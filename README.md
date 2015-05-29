@@ -3,6 +3,8 @@ pushIn.js
 
 I'm working on making a JQuery plugin that simulates a dolly-in or push-in effect on a div element.
 
+Working Example: http://natehub.net/pushin/
+
 All child elements within the div should remain relative to eachother, which creates a decent illusion of perspective as objects grow/shrink.
 
 ### Installation
@@ -29,6 +31,9 @@ Include items as objects, like this:
 `$(div).pushIn({Start: 0.5, Stop: 0.75, Speed: 1.3});`
 
 
-### Coming Soon
+### To Do:
 
 Lots of kinks to sort through. Future updates to come!
+
+* Mobile support
+* Cross-browser testing
