@@ -4,26 +4,34 @@
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<title>Parallax Zoom</title>
+        <link rel='stylesheet' href='pushIn.css'>
 		<link rel='stylesheet' href='style.css'>
         <script src='jquery-1.11.3.min.js'>oops! no javascript.</script>
 	</head>
 	<body>
         <div id='wrapper'>
-            <div id='test'></div>
-            <div id='layer1' class='layer'>
-                <div class='dot left'>
-                    <div class='content'>Div #1</div>
+            <section id='container'>
+                <div id='layer1' class='blue layer'>
+                    <div class='yellow dot'>
+                        <div class='content'>
+                            <h4>Div #1</h4>
+                        </div>
+                    </div>
+                    <div class='yellow dot'>
+                        <div class='content'>
+                            <h4>Div #2</h4>
+                        </div>
+                    </div>
+                    <div class='yellow dot'>
+                        <div class='content'>
+                            <h4>Div #3</h4>
+                        </div>
+                    </div>
                 </div>
-                <div class='dot center'>
-                    <div class='content'>Div #2</div>
+                <div id='layer2' class='yellow layer'>
+                    <h4>This is a second layer!</h4>
                 </div>
-                <div class='dot right'>
-                    <div class='content'>Div #3</div>
-                </div>
-            </div>
-            <div id='layer2' class='layer'>
-                <h1>This is a second layer!</h1>
-            </div>
+            </section>
         </div>
 		<script src='pushIn.js'>oops! no javascript.</script>
         <script src='functions.js'>oops! no javascript.</script>
