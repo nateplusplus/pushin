@@ -38,15 +38,24 @@ $(document).ready(function () {
                 
                 // Amount of growth after specified start point
                 // Multiplied by desired speed
-                var scaleValue = 1 + (
-                        (scrollValue - defaults.start) * defaults.speed
-                    );
+                var scaleAmount = 1 + (
+                    ((scrollValue - defaults.start) * defaults.speed) * .001
+                );
                 
                 // Prevent negative scaleValue before start point
-                scaleValue < 0 ? scaleValue = 0 : scaleValue;
+                scaleAmount < 0 ? scaleAmount = 0 : scaleAmount;
                 
                 // For each item within JQuery object...
                 this.each(function () {
+                    
+                    // Get the computed value of CSS transform
+                    var scale = this.style.transform;
+                    
+                    if (scale == ""){ scale = '0000000.01'; }
+                    
+                    var scaleSliced = scale.slice(6),
+                        scaleNumber = parseFloat(scaleSliced, 10),
+                        scaleValue = scaleAmount * scaleNumber;
                     
                     // Scale object to current scaleValue using CSS transform
                     $(this).css({
