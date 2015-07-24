@@ -20,17 +20,20 @@ div element to simulate a dolly-in or push-in effect.
 	margin: 0;
 	}
 
-#wrapper,
-#container,
+#wrapper {
+    display: block;
+    width: 100%;
+    height: 2000px;
+}
+
+#scroller,
 .layer {
     display: block;
     width: 100%;
 	height: 100%;
 }
 
-#wrapper { position: fixed; }
-
-#container { position: relative; }
+#scroller { position: absolute; }
 
 .layer {
     position: absolute;

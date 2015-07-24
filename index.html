@@ -4,13 +4,12 @@
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<title>Parallax Zoom</title>
-        <link rel='stylesheet' href='pushIn.css'>
-		<link rel='stylesheet' href='style.css'>
-        <script src='jquery-1.11.3.min.js'>oops! no javascript.</script>
+        <link rel='stylesheet' href='css/pushIn.css'>
+		<link rel='stylesheet' href='css/style.css'>
 	</head>
 	<body>
         <div id='wrapper'>
-            <section id='container'>
+            <div id='scroller'>
                 <div id='layer1' class='blue layer'>
                     <div class='yellow dot'>
                         <div class='content'>
@@ -31,9 +30,13 @@
                 <div id='layer2' class='yellow layer'>
                     <h4>This is a second layer!</h4>
                 </div>
-            </section>
+            </div>
         </div>
-		<script src='pushIn.js'>oops! no javascript.</script>
-        <script src='functions.js'>oops! no javascript.</script>
+        <script src='js/lib/jquery-1.11.3.min.js'>oops! no javascript.</script>
+        <script src='js/lib/iscroll-lite.js'></script>
+        <script src='js/lib/iscroll.js'></script>
+        <script src='js/lib/modernizr.js'></script>
+        <!--<script src='js/pushIn.js'>oops! no javascript.</script>
+        <script src='js/functions.js'>oops! no javascript.</script>-->
 	</body>
 </html>
