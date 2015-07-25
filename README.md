@@ -38,4 +38,4 @@ Include items as objects, like this:
 ### To Do:
 
 - Mobile support works, but is a little buggy.
-- Looking for a way to get computed style in the beginning and then add to it.
+- Testing some ways to make this compatible with custom CSS transforms in stylesheet

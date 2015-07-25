@@ -63,6 +63,24 @@ $( document ).ready(function() {
                     };
 
                     options = $.extend(defaults, options);
+                    
+                    
+                    
+                    /* =========== TO DO: ============ */
+                    
+                    // test getting current computed style of css transform
+                    
+                    // newComputedStyle = current computed style - scaleValue
+                    
+                    // If scroll.y - start <= 0
+                        // scaleValue = original computed style on CSS document
+                    // Else...
+                        // scaleValue = newComputedStyle + scaleValue
+                               
+                    
+                    /* =============================== */
+                    
+                    
 
                     scaleValue = 1 + (
                             (scrollValue - defaults.start) * defaults.speed
