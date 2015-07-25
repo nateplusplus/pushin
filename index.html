@@ -8,9 +8,11 @@
 		<link rel='stylesheet' href='css/style.css'>
 	</head>
 	<body>
+        <header></header>
         <div id='wrapper'>
-            <div id='scroller'>
-                <div id='layer1' class='blue layer'>
+            <div id='scroller'> <!-- For iScroll functionality -->
+               
+                <div id='layer1' class='layer'>
                     <div class='yellow dot'>
                         <div class='content'>
                             <h4>Div #1</h4>
@@ -30,13 +32,15 @@
                 <div id='layer2' class='yellow layer'>
                     <h4>This is a second layer!</h4>
                 </div>
-            </div>
-        </div>
+                
+            </div> <!-- scroller -->
+        </div> <!-- wrapper -->
+        
+        
         <script src='js/lib/jquery-1.11.3.min.js'>oops! no javascript.</script>
-        <script src='js/lib/iscroll-lite.js'></script>
         <script src='js/lib/iscroll.js'></script>
         <script src='js/lib/modernizr.js'></script>
-        <!--<script src='js/pushIn.js'>oops! no javascript.</script>
-        <script src='js/functions.js'>oops! no javascript.</script>-->
+        <script src='js/pushIn.js'></script>
+        <script src='js/functions.js'></script>
 	</body>
 </html>

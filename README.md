@@ -1,21 +1,25 @@
-pushIn.js
+pushIn
 =========
 
-I'm working on making a JQuery plugin that simulates a dolly-in or push-in effect on a div element.
+I'm developing a technique that simulates a dolly-in or push-in effect on a div element.
 
 All child elements within the div should remain relative to eachother, which creates a decent illusion of perspective as objects grow/shrink.
 
+Please note that this is still heavily under development and is not ready for production sites, but feel free to take it and improve on it for your own use!
+
 ### Installation
 
-1. Include **pushIn.js** and **pushIn.css** in your website directory.
+In order to be cross-compatible, I found iScroll and jQuery to be very useful. So at this point those are the two dependencies for this effect.
+
+1. Download and include **jQuery** and **iScroll** in your website directory.
+2. Include **pushIn.js** and **pushIn.css** in your website directory.
 2. Link to **pushIn.css** after your css stylesheet.
 3. Link to **pushIn.js** at the end of your HTML document and after calling any JS libraries.
-4. Be sure to include the latest version of JQuery as well, BEFORE calling **pushIn.js**.
-5. The plugin is ready to use!
+4. The plugin is ready to use!
 
 ### Usage
 
-In your own JavaScript, just use `.pushIn()` on a JQuery object.
+In your own JavaScript, just use `.pushIn()` on a JQuery object. Right now, you'll need to do this within the pushIn.js file, in the section I've labeled "CUSTOM CODE".
 
 #### Options:
 
@@ -31,4 +35,5 @@ Include items as objects, like this:
 
 ### Coming Soon
 
-Lots of kinks to sort through. Future updates to come!
+- Mobile support works, but is a little buggy.
+- Looking for a way to get computed style in the beginning and then add to it.
