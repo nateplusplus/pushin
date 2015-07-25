@@ -44,9 +44,8 @@ $( document ).ready(function() {
         
         // Stop scroller from scrolling
         $('.layer').css('top', scrollPos);
-        var layerTop = $('.layer').position().top;
-        
-        var viewHeight = $(window).height(),
+        var layerTop = $('.layer').position().top,
+            viewHeight = $(window).height(),
             pageHeight = $('#scroller').height(),
             scrollValue = scrollPos / (pageHeight - viewHeight),
             scaleValue;
@@ -110,10 +109,17 @@ $( document ).ready(function() {
 
         }(jQuery)); // jQuery Plugin
         
-        /*  CUSTOM CODE  */
+        
+        
+        // ========= CUSTOM CODE ========= //
+        
         
         dots.pushIn({speed: 40, stop: 0.2});
         layer2.pushIn({speed: 10, start: 0.2});
+        
+        
+        // ============================== //
+        
         
         
     })(); // Animation Loop
