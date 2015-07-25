@@ -4,14 +4,15 @@
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<title>Parallax Zoom</title>
-        <link rel='stylesheet' href='pushIn.css'>
-		<link rel='stylesheet' href='style.css'>
-        <script src='jquery-1.11.3.min.js'>oops! no javascript.</script>
+        <link rel='stylesheet' href='css/pushIn.css'>
+		<link rel='stylesheet' href='css/style.css'>
 	</head>
 	<body>
-        <div id='wrapper'> <!-- Keeps things fixed in view -->
-            <section id='container'> <!-- Think of Container as the overal canvas -->
-                <div id='layer1' class='blue layer'> <!-- Each layer of depth defined by class "layer" -->
+        <header></header>
+        <div id='wrapper'>
+            <div id='scroller'> <!-- For iScroll functionality -->
+               
+                <div id='layer1' class='layer'> <!-- Each layer of depth defined by class "layer" -->
                     <div class='yellow dot'>
                         <div class='content'>
                             <h4>Div #1</h4>
@@ -31,9 +32,15 @@
                 <div id='layer2' class='yellow layer'>
                     <h4>This is a second layer!</h4>
                 </div>
-            </section>
-        </div>
-		<script src='pushIn.js'>oops! no javascript.</script>
-        <script src='functions.js'>oops! no javascript.</script>
+                
+            </div> <!-- scroller -->
+        </div> <!-- wrapper -->
+        
+        
+        <script src='js/lib/jquery-1.11.3.min.js'>oops! no javascript.</script>
+        <script src='js/lib/iscroll.js'></script>
+        <script src='js/lib/modernizr.js'></script>
+        <script src='js/pushIn.js'></script>
+        <script src='js/functions.js'></script>
 	</body>
 </html>
