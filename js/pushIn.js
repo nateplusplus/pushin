@@ -148,7 +148,7 @@ $( document ).ready(function() {
 
         activateScroll();
         activatePushIn();
-        customCode();
+        addPushIn();
 
     })(); // Animation Loop
 }); // DOM Ready
