@@ -134,5 +134,5 @@ h4 {
 
 /* TEST */
 #layer1 {
-    transform:scale(1, 1)
+    transform:scale(.5, .5)
 }

@@ -6,7 +6,21 @@ function getScroll(iscroll) {
     return {x: x, y: y};
 }
 
-var scrollPos, scroll;
+// Get the current scale
+function getElementScale(elem) {
+    var transform = /matrix\([^\)]+\)/.exec(
+        window.getComputedStyle(elem)['-webkit-transform']),
+        scale = {'x': 1, 'y': 1};
+    if( transform ) {
+        transform = transform[0].replace(
+            'matrix(', '').replace(')', '').split(', ');
+        scale.x = parseFloat(transform[0]);
+        scale.y = parseFloat(transform[3]);
+    }
+    return scale;
+}
+
+var scrollPos, scroll, scaleObj;
 
 
 $( document ).ready(function() {
@@ -26,6 +40,8 @@ $( document ).ready(function() {
     document.addEventListener( 'touchmove', preventDefaultScrolling, false );
     
     
+    // ========= PUSH-IN ========= //
+    
     (function animationLoop(){
         
         window.requestAnimationFrame(animationLoop);
@@ -37,12 +53,9 @@ $( document ).ready(function() {
         
         
         
-        // ========= PUSH-IN ========= //
-
         // Scroll position updated
         scrollPos = scroll.y;
         
-        // Stop scroller from scrolling
         $('.layer').css('top', scrollPos);
         var layerTop = $('.layer').position().top,
             viewHeight = $(window).height(),
@@ -64,31 +77,25 @@ $( document ).ready(function() {
 
                     options = $.extend(defaults, options);
                     
-                    
-                    
-                    /* =========== TO DO: ============ */
-                    
-                    // test getting current computed style of css transform
-                    
-                    // newComputedStyle = current computed style - scaleValue
-                    
-                    // If scroll.y - start <= 0
-                        // scaleValue = original computed style on CSS document
-                    // Else...
-                        // scaleValue = newComputedStyle + scaleValue
-                               
-                    
-                    /* =============================== */
-                    
-                    
-
-                    scaleValue = 1 + (
+                    this.each(function () {
+                        
+                        // If scaleObj has not been defined, define it
+                        if (!scaleObj) {
+                            scaleObj = getElementScale(this);
+                        }
+                        
+                        /* =============================================== 
+                            scaleObj should only be defined one time
+                            this allows for original CSS transforms to
+                            be used as a base-point for the push-in effect
+                        /* =============================================== */
+                        
+                        
+                        scaleValue = scaleObj.x + (
                             (scrollValue - defaults.start) * defaults.speed
                         );
 
                     scaleValue < 0 ? scaleValue = 0 : scaleValue;
-
-                    this.each(function () {
 
                         $(this).css({
                             '-webkit-transform':
@@ -103,7 +110,7 @@ $( document ).ready(function() {
                                 'scale(' + scaleValue + ')'
                         });
 
-                    });
+                    });  // this.each function
 
                     if (defaults.start <= scrollValue && defaults.stop >= scrollValue) {
                         this.each(function () {
@@ -120,10 +127,10 @@ $( document ).ready(function() {
 
                         });
 
-                    }
+                    } // else
 
-                }
-            });
+                } // pushIn plugin
+            });  // $.fn.extend
 
         }(jQuery)); // jQuery Plugin
         

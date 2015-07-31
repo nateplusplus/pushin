@@ -38,4 +38,4 @@ Include items as objects, like this:
 ### To Do:
 
 - Mobile support works, but is a little buggy.
-- Testing some ways to make this compatible with custom CSS transforms in stylesheet
+- slight "bouncing" effect when scrolling fast.
