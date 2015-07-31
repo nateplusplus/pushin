@@ -41,4 +41,3 @@ Include items as objects, like this:
 
 - Mobile support works, but is a little buggy.
 - slight "bouncing" effect when scrolling fast.
-- put the opacity 0 styling in the js file to minimize dependencies

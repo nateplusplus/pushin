@@ -65,7 +65,6 @@ function activatePushIn(){
         scrollValue = scrollPos / (pageHeight - viewHeight),
         scaleValue;
 
-
     (function ($) {
 
         $.fn.extend({
