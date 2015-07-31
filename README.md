@@ -39,3 +39,5 @@ Include items as objects, like this:
 
 - Mobile support works, but is a little buggy.
 - slight "bouncing" effect when scrolling fast.
+
+- In order to separate custom code, try putting the plugin and custom code into functions, which are placed in an animation function?
