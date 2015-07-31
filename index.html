@@ -8,7 +8,6 @@
 		<link rel='stylesheet' href='css/style.css'>
 	</head>
 	<body>
-        <header></header>
         <div id='wrapper'>
             <div id='scroller'> <!-- For iScroll functionality -->
                
@@ -18,18 +17,18 @@
                             <h4>Div #1</h4>
                         </div>
                     </div>
-                    <div class='yellow dot'>
+                    <div class='green dot'>
                         <div class='content'>
                             <h4>Div #2</h4>
                         </div>
                     </div>
-                    <div class='yellow dot'>
+                    <div class='blue dot'>
                         <div class='content'>
                             <h4>Div #3</h4>
                         </div>
                     </div>
                 </div>
-                <div id='layer2' class='yellow layer'>
+                <div id='layer2' class='green layer'>
                     <h4>This is a second layer!</h4>
                 </div>
                 
@@ -40,5 +39,13 @@
         <script src='js/lib/jquery-1.11.3.min.js'>oops! no javascript.</script>
         <script src='js/lib/iscroll.js'></script>
         <script src='js/pushIn.js'></script>
+        <script type="text/javascript">
+            
+            function customCode() {
+                $('#layer1').pushIn({speed: 40, stop: 0.2});
+                $('#layer2').pushIn({speed: 10, start: 0.15});
+            }
+            
+        </script>
 	</body>
 </html>

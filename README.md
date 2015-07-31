@@ -41,3 +41,4 @@ Include items as objects, like this:
 - slight "bouncing" effect when scrolling fast.
 
 - In order to separate custom code, try putting the plugin and custom code into functions, which are placed in an animation function?
+- put the opacity 0 styling in the js file to minimize dependencies

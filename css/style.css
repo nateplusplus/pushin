@@ -80,7 +80,10 @@ html, body {
 
 /* LAYER 1 STYLING */
 
-#layer1 { opacity: 1; }
+#layer1 {
+    opacity: 1;
+    transform:scale(.5, .5);
+}
 
 .dot {
     position: relative;
@@ -128,11 +131,6 @@ h4 {
 
 .yellow { background: rgb(255, 255, 230); }
 
-.blue { background: rgb(200, 220, 230); }
+.green { background: rgb(200, 230, 200); }
 
-
-
-/* TEST */
-#layer1 {
-    transform:scale(.5, .5)
-}
+.blue { background: rgb(215, 215, 230); }
