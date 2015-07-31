@@ -21,7 +21,9 @@ In order to be cross-compatible, I found iScroll and jQuery to be very useful. S
 
 ### Usage
 
-In your own JavaScript, just use `.pushIn()` on a JQuery object. Right now, you'll need to do this within the pushIn.js file, in the section I've labeled "CUSTOM CODE".
+Just use `.pushIn()` on a JQuery object.
+
+This needs to be within the customCode function to work properly. See the bottom of the `index.html` file for an example.
 
 #### Options:
 
@@ -39,6 +41,4 @@ Include items as objects, like this:
 
 - Mobile support works, but is a little buggy.
 - slight "bouncing" effect when scrolling fast.
-
-- In order to separate custom code, try putting the plugin and custom code into functions, which are placed in an animation function?
 - put the opacity 0 styling in the js file to minimize dependencies
