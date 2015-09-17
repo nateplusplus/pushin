@@ -7,37 +7,32 @@ Working Example: http://natehub.net/pushin/
 
 All child elements within the div should remain relative to eachother, which creates a decent illusion of perspective as objects grow/shrink.
 
-Please note that this is still heavily under development and is not ready for production sites, but feel free to take it and improve on it for your own use!
+I've targeted touch and scroll actions, and used the requestAnimationFrame method to make this as memory efficient as possible.
+
+Feel free to take it and improve on it for your own use, or talk to me about any ideas!
 
 ### Installation
 
-In order to be cross-compatible, I found iScroll and jQuery to be very useful. So at this point those are the two dependencies for this effect.
+All the functionality is just in that one **pushIn.js** file. Easy peasy!
 
-1. Download and include **jQuery** and **iScroll** in your website directory.
-2. Include **pushIn.js** and **pushIn.css** in your website directory.
-2. Link to **pushIn.css** after your css stylesheet.
-3. Link to **pushIn.js** at the end of your HTML document and after calling any JS libraries.
-4. The plugin is ready to use!
+1. Download and include **pushIn.js** in your website directory.
+2. Link to **pushIn.js** at the end of your HTML document and after calling any JS libraries.
+3. The plugin is ready to use!
 
 ### Usage
 
-Just use `.pushIn()` on a JQuery object.
+To make an element scroll, just include "layer" in its class list.
 
-This needs to be within the customCode function to work properly. See the bottom of the `index.html` file for an example.
+Ex: `<p class='layer'>I'm gonna move!</p>`
 
 #### Options:
 
-To customize this effect, use the following plugin options:
+To customize this effect, plugin options can be typed into an HTML attribute named `data-params` on each element you want to scroll.
 
-* **Start** - Number between 0 - 1, reprecenting the percentage of total scroll duration at which the object should fade in and begin to grow. Default is set to 0, which is the top of the page.
-* **Stop** - Number between 0 - 1, reprecenting the percentage of total scroll duration at which the object should fade out. Default is set to 1 (100%), which is the bottom of the page.
-* **Speed** - The speed at which the object will grow/shrink when scrolling. Default is 0.75.
+The options need to be comma separated without white space in the following order: **data-params="start,stop**
 
-Include items as objects, like this:  
-`$(div).pushIn({Start: 0.5, Stop: 0.75, Speed: 1.3});`
+Ex: `<p class='layer' data-params='30,500'>I'm gonna move!</p>`
 
-
-### To Do:
-
-- Mobile support works, but is a little buggy.
-- slight "bouncing" effect when scrolling fast.
+* **Start** - How many pixels you want to scroll down before animation begins
+* **Stop** - How many pixels you want to scroll down before animation ends
+* **Speed** - How fast you want this element to fly at you. 200 is default. Higher numbers produce slower results, anything lower than 100 becomes lightning speed. Negative values flip the world upside down!! AAAH!
