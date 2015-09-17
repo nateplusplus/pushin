@@ -29,7 +29,7 @@ Ex: `<p class='layer'>I'm gonna move!</p>`
 
 To customize this effect, plugin options can be typed into an HTML attribute named `data-params` on each element you want to scroll.
 
-The options need to be comma separated without white space in the following order: **data-params="[start],[stop],[speed]**
+The options need to be comma separated without white space in the following order: **data-params="[start],[stop],[speed]"**
 
 Ex: `<p class='layer' data-params='30,500,10000'>I'm gonna move really slow!</p>`
 
