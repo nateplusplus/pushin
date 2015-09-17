@@ -36,3 +36,7 @@ Ex: `<p class='layer' data-params='30,500,10000'>I'm gonna move really slow!</p>
 * **Start** - How many pixels you want to scroll down before animation begins. (Default: 0)
 * **Stop** - How many pixels you want to scroll down before animation ends. (Default: current page height)
 * **Speed** - How fast you want this element to fly at you. (Default: 200). Higher numbers produce slower results, anything lower than 100 becomes lightning speed. Negative values flip the world upside down!! AAAH!
+
+### To Do:
+
+- How to add inertia to mobile scroll?
