@@ -29,10 +29,10 @@ Ex: `<p class='layer'>I'm gonna move!</p>`
 
 To customize this effect, plugin options can be typed into an HTML attribute named `data-params` on each element you want to scroll.
 
-The options need to be comma separated without white space in the following order: **data-params="start,stop**
+The options need to be comma separated without white space in the following order: **data-params="[start],[stop],[speed]**
 
-Ex: `<p class='layer' data-params='30,500'>I'm gonna move!</p>`
+Ex: `<p class='layer' data-params='30,500,10000'>I'm gonna move really slow!</p>`
 
-* **Start** - How many pixels you want to scroll down before animation begins
-* **Stop** - How many pixels you want to scroll down before animation ends
-* **Speed** - How fast you want this element to fly at you. 200 is default. Higher numbers produce slower results, anything lower than 100 becomes lightning speed. Negative values flip the world upside down!! AAAH!
+* **Start** - How many pixels you want to scroll down before animation begins. (Default: 0)
+* **Stop** - How many pixels you want to scroll down before animation ends. (Default: current page height)
+* **Speed** - How fast you want this element to fly at you. (Default: 200). Higher numbers produce slower results, anything lower than 100 becomes lightning speed. Negative values flip the world upside down!! AAAH!
