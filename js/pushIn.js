@@ -74,62 +74,64 @@ for ( var i=0; i<layers.length; i++ ){
 
 var dolly = function(scrollPos) {
     
-    for( var i=0; i<layers.length; i++){
-        
-        var params = [];
-        
-        if ( layers[i].getAttribute('data-params') ){
-            params = layers[i].getAttribute('data-params').split(',');
-        }
-        
-        var inpoint = ( params[0] || 0 );
-        var outpoint = ( params[1] || pageHeight );
-        var speed = ( params[2] || 200 );
-        
-        var scaleVal = (
-            (scaleArray[i].x + ( (scrollPos - inpoint) / speed ) )
-            );
-        
-        // At the inpoint: 
-        if(scrollPos >= inpoint && scrollPos <= outpoint){
-            // make sure the element is visible
-            if(layers[i].classList.contains('hide')){
-                layers[i].classList.remove('hide');
-            }
-            // Use move data to recalculate the element's size
-            var scaleString = "scale("+scaleVal+")";
-            layers[i].style.webkitTransform = scaleString;
-            layers[i].style.mozTransform = scaleString;
-            layers[i].style.msTransform = scaleString;
-            layers[i].style.oTransform = scaleString;
-            layers[i].style.transform = scaleString;
+    requestAnimationFrame( function(){
+    
+        for( var i=0; i<layers.length; i++){
 
-        } else { // Before inpoint and after the outpoint:
-            
-            // Make sure the element is hidden
-            if(!layers[i].classList.contains('hide')){
-                layers[i].classList.add('hide');
+            var params = [];
+
+            if ( layers[i].getAttribute('data-params') ){
+                params = layers[i].getAttribute('data-params').split(',');
             }
-            // Do not recalculate element's size
-        }
-    }
-}
+
+            var inpoint = ( params[0] || 0 );
+            var outpoint = ( params[1] || pageHeight );
+            var speed = ( params[2] || 200 );
+
+            var scaleVal = (
+                (scaleArray[i].x + ( (scrollPos - inpoint) / speed ) )
+                );
+
+            // At the inpoint: 
+            if(scrollPos >= inpoint && scrollPos <= outpoint){
+                // make sure the element is visible
+                if(layers[i].classList.contains('hide')){
+                    layers[i].classList.remove('hide');
+                }
+                // Use move data to recalculate the element's size
+                var scaleString = "scale("+scaleVal+")";
+                layers[i].style.webkitTransform = scaleString;
+                layers[i].style.mozTransform = scaleString;
+                layers[i].style.msTransform = scaleString;
+                layers[i].style.oTransform = scaleString;
+                layers[i].style.transform = scaleString;
+
+            } else { // Before inpoint and after the outpoint:
+
+                // Make sure the element is hidden
+                if(!layers[i].classList.contains('hide')){
+                    layers[i].classList.add('hide');
+                }
+                // Do not recalculate element's size
+            }
+        } // For loop
+    }); // Request animation frame
+} // Dolly function
 
 
 // Detect when user scrolls or touchmoves
-window.addEventListener("scroll", function(event) {
-
-    var scrollPos = window.pageYOffset;
-
-    requestAnimationFrame( function(){
-        dolly(scrollPos);
-    });
-
-});
 
 var scrollPos = 0,
     touchStart = null,
     scrollEnd = null;
+
+window.addEventListener("scroll", function(event) {
+
+    scrollPos = window.pageYOffset;
+
+    dolly(scrollPos);
+    
+});
 
 window.addEventListener("touchstart", function(event) {
     touchStart = event.changedTouches[0].screenY;
@@ -142,9 +144,7 @@ window.addEventListener("touchmove", function(event) {
     scrollPos = Math.max(scrollEnd+touchStart-touchMove, 0);
     scrollPos = Math.min(scrollPos, pageHeight-window.innerHeight);
     
-    requestAnimationFrame( function() {
-        dolly(scrollPos);
-    });
+    dolly(scrollPos);
 });
 
 window.addEventListener("touchend", function(event) {
