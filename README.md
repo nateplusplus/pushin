@@ -3,7 +3,7 @@ pushIn
 
 I'm developing a technique that simulates a dolly-in or push-in effect on a div element.
 
-Working Example: http://natehub.net.s3-website-us-west-2.amazonaws.com/projects/pushin/
+Working Example: http://nateplusplus.github.io/pushIn-js/
 
 All child elements within the div should remain relative to eachother, which creates a decent illusion of perspective as objects grow/shrink.
 
