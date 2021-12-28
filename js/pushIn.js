@@ -1,5 +1,7 @@
-// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-// MIT license
+/**
+ * requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+ * MIT license
+ */
 (function () {
 	var lastTime = 0;
 	var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -27,6 +29,12 @@
 		};
 }());
 
+/**
+ * PushIn object
+ *
+ * Once new object is created, it will initialize itself and
+ * bind events to begin interacting with dom.
+ */
 var pushIn = function () {
 	this.touchStart;
 	this.scrollEnd;
@@ -36,10 +44,19 @@ var pushIn = function () {
 	this.init();
 }
 
+/**
+ * Prototype functions for the PushIn object.
+ */
 pushIn.prototype = {
+	/**
+	 * Initialize the object to start everything up.
+	 */
 	init: function () {
 		this.bindEvents();
 	},
+	/**
+	 * Bind event listeners to watch for page load and user interaction.
+	 */
 	bindEvents: function () {
 		document.addEventListener('DOMContentLoaded', function () {
 			this.layers = document.getElementsByClassName('layer');
@@ -95,6 +112,9 @@ pushIn.prototype = {
 		}
 		return scale;
 	},
+	/**
+	 * Animation effect, mimicking a camera dolly on the webpage.
+	 */
 	dolly: function () {
 		requestAnimationFrame(function () {
 			for (var i = 0; i < this.layers.length; i++) {
@@ -109,8 +129,10 @@ pushIn.prototype = {
 				var outpoint = (params[1] || pageHeight);
 				var speed = (params[2] || 200);
 
+				var scaleX = this.scaleArray[i].hasOwnProperty( 'x' ) ? this.scaleArray[i].x : 0;
+
 				var scaleVal = (
-					(this.scaleArray[i].x + ((this.scrollPos - inpoint) / speed))
+					( scaleX + ((this.scrollPos - inpoint) / speed))
 				);
 
 				// At the inpoint: 
