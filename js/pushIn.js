@@ -35,11 +35,13 @@
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-var pushIn = function () {
+var pushIn = function ( parent ) {
 	this.touchStart;
 	this.scrollEnd;
 	this.scaleArray = [];
 	this.scrollPos = 0;
+
+	this.parent = parent;
 
 	this.init();
 }
@@ -48,29 +50,53 @@ var pushIn = function () {
  * Prototype functions for the PushIn object.
  */
 pushIn.prototype = {
+
 	/**
 	 * Initialize the object to start everything up.
 	 */
 	init: function () {
 		this.bindEvents();
 	},
+
 	/**
 	 * Bind event listeners to watch for page load and user interaction.
 	 */
 	bindEvents: function () {
-		document.addEventListener('DOMContentLoaded', function () {
-			this.layers = document.getElementsByClassName('layer');
-			this.pageHeight = document.body.clientHeight;
+		this.layers    = this.parent.getElementsByClassName('layer');
+		this.scrollPos = window.pageYOffset;
 
-			// Hold all scale values in an array of objects
-			for (var i = 0; i < this.layers.length; i++) {
-				this.scaleArray.push(this.getElementScale(this.layers[i]));
+		// Find all layers on the page and store them with their parameters
+		for (var i = 0; i < this.layers.length; i++) {
+			var params = [];
+			if (this.layers[i].getAttribute('data-params')) {
+				params = this.layers[i].getAttribute('data-params').split(',');
 			}
-		}.bind(this));
+
+			var top = this.parent.getBoundingClientRect().top;
+			if ( this.parent.dataset.hasOwnProperty('from') ) {
+				top = this.parent.dataset.from;
+			}
+
+			var bottom = this.parent.getBoundingClientRect().bottom;
+			if ( this.parent.dataset.hasOwnProperty('to') ) {
+				bottom = this.parent.dataset.to;
+			}
+
+			this.scaleArray.push({
+				elem : this.layers[i],
+				index: i,
+				originalScale: this.getElementScaleX( this.layers[i] ),
+				params: {
+					inpoint  : (params[0] || top),
+					outpoint : (params[1] || bottom),
+					speed    : (params[2] || 200)
+				}
+			});
+		}
 
 		window.addEventListener("scroll", function (event) {
 			this.scrollPos = window.pageYOffset;
-			this.dolly(this.scrollPos);
+			this.dolly();
 		}.bind(this));
 
 		window.addEventListener("touchstart", function (event) {
@@ -91,75 +117,99 @@ pushIn.prototype = {
 			this.scrollEnd = this.scrollPos;
 		}.bind(this));
 	},
+
 	/**
 	 * Get the initial scale of the element at time of DOM load.
 	 *
 	 * @param {Element} elem 
-	 * @return {object}
+	 * @return {Number} scaleX
 	 */
-	getElementScale: function (elem) {
+	getElementScaleX: function (elem) {
 		var transform = /matrix\([^\)]+\)/.exec(
 				window.getComputedStyle(elem)['-webkit-transform']),
-			scale = {
-				'x': 1,
-				'y': 1
-			};
+			scaleX = 1;
 		if (transform) {
 			transform = transform[0].replace(
 				'matrix(', '').replace(')', '').split(', ');
-			scale.x = parseFloat(transform[0]);
-			scale.y = parseFloat(transform[3]);
+			scaleX = parseFloat(transform[0]);
 		}
-		return scale;
+		return scaleX;
 	},
+
 	/**
 	 * Animation effect, mimicking a camera dolly on the webpage.
 	 */
 	dolly: function () {
 		requestAnimationFrame(function () {
-			for (var i = 0; i < this.layers.length; i++) {
-
-				var params = [];
-
-				if (this.layers[i].getAttribute('data-params')) {
-					params = this.layers[i].getAttribute('data-params').split(',');
+			this.scaleArray.forEach( function( layer ) {
+				if ( this.isActive( layer ) ) {
+					layer.elem.classList.remove('hide');
+					this.setScale( layer.elem, this.getScaleValue( layer ) );
+				} else if( ! this.isVisible( layer ) ) {
+					layer.elem.classList.add('hide');
 				}
+			}.bind(this));
+		}.bind(this));
+	},
 
-				var inpoint = (params[0] || 0);
-				var outpoint = (params[1] || pageHeight);
-				var speed = (params[2] || 200);
+	/**
+	 * Whether or not a layer should currently be zooming.
+	 *
+	 * @param {Object} layer 
+	 * @returns Boolean
+	 */
+	isActive: function( layer ) {
+		return this.scrollPos >= layer.params.inpoint && this.scrollPos <= layer.params.outpoint;
+	},
 
-				var scaleX = this.scaleArray[i].hasOwnProperty( 'x' ) ? this.scaleArray[i].x : 0;
+	/**
+	 * Whether or not a layer should be visible
+	 *
+	 * @param {Object} layer 
+	 * @returns Boolean
+	 */
+	isVisible: function( layer ) {
+		var isVisible = false;
+		if ( layer.index === 0 && this.scrollPos < layer.params.inpoint ) {
+			// If this is the first layer and  we have scrolled past the top of the parent, it should be visible
+			isVisible = true;
+		} else if ( layer.index === this.layers.length && this.scrollPos > layer.params.outpoint ) {
+			// If this is the last layer and we have scrolled past the bottom of the parent, it should be visible
+			isVisible = true;
+		}
+		return isVisible;
+	},
 
-				var scaleVal = (
-					( scaleX + ((this.scrollPos - inpoint) / speed))
-				);
+	/**
+	 * Get the scaleX value for the layer.
+	 *
+	 * @param {Object} layer 
+	 * @returns 
+	 */
+	getScaleValue: function(layer) {
+		return layer.originalScale + ((this.scrollPos - layer.params.inpoint) / layer.params.speed);
+	},
 
-				// At the inpoint: 
-				if (this.scrollPos >= inpoint && this.scrollPos <= outpoint) {
-					// make sure the element is visible
-					if (this.layers[i].classList.contains('hide')) {
-						this.layers[i].classList.remove('hide');
-					}
-					// Use move data to recalculate the element's size
-					var scaleString = "scale(" + scaleVal + ")";
-					this.layers[i].style.webkitTransform = scaleString;
-					this.layers[i].style.mozTransform = scaleString;
-					this.layers[i].style.msTransform = scaleString;
-					this.layers[i].style.oTransform = scaleString;
-					this.layers[i].style.transform = scaleString;
-
-				} else { // Before inpoint and after the outpoint:
-
-					// Make sure the element is hidden
-					if (!this.layers[i].classList.contains('hide')) {
-						this.layers[i].classList.add('hide');
-					}
-					// Do not recalculate element's size
-				}
-			} // For loop
-		}.bind(this)); // Request animation frame
+	/**
+	 * Set element scale.
+	 *
+	 * @param {HtmlElement} elem 
+	 * @param {Number} value 
+	 */
+	setScale: function( elem, value ) {
+		var scaleString = "scale(" + value + ")";
+		elem.style.webkitTransform = scaleString;
+		elem.style.mozTransform = scaleString;
+		elem.style.msTransform = scaleString;
+		elem.style.oTransform = scaleString;
+		elem.style.transform = scaleString;
 	}
 };
 
-new pushIn();
+document.addEventListener('DOMContentLoaded', function () {
+	var parents = document.getElementsByClassName('push-in');
+
+	for (var i = 0; i < parents.length; i++) {
+		new pushIn( parents[i] );
+	}
+});

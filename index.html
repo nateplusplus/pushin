@@ -3,39 +3,40 @@
 	<head>
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
-		<title>Parallax Zoomin'</title>
+		<title>PushIn JS</title>
 		<link rel='stylesheet' href='css/style.css'>
+		<link rel='stylesheet' href='css/demo.css'>
 	</head>
 	<body>
-		<div id='wrapper'>
-			<div id='scroller'> <!-- For iScroll functionality -->
-			   
-				<div id='layer1' class='layer hide' data-params='30,600,200'> <!-- Each layer of depth defined by class "layer" -->
-					<div class='yellow dot'>
-						<div class='content'>
-							<h4>Yellow</h4>
-						</div>
-					</div>
-					<div class='green dot'>
-						<div class='content'>
-							<h4>Green</h4>
-						</div>
-					</div>
-					<div class='blue dot'>
-						<div class='content'>
-							<h4>Blue</h4>
-						</div>
+		<header class="demo-header">
+			<div class="demo-padded">
+				<h1>PushIn.js</h1>
+				<p class="demo-subhead">
+					PushIn.js is a plugin which can be attached to any div element to simulate a dolly-in or push-in effect.
+				</p>
+			</div>
+		</header>
+		<main>
+			<section class="demo-scroller push-in" data-pushin-from="200" data-pushin-to="2000">
+				<div class="layer demo-layer-1" data-params="200,400">
+					<div class="demo-text-box demo-layer-1-text">
+						Scroll to push in
 					</div>
 				</div>
-				<div id='layer2' class='green layer hide' data-params='500,1600,10000'>
-					<h4>This is a second layer set to a slow speed.</h4>
+				<div class="layer demo-layer-2" data-params="600">
+					<div class="demo-text-box demo-layer-2-text">
+						Each layer can come into view at different times.
+					</div>
 				</div>
-				<div id='layer3' class='blue layer hide' data-params='1500,10000,800'>
-					<h4>The final layer</h4>
-				</div>
-				
-			</div> <!-- scroller -->
-		</div> <!-- wrapper -->
+			</section>
+		</main>
+		<footer>
+			<ul class="demo-padded">
+				<li>
+					<a href="https://github.com/nateplusplus/pushin-js">GitHub Repo</a>
+				</li>
+			</ul>
+		</footer>
 		<script src="js/pushIn.js" type="text/javascript"></script>
 	</body>
 </html>

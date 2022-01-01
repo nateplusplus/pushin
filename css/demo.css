@@ -1,0 +1,99 @@
+/*
+
+PushIn.js - Demo CSS
+=========
+
+CSS document for working sample. This CSS is not required
+to use this plugin on your code.
+
+*/
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 1000%;
+    font: 100%/1 'Arial', sans-serif
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+h1 {
+    margin-bottom: 1em;
+}
+
+.demo-scroller {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    top: 0;
+    left: 0;
+}
+
+.demo-text-box {
+    position: absolute;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    padding: 2em;
+    font-size: 3em;
+    font-weight: 700;
+}
+
+.demo-scroller {
+    background-color: rgba( 0,0,0,0.2 );
+}
+
+.demo-layer-1-text {
+    top: 220px;
+    left: 10%;
+    background-color: rgb(181, 247, 247);
+}
+
+.demo-layer-2-text {
+    top: 300px;
+    right: 10%;
+    background-color: rgb(243, 204, 154);
+}
+
+.demo-padded {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+@media (min-width: 768px) {
+    .demo-padded {
+        padding: 15px 60px;
+    }
+}
+
+.demo-header {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background-color: white;
+}
+
+footer {
+    position: fixed;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    background-color: lightgray;
+}
+
+footer ul {
+    padding: 0;
+    list-style: none;
+}
