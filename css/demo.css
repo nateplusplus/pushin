@@ -42,9 +42,15 @@ h1 {
     justify-content: center;
     align-items: center;
     border-radius: 15px;
-    padding: 2em;
+    padding: 1em;
     font-size: 3em;
     font-weight: 700;
+}
+
+@media ( min-width: 768px ) {
+    .demo-text-box {
+        padding: 2em;
+    }
 }
 
 .demo-scroller {
@@ -52,15 +58,26 @@ h1 {
 }
 
 .demo-layer-1-text {
-    top: 220px;
-    left: 10%;
+    top: 300px;
+    left: 0;
     background-color: rgb(181, 247, 247);
+    max-width: 300px;
+}
+
+@media ( min-width: 768px ) {
+    .demo-layer-1-text {
+        left: 10%;
+        top: 220px;
+        max-width: 400px;
+    }
 }
 
 .demo-layer-2-text {
-    top: 300px;
-    right: 10%;
+    top: 15%;
+    right: 3%;
     background-color: rgb(243, 204, 154);
+    transform: scale(0.5);
+    max-width: 600px;
 }
 
 .demo-padded {

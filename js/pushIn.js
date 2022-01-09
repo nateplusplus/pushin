@@ -30,6 +30,22 @@
 }());
 
 /**
+ * Helper function: Set up and start push-in effect on all elements
+ * matching the provided selector.
+ *
+ * @param { string } selector
+ */
+function pushInStart( selector ) {
+	document.addEventListener('DOMContentLoaded', function () {
+		var elements = document.querySelectorAll(selector);
+
+		for (var i = 0; i < elements.length; i++) {
+			new pushIn( elements[i] ).start();
+		}
+	});
+}
+
+/**
  * PushIn object
  *
  * Once new object is created, it will initialize itself and
@@ -38,12 +54,10 @@
 var pushIn = function ( parent ) {
 	this.touchStart;
 	this.scrollEnd;
-	this.scaleArray = [];
+	this.layers = [];
 	this.scrollPos = 0;
 
-	this.parent = parent;
-
-	this.init();
+	this.parent = parent || null;
 }
 
 /**
@@ -54,46 +68,70 @@ pushIn.prototype = {
 	/**
 	 * Initialize the object to start everything up.
 	 */
-	init: function () {
-		this.bindEvents();
+	start: function () {
+		if ( this.parent ) {
+			this.scrollPos = window.pageYOffset;
+			this.getLayers();
+			this.bindEvents();
+		} else {
+			console.error( 'No parent element provided to pushIn.js. Effect will not be applied.' );
+		}
+	},
+
+	/**
+	 * Find all layers on the page and store them with their parameters
+	 */
+	 getLayers: function () {
+		var layers = this.parent.getElementsByClassName('layer');
+		if ( layers ) {
+			for (var i = 0; i < layers.length; i++) {
+				var elem = layers[i];
+	
+				var inpoint  = elem.dataset.hasOwnProperty( 'pushinFrom' ) ? elem.dataset.pushinFrom : null;
+				var outpoint = elem.dataset.hasOwnProperty( 'pushinTo' ) ? elem.dataset.pushinTo : null;
+				var speed    = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
+	
+				var top = this.parent.getBoundingClientRect().top;
+				if ( this.parent.dataset.hasOwnProperty('pushinFrom') ) {
+					top = this.parent.dataset.pushinFrom;
+				}
+	
+				var bottom = this.parent.getBoundingClientRect().bottom;
+				if ( this.parent.dataset.hasOwnProperty('pushinTo') ) {
+					bottom = this.parent.dataset.pushinTo;
+				}
+
+				layer = {
+					elem : elem,
+					index: i,
+					originalScale: this.getElementScaleX( elem ),
+					params: {
+						inpoint  : (inpoint || top),
+						outpoint : (outpoint || bottom),
+						speed    : (speed || 8)
+					}
+				};
+
+				this.layers.push( layer );
+				this.setZIndex( layer, layers.length );
+			}
+		}
+	},
+
+	/**
+	 * Set the z-index of each layer so they overlap correctly.
+	 *
+	 * @param {object} layer
+	 * @param {int} total
+	 */
+	setZIndex( layer, total ) {
+		layer.elem.style.zIndex = total - layer.index;
 	},
 
 	/**
 	 * Bind event listeners to watch for page load and user interaction.
 	 */
 	bindEvents: function () {
-		this.layers    = this.parent.getElementsByClassName('layer');
-		this.scrollPos = window.pageYOffset;
-
-		// Find all layers on the page and store them with their parameters
-		for (var i = 0; i < this.layers.length; i++) {
-			var params = [];
-			if (this.layers[i].getAttribute('data-params')) {
-				params = this.layers[i].getAttribute('data-params').split(',');
-			}
-
-			var top = this.parent.getBoundingClientRect().top;
-			if ( this.parent.dataset.hasOwnProperty('from') ) {
-				top = this.parent.dataset.from;
-			}
-
-			var bottom = this.parent.getBoundingClientRect().bottom;
-			if ( this.parent.dataset.hasOwnProperty('to') ) {
-				bottom = this.parent.dataset.to;
-			}
-
-			this.scaleArray.push({
-				elem : this.layers[i],
-				index: i,
-				originalScale: this.getElementScaleX( this.layers[i] ),
-				params: {
-					inpoint  : (params[0] || top),
-					outpoint : (params[1] || bottom),
-					speed    : (params[2] || 200)
-				}
-			});
-		}
-
 		window.addEventListener("scroll", function (event) {
 			this.scrollPos = window.pageYOffset;
 			this.dolly();
@@ -125,14 +163,16 @@ pushIn.prototype = {
 	 * @return {Number} scaleX
 	 */
 	getElementScaleX: function (elem) {
-		var transform = /matrix\([^\)]+\)/.exec(
-				window.getComputedStyle(elem)['-webkit-transform']),
-			scaleX = 1;
-		if (transform) {
-			transform = transform[0].replace(
-				'matrix(', '').replace(')', '').split(', ');
-			scaleX = parseFloat(transform[0]);
+		var scaleX    = 1;
+		var transform = elem.style.transform;
+
+		if ( transform ) {
+			var match = transform.match( /scale\((\d+)/ );
+			if ( match[1] ) {
+				scaleX = parseFloat(match[1]);
+			}
 		}
+
 		return scaleX;
 	},
 
@@ -141,11 +181,11 @@ pushIn.prototype = {
 	 */
 	dolly: function () {
 		requestAnimationFrame(function () {
-			this.scaleArray.forEach( function( layer ) {
+			this.layers.forEach( function( layer ) {
 				if ( this.isActive( layer ) ) {
 					layer.elem.classList.remove('hide');
 					this.setScale( layer.elem, this.getScaleValue( layer ) );
-				} else if( ! this.isVisible( layer ) ) {
+				} else if ( this.shouldHide( layer ) ) {
 					layer.elem.classList.add('hide');
 				}
 			}.bind(this));
@@ -163,31 +203,39 @@ pushIn.prototype = {
 	},
 
 	/**
-	 * Whether or not a layer should be visible
+	 * Whether or not a layer should be hidden
 	 *
 	 * @param {Object} layer 
 	 * @returns Boolean
 	 */
-	isVisible: function( layer ) {
-		var isVisible = false;
-		if ( layer.index === 0 && this.scrollPos < layer.params.inpoint ) {
-			// If this is the first layer and  we have scrolled past the top of the parent, it should be visible
-			isVisible = true;
-		} else if ( layer.index === this.layers.length && this.scrollPos > layer.params.outpoint ) {
+	shouldHide: function( layer ) {
+		var hide = true;
+		var isFirst = layer.index === 0;
+		var isLast = layer.index + 1 === this.layers.length;
+
+		if ( isFirst && this.scrollPos < layer.params.inpoint ) {
+			hide = false;
+		} else if ( isLast && this.scrollPos > layer.params.outpoint ) {
 			// If this is the last layer and we have scrolled past the bottom of the parent, it should be visible
-			isVisible = true;
+			hide = false;
+		} else if ( ! isFirst && ! isLast & this.isActive( layer )) {
+			hide = false;
 		}
-		return isVisible;
+		return hide;
 	},
 
 	/**
 	 * Get the scaleX value for the layer.
 	 *
 	 * @param {Object} layer 
-	 * @returns 
+	 * @return {Number}
 	 */
 	getScaleValue: function(layer) {
-		return layer.originalScale + ((this.scrollPos - layer.params.inpoint) / layer.params.speed);
+		var distance = this.scrollPos - layer.params.inpoint;
+		var speed    = Math.min( layer.params.speed, 100 ) / 100;
+		var delta    = ( distance * speed ) / 100;
+
+		return Math.max( layer.originalScale + delta, 0 );
 	},
 
 	/**
@@ -206,10 +254,8 @@ pushIn.prototype = {
 	}
 };
 
-document.addEventListener('DOMContentLoaded', function () {
-	var parents = document.getElementsByClassName('push-in');
 
-	for (var i = 0; i < parents.length; i++) {
-		new pushIn( parents[i] );
-	}
-});
+// Export for mocha unit tests
+if ( typeof exports !== 'undefined' ) {
+	exports.pushIn = pushIn;
+}
