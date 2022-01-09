@@ -70,6 +70,7 @@ pushIn.prototype = {
 	 */
 	start: function () {
 		if ( this.parent ) {
+			this.appendStyles();
 			this.scrollPos = window.pageYOffset;
 			this.getLayers();
 			this.bindEvents();
@@ -163,15 +164,17 @@ pushIn.prototype = {
 	 * @return {Number} scaleX
 	 */
 	getElementScaleX: function (elem) {
-		var scaleX    = 1;
-		var transform = elem.style.transform;
+		var transform = window.getComputedStyle( elem ).getPropertyValue( 'transform' );
 
-		if ( transform ) {
-			var match = transform.match( /scale\((\d+)/ );
-			if ( match[1] ) {
-				scaleX = parseFloat(match[1]);
+		var scaleX = 1;
+		if ( transform && transform !== 'none' ) {
+			var match = transform.match( /[matrix|scale]\(([\d,\.\s]+)/ );
+			if ( match && match[1] ) {
+				var matrix = match[1].split( ', ' );
+				scaleX = parseFloat(matrix[0]);
 			}
 		}
+
 
 		return scaleX;
 	},
@@ -251,7 +254,22 @@ pushIn.prototype = {
 		elem.style.msTransform = scaleString;
 		elem.style.oTransform = scaleString;
 		elem.style.transform = scaleString;
+	},
+
+	/**
+	 * Add a few simple CSS styles to the page for functionality.
+	 */
+	appendStyles: function() {
+		var stylesheet = document.getElementById( 'pushinStyles' );
+		if ( ! stylesheet ) {
+			stylesheet = document.createElement( 'style' );
+			stylesheet.id = 'pushinStyles';
+			stylesheet.innerText = ".hide{ opacity: 0 !important; } .layer { width: 100%; height: 100%; transition: opacity 1000ms ease; position: fixed; }";
+
+			document.head.appendChild( stylesheet )
+		}
 	}
+
 };
 
 
