@@ -16,7 +16,7 @@ describe( 'setScale', function() {
         global.window   = dom.window;
         global.document = window.document;
 
-        pushIn = require( '../js/pushIn' ).pushIn;
+        pushIn = require( '../src/index' ).pushIn;
     });
 
     it( 'should set element scale value', function() {

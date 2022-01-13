@@ -11,7 +11,7 @@ describe( 'isActive', function() {
         global.window   = dom.window;
         global.document = window.document;
 
-        pushIn = require( '../js/pushIn' ).pushIn;
+        pushIn = require( '../src/index' ).pushIn;
 
         this.layer = {
             params : {
