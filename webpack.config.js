@@ -14,7 +14,7 @@ module.exports = {
                     copy: [
                         {
                             source: path.join(__dirname, 'dist'),
-                            destination: path.join(__dirname, 'demo')
+                            destination: path.join(__dirname, 'docs')
                         }
                     ]
                 }]
