@@ -29,6 +29,7 @@
   "homepage": "http://nateplusplus.github.io/pushIn-js/",
   "devDependencies": {
     "chai": "^4.3.4",
+    "filemanager-webpack-plugin": "^6.1.7",
     "jsdom": "^19.0.0",
     "mocha": "^9.1.3",
     "path": "^0.12.7",
