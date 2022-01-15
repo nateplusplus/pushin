@@ -5,6 +5,7 @@ pushIn.js
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 ![Maintainer](https://img.shields.io/badge/maintainer-nateplusplus-blue)
 [![GitHub license](https://img.shields.io/github/license/nateplusplus/pushin-js.svg)](https://github.com/nateplusplus/pushin-js/blob/main/LICENSE)
+[![Node.js CI](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml)
 
 
 PushIn.js is a lightweight parallax effect built in JavaScript, which simulates an interactive dolly-in or push-in animation on a webpage.
