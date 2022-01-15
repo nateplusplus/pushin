@@ -16,7 +16,7 @@ Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a workin
 
 ### 1. Download and include the JavaScript
 
-Download [dist/pushin.js](dist/pushin.js) and include it in your project. This one file will include all the functionality for the effect.
+Download [dist/pushin.min.js](dist/pushin.min.js) and include it in your project. This one file will include all the functionality for the effect.
 
 **Example:**
 ```html
