@@ -37,15 +37,15 @@ At the most basic level, there are a few things you need to set up on your page 
 
 First, you will need at least one parent element where the effect should be applied. It's helpful to have a unique selector for these parent elements so that you can target them easily.
 
-Inside that parent element, you'll also need to have one or more elements with the class name: `layer`. Each "layer" element will hold the content that grows or shinks to create the aninated push-in effect.
+Inside that parent element, you'll also need to have one or more elements with the class name: `pushin-layer`. Each "layer" element will hold the content that grows or shinks to create the aninated push-in effect.
 
 **Example:**
 ```html
 <div class="push-in">
-    <div class="layer">
+    <div class="pushin-layer">
         This is the first layer you'll see.
     </div>
-    <div class="layer">
+    <div class="pushin-layer">
         This is a second layer, which will be positioned behind the first one.
     </div>
 </div>

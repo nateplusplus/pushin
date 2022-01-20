@@ -68,6 +68,9 @@ class pushIn {
 			this.scrollPos = window.pageYOffset;
 			this.getLayers();
 			this.bindEvents();
+
+			// Set layer initial state
+			this.toggleLayers();
 		} else {
 			console.error( 'No parent element provided to pushIn.js. Effect will not be applied.' );
 		}
@@ -77,7 +80,7 @@ class pushIn {
 	 * Find all layers on the page and store them with their parameters
 	 */
 	 getLayers() {
-		const layers = this.parent.getElementsByClassName('layer');
+		const layers = this.parent.getElementsByClassName('pushin-layer');
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
 				const elem = layers[i];
@@ -178,14 +181,24 @@ class pushIn {
 	 */
 	dolly() {
 		requestAnimationFrame(function () {
-			this.layers.forEach( function( layer ) {
+			this.toggleLayers();
+		}.bind(this));
+	}
+
+	/**
+	 * Show or hide layers and set their scale, depending on if active.
+	 */
+	toggleLayers() {
+		this.layers.forEach( function( layer ) {
+			if ( ! this.shouldHide( layer ) ) {
+				layer.elem.classList.add('pushin-active');
+
 				if ( this.isActive( layer ) ) {
-					layer.elem.classList.remove('hide');
 					this.setScale( layer.elem, this.getScaleValue( layer ) );
-				} else if ( this.shouldHide( layer ) ) {
-					layer.elem.classList.add('hide');
 				}
-			}.bind(this));
+			} else {
+				layer.elem.classList.remove('pushin-active');
+			}
 		}.bind(this));
 	}
 
