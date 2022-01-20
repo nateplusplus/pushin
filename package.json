@@ -5,7 +5,7 @@
   "main": "js/pushin.js",
   "scripts": {
     "build": "webpack",
-    "start": "open demo/index.html -a 'Google Chrome' && webpack --watch",
+    "start": "open docs/index.html -a 'Google Chrome' && webpack --watch",
     "test": "mocha --watch",
     "test:once": "mocha"
   },
