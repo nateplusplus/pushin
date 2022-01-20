@@ -16,12 +16,13 @@ Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a workin
 
 ### 1. Download and include the JavaScript
 
-Download [dist/pushin.min.js](dist/pushin.min.js) and include it in your project. This one file will include all the functionality for the effect.
+Download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
 
 **Example:**
 ```html
 <html>
     <head>
+        <link rel='stylesheet' href='pushin.min.css'>
         <script type="text/javascript" src="pushin.js">
     </head>
     <body>

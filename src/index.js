@@ -1,3 +1,5 @@
+require( './style.css' );
+
 /**
  * requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
  * MIT license
@@ -63,7 +65,6 @@ class pushIn {
 	 */
 	 start() {
 		if ( this.parent ) {
-			this.appendStyles();
 			this.scrollPos = window.pageYOffset;
 			this.getLayers();
 			this.bindEvents();
@@ -248,20 +249,6 @@ class pushIn {
 		elem.style.msTransform = scaleString;
 		elem.style.oTransform = scaleString;
 		elem.style.transform = scaleString;
-	}
-
-	/**
-	 * Add a few simple CSS styles to the page for functionality.
-	 */
-	appendStyles() {
-		let stylesheet = document.getElementById( 'pushinStyles' );
-		if ( ! stylesheet ) {
-			stylesheet = document.createElement( 'style' );
-			stylesheet.id = 'pushinStyles';
-			stylesheet.innerText = ".hide{ opacity: 0 !important; } .layer { width: 100%; height: 100%; transition: opacity 1000ms ease; position: fixed; }";
-
-			document.head.appendChild( stylesheet )
-		}
 	}
 }
 

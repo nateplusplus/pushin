@@ -1,0 +1,10 @@
+.hide {
+    opacity: 0 !important;
+}
+
+.layer {
+    width: 100%;
+    height: 100%;
+    transition: opacity 1000ms ease;
+    position: fixed;
+}
