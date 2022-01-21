@@ -5,7 +5,7 @@
   "main": "js/pushin.js",
   "scripts": {
     "build": "webpack",
-    "start": "open docs/index.html -a 'Google Chrome' && webpack --watch",
+    "start": "webpack serve",
     "test": "mocha --watch",
     "test:once": "mocha"
   },
@@ -39,6 +39,7 @@
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.0",
     "webpack": "^5.66.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
   }
 }

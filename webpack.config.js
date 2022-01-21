@@ -9,6 +9,13 @@ const PACKAGE = require('./package.json');
 
 module.exports = {
     mode: 'production',
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'docs'),
+        },
+        compress: true,
+        port: 8080,
+    },
     output: {
         path: path.resolve( __dirname, 'dist' ),
         filename: 'pushin.min.js',
