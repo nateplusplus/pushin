@@ -8,7 +8,7 @@ pushIn.js
 [![Node.js CI](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml)
 
 
-PushIn.js is a lightweight parallax effect built in JavaScript, which simulates an interactive dolly-in or push-in animation on a webpage.
+PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 
 Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a working example.
 
