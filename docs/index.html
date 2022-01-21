@@ -5,6 +5,7 @@
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<title>PushIn JS</title>
 		<link rel='stylesheet' href='demo.css'>
+		<link rel='stylesheet' href='pushin.min.css'>
 		<script src="pushin.min.js" type="text/javascript"></script>
 	</head>
 	<body>
@@ -12,28 +13,28 @@
 			<div class="demo-padded">
 				<h1>PushIn.js</h1>
 				<p class="demo-subhead">
-					PushIn.js is a plugin which can be attached to any div element to simulate a dolly-in or push-in effect.
+					PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 				</p>
 			</div>
 		</header>
 		<main>
 			<section class="demo-scroller push-in">
-				<div class="layer demo-layer-1" data-pushin-from="200" data-pushin-to="500">
+				<div class="pushin-layer demo-layer-1" data-pushin-from="200" data-pushin-to="1000">
 					<div class="demo-text-box demo-layer-1-text">
 						Scroll to push in
 					</div>
 				</div>
-				<div class="layer demo-layer-2 hide" data-pushin-from="300" data-pushin-to="2000" data-pushin-speed="25">
+				<div class="pushin-layer demo-layer-2" data-pushin-from="700" data-pushin-to="2500">
 					<div class="demo-text-box demo-layer-2-text">
 						Each layer can come into view at different times.
 					</div>
 				</div>
-				<div class="layer demo-layer-3 hide" data-pushin-from="1500" data-pushin-to="3000">
+				<div class="pushin-layer demo-layer-3" data-pushin-from="1500" data-pushin-to="3000">
 					<div class="demo-text-box demo-layer-3-text">
 						Use HTML data-attributes to control the timing and speed of each layer.
 					</div>
 				</div>
-				<div class="layer demo-layer-end hide" data-pushin-from="2000" data-pushin-to="6000">
+				<div class="pushin-layer demo-layer-end" data-pushin-from="2000" data-pushin-to="6000" data-pushin-speed="25">
 					<div class="demo-text-box demo-layer-end-text">
 						PushIn.js
 					</div>

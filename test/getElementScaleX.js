@@ -26,7 +26,7 @@ describe( 'getElementScaleX', function() {
         global.window   = dom.window;
         global.document = window.document;
 
-        pushIn = require( '../src/index' ).pushIn;
+        pushIn = require( '../src/pushin' ).pushIn;
     } );
 
     it( 'Should return default element scale if never altered', function() {

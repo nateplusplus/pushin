@@ -8,7 +8,7 @@ pushIn.js
 [![Node.js CI](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml)
 
 
-PushIn.js is a lightweight parallax effect built in JavaScript, which simulates an interactive dolly-in or push-in animation on a webpage.
+PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 
 Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a working example.
 
@@ -16,12 +16,13 @@ Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a workin
 
 ### 1. Download and include the JavaScript
 
-Download [dist/pushin.min.js](dist/pushin.min.js) and include it in your project. This one file will include all the functionality for the effect.
+Download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
 
 **Example:**
 ```html
 <html>
     <head>
+        <link rel='stylesheet' href='pushin.min.css'>
         <script type="text/javascript" src="pushin.js">
     </head>
     <body>
@@ -36,15 +37,15 @@ At the most basic level, there are a few things you need to set up on your page 
 
 First, you will need at least one parent element where the effect should be applied. It's helpful to have a unique selector for these parent elements so that you can target them easily.
 
-Inside that parent element, you'll also need to have one or more elements with the class name: `layer`. Each "layer" element will hold the content that grows or shinks to create the aninated push-in effect.
+Inside that parent element, you'll also need to have one or more elements with the class name: `pushin-layer`. Each "layer" element will hold the content that grows or shinks to create the aninated push-in effect.
 
 **Example:**
 ```html
 <div class="push-in">
-    <div class="layer">
+    <div class="pushin-layer">
         This is the first layer you'll see.
     </div>
-    <div class="layer">
+    <div class="pushin-layer">
         This is a second layer, which will be positioned behind the first one.
     </div>
 </div>
@@ -115,3 +116,11 @@ A numerical value representing how fast or slow the element should move when scr
 ## Contributing
 
 I appreciate and welcome any contributions to this project. Please submit an issue if you find a bug or need help.
+
+### Development Setup
+
+1. Clone this repo
+2. Run `npm ci` to install all dependencies
+3. Run `npm start` to start up development environment
+
+The `npm start` command will compile all code and begin running a node server at [localhost:8080](). The page will automatically refresh whenever you make a change to the source code.
