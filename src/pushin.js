@@ -180,7 +180,7 @@ class pushIn {
 		} else if ( isLast && this.scrollPos > layer.params.outpoint ) {
 			// If this is the last layer and we have scrolled past the bottom of the parent, it should be visible
 			hide = false;
-		} else if ( ! isFirst && ! isLast & this.isActive( layer )) {
+		} else if ( this.isActive( layer ) ) {
 			hide = false;
 		}
 		return hide;

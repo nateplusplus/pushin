@@ -1,3 +1,5 @@
+const pushIn = require( './pushin' ).pushIn;
+
 /**
  * Helper function: Set up and start push-in effect on all elements
  * matching the provided selector.

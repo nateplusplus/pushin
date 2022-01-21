@@ -1,5 +1,4 @@
 require( './style.css' );
-require( './pushin' );
 require( './helpers' );
 
 /**
