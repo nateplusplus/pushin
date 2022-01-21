@@ -116,3 +116,11 @@ A numerical value representing how fast or slow the element should move when scr
 ## Contributing
 
 I appreciate and welcome any contributions to this project. Please submit an issue if you find a bug or need help.
+
+### Development Setup
+
+1. Clone this repo
+2. Run `npm ci` to install all dependencies
+3. Run `npm start` to start up development environment
+
+The `npm start` command will compile all code and begin running a node server at [localhost:8080](). The page will automatically refresh whenever you make a change to the source code.
