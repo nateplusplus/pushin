@@ -29,7 +29,7 @@ describe( 'getScaleValue', function() {
         global.window   = dom.window;
         global.document = window.document;
 
-        pushIn = require( '../src/index' ).pushIn;
+        pushIn = require( '../src/pushin' ).pushIn;
     } );
 
     it( 'should return original scale if scroll position and inpoint are the same', function() {

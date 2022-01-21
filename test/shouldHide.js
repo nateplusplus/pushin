@@ -35,7 +35,7 @@ describe( 'shouldHide', function() {
         global.window   = dom.window;
         global.document = window.document;
 
-        pushIn = require( '../src/index' ).pushIn;
+        pushIn = require( '../src/pushin' ).pushIn;
     } );
 
     it( 'should return false if it is the first layer and window top is above inpoint', function() {
