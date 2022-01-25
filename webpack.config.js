@@ -9,6 +9,7 @@ const PACKAGE = require('./package.json');
 
 module.exports = {
     mode: 'production',
+    target: 'browserslist',
     devServer: {
         static: {
             directory: path.join(__dirname, 'docs'),
@@ -55,6 +56,16 @@ module.exports = {
                 test: /\.css$/i,
                 use: [ MiniCssExtractPlugin.loader, "css-loader" ],
             },
+            {
+                test: /\.m?js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            }
         ]
     }
 };
