@@ -12,6 +12,9 @@ PushIn.js is a lightweight parallax effect, built with JavaScript, that simulate
 
 Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a working example.
 
+## Compatibility
+PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+
 ## Getting started
 
 ### 1. Download and include the JavaScript
