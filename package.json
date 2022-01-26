@@ -1,7 +1,7 @@
 {
   "name": "pushin",
   "description": "A javascript plugin to attach a 'dolly' or 'push-in' effect to a div element when user scrolls.",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "main": "js/pushin.js",
   "scripts": {
     "build": "webpack",
