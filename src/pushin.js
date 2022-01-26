@@ -140,17 +140,7 @@ class pushIn {
 	 * Show or hide layers and set their scale, depending on if active.
 	 */
 	toggleLayers() {
-		this.layers.forEach( function( layer ) {
-			if ( ! this.shouldHide( layer ) ) {
-				layer.elem.classList.add('pushin-active');
-
-				if ( this.isActive( layer ) ) {
-					this.setScale( layer.elem, this.getScaleValue( layer ) );
-				}
-			} else {
-				layer.elem.classList.remove('pushin-active');
-			}
-		}.bind(this));
+		this.layers.forEach( layer => this.setLayerStyle( layer ) );
 	}
 
 	/**
@@ -161,29 +151,6 @@ class pushIn {
 	 */
 	isActive( layer ) {
 		return this.scrollPos >= layer.params.inpoint && this.scrollPos <= layer.params.outpoint;
-	}
-
-	/**
-	 * Whether or not a layer should be hidden
-	 *
-	 * @param {Object} layer 
-	 * @returns Boolean
-	 */
-	shouldHide( layer ) {
-		let hide = true;
-
-		const isFirst = layer.index === 0;
-		const isLast  = layer.index + 1 === this.layers.length;
-
-		if ( isFirst && this.scrollPos < layer.params.inpoint ) {
-			hide = false;
-		} else if ( isLast && this.scrollPos > layer.params.outpoint ) {
-			// If this is the last layer and we have scrolled past the bottom of the parent, it should be visible
-			hide = false;
-		} else if ( this.isActive( layer ) ) {
-			hide = false;
-		}
-		return hide;
 	}
 
 	/**
@@ -213,6 +180,34 @@ class pushIn {
 		elem.style.msTransform = scaleString;
 		elem.style.oTransform = scaleString;
 		elem.style.transform = scaleString;
+	}
+
+	setLayerStyle( layer ) {
+		let opacity = 0;
+		const isFirst = layer.index === 0;
+		const isLast  = layer.index + 1 === this.layers.length;
+
+		if ( isFirst && this.scrollPos < layer.params.inpoint ) {
+			opacity = 1;
+		} else if ( isLast && this.scrollPos > layer.params.outpoint ) {
+			opacity = 1;
+		} else if ( this.isActive( layer ) ) {
+			this.setScale( layer.elem, this.getScaleValue( layer ) );
+
+			let inpointDistance = Math.max( Math.min( this.scrollPos - layer.params.inpoint, 200 ), 0) / 200;
+			if ( isFirst ) {
+				inpointDistance = 1;
+			}
+
+			let outpointDistance = Math.max( Math.min( layer.params.outpoint - this.scrollPos, 200 ), 0) / 200;
+			if ( isLast ) {
+				outpointDistance = 1;
+			}
+
+			opacity = Math.min( inpointDistance, outpointDistance );
+		}
+
+		layer.elem.style.opacity = opacity;
 	}
 }
 
