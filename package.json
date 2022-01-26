@@ -28,6 +28,9 @@
   },
   "homepage": "http://nateplusplus.github.io/pushIn-js/",
   "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.3",
     "chai": "^4.3.4",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.4.1",
