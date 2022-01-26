@@ -40,14 +40,24 @@ class pushIn {
 				const outpoint = elem.dataset.hasOwnProperty( 'pushinTo' ) ? elem.dataset.pushinTo : null;
 				const speed    = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
 	
+				// Default for first layers
 				let top = this.parent.getBoundingClientRect().top;
 				if ( this.parent.dataset.hasOwnProperty('pushinFrom') ) {
+					// custom inpoint
 					top = this.parent.dataset.pushinFrom;
+				} else if ( i > 0 ) {
+					// Set default for middle layers
+					top = this.layers[ i - 1 ].params.outpoint - 100;
 				}
-	
+
+				// Default for last layers
 				let bottom = this.parent.getBoundingClientRect().bottom;
 				if ( this.parent.dataset.hasOwnProperty('pushinTo') ) {
+					// custom outpoint
 					bottom = this.parent.dataset.pushinTo;
+				} else if ( i > 0 ) {
+					// Set default for middle layers
+					bottom = top + 1000;
 				}
 
 				const layer = {
@@ -65,6 +75,8 @@ class pushIn {
 				this.setZIndex( layer, layers.length );
 			}
 		}
+
+		console.log( this.layers )
 	}
 
 	/**
