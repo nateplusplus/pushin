@@ -1,11 +1,6 @@
 .pushin-layer {
     width: 100%;
     height: 100%;
-    /* opacity: 0; */
     position: fixed;
-    /* transition: opacity 1000ms ease; */
+    opacity: 0;
 }
-
-/* .pushin-layer.pushin-active {
-    opacity: 1;
-} */
