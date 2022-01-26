@@ -26,7 +26,7 @@ Download the CSS and JavaScript files from this repo: [dist/](dist/) and include
 <html>
     <head>
         <link rel='stylesheet' href='pushin.min.css'>
-        <script type="text/javascript" src="pushin.js">
+        <script type="text/javascript" src="pushin.min.js">
     </head>
     <body>
         <!-- page content... -->
