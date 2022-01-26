@@ -75,8 +75,6 @@ class pushIn {
 				this.setZIndex( layer, layers.length );
 			}
 		}
-
-		console.log( this.layers )
 	}
 
 	/**
