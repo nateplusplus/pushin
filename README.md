@@ -19,7 +19,13 @@ PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io
 
 ### 1. Download and include the JavaScript
 
-Download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
+If you're using npm, you can install the package by running:
+
+```bash
+npm install --save pushin
+```
+
+If you're not using npm, just download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
 
 **Example:**
 ```html

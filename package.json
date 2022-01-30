@@ -22,7 +22,7 @@
     "effect"
   ],
   "author": "Nathan Blair <nate@natehub.net> (https://natehub.net)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/nateplusplus/pushIn-js/issues"
   },
