@@ -17,13 +17,24 @@ PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io
 
 ## Getting started
 
-### 1. Download and include the JavaScript
+### 1a. Install pushin with NPM
 
 If you're using npm, you can install the package by running:
 
 ```bash
 npm install --save pushin
 ```
+
+Then, in your Javascript, require the assets:
+
+```js
+const pushin = require('pushin');
+const css = require('pushin/dist/pushin.min.css');
+```
+
+* _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
+
+### 1b. Manually download and include the JavaScript and CSS
 
 If you're not using npm, just download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
 
@@ -32,7 +43,7 @@ If you're not using npm, just download the CSS and JavaScript files from this re
 <html>
     <head>
         <link rel='stylesheet' href='pushin.min.css'>
-        <script type="text/javascript" src="pushin.min.js">
+        <script type="text/javascript" src="pushin.min.js"></script>
     </head>
     <body>
         <!-- page content... -->
