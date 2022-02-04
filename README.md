@@ -61,7 +61,7 @@ Inside that parent element, you'll also need to have one or more elements with t
 
 **Example:**
 ```html
-<div class="push-in">
+<div class="pushin">
     <div class="pushin-layer">
         This is the first layer you'll see.
     </div>
@@ -79,14 +79,14 @@ Once you have your HTML set up, you just need to call the `pushInStart()` functi
 
 **Example:**
 ```html
-    <div class="push-in">
-        <div class="layer">
+    <div class="pushin">
+        <div class="pushin-layer">
             <!-- layer content... -->
         </div>
     </div>
     <script type="text/javascript">
-        // initialize push-in effect on the .push-in parent element
-        pushInStart( '.push-in' );
+        // initialize push-in effect on the .pushin parent element
+        pushInStart( '.pushin' );
     </script>
 </body>
 ```

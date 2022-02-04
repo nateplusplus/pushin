@@ -14,7 +14,6 @@ module.exports = {
         static: {
             directory: path.join(__dirname, 'docs'),
         },
-        compress: true,
         port: 8080,
     },
     output: {

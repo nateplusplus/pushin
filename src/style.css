@@ -1,6 +1,14 @@
-.pushin-layer {
-    width: 100%;
-    height: 100%;
+.pushin {
+    height: 100vh;
     position: fixed;
+    width: 100%;
+}
+.pushin-layer {
+    align-items: center;
+    display:flex;
+    height: 100%;
+    justify-content: center;
     opacity: 0;
+    position: fixed;
+    width: 100%;
 }
