@@ -26,6 +26,14 @@ h1 {
     margin-bottom: 1em;
 }
 
+p {
+    margin-bottom: 0.8em;
+}
+
+ul {
+    margin-top: 1.2em;
+}
+
 .demo-scroller {
     position: fixed;
     width: 100%;
