@@ -8,12 +8,7 @@ to use this plugin on your code.
 
 */
 
-html {
-	height: 100%;
-}
-
 body {
-	height: 1000%;
     font: 100%/1 'Arial', sans-serif
 }
 
@@ -35,12 +30,10 @@ ul {
 }
 
 .demo-scroller {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    z-index: -1;
-    top: 0;
+    background-color: rgba( 0,0,0,0.2 );
     left: 0;
+    top: 0;
+    z-index: -1;
 }
 
 .demo-text-box {
@@ -59,10 +52,6 @@ ul {
     .demo-text-box {
         padding: 2em;
     }
-}
-
-.demo-scroller {
-    background-color: rgba( 0,0,0,0.2 );
 }
 
 .demo-padded {

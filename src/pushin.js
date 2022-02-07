@@ -6,18 +6,19 @@
  */
 class pushIn {
 
-	constructor( parent ) {
+	constructor( scene ) {
 		this.layers = [];
-		this.parent = parent || null;
+		this.scene = scene || null;
 	}
 
 	/**
 	 * Initialize the object to start everything up.
 	 */
 	 start() {
-		if ( this.parent ) {
+		if ( this.scene ) {
 			this.scrollPos = window.pageYOffset;
 			this.getLayers();
+			this.setScrollLength();
 			this.bindEvents();
 
 			// Set layer initial state
@@ -31,7 +32,7 @@ class pushIn {
 	 * Find all layers on the page and store them with their parameters
 	 */
 	 getLayers() {
-		const layers = this.parent.getElementsByClassName('pushin-layer');
+		const layers = this.scene.getElementsByClassName('pushin-layer');
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
 				const elem = layers[i];
@@ -41,20 +42,20 @@ class pushIn {
 				const speed    = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
 	
 				// Default for first layers
-				let top = this.parent.getBoundingClientRect().top;
-				if ( this.parent.dataset.hasOwnProperty('pushinFrom') ) {
+				let top = this.scene.getBoundingClientRect().top;
+				if ( this.scene.dataset.hasOwnProperty('pushinFrom') ) {
 					// custom inpoint
-					top = this.parent.dataset.pushinFrom;
+					top = this.scene.dataset.pushinFrom;
 				} else if ( i > 0 ) {
 					// Set default for middle layers
 					top = this.layers[ i - 1 ].params.outpoint - 100;
 				}
 
 				// Default for last layers
-				let bottom = this.parent.getBoundingClientRect().bottom;
-				if ( this.parent.dataset.hasOwnProperty('pushinTo') ) {
+				let bottom = this.scene.getBoundingClientRect().bottom;
+				if ( this.scene.dataset.hasOwnProperty('pushinTo') ) {
 					// custom outpoint
-					bottom = this.parent.dataset.pushinTo;
+					bottom = this.scene.dataset.pushinTo;
 				} else if ( i > 0 ) {
 					// Set default for middle layers
 					bottom = top + 1000;
@@ -192,8 +193,16 @@ class pushIn {
 		elem.style.transform = scaleString;
 	}
 
+	/**
+	 * Set CSS styles to control the effect on each layer.
+	 *
+	 * This will control the scale and opacity of the layer
+	 * as the user scrolls.
+	 *
+	 * @param Element layer    Layer element
+	 */
 	setLayerStyle( layer ) {
-		let opacity = 0;
+		let opacity   = 0;
 		const isFirst = layer.index === 0;
 		const isLast  = layer.index + 1 === this.layers.length;
 
@@ -218,6 +227,12 @@ class pushIn {
 		}
 
 		layer.elem.style.opacity = opacity;
+	}
+
+	setScrollLength() {
+		const parent = this.scene.parentElement;
+		const height = getComputedStyle( parent ).height.replace('px', '');
+		parent.style.height = Math.max( height, this.layers.length * ( screen.height + 100 ) ) + 'px';
 	}
 }
 
