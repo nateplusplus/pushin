@@ -1,7 +1,12 @@
 .pushin {
+    position: relative;
+}
+.pushin-scene {
     height: 100vh;
+    left: 0;
     position: fixed;
     width: 100%;
+    top: 0;
 }
 .pushin-layer {
     align-items: center;

@@ -62,11 +62,13 @@ Inside that parent element, you'll also need to have one or more elements with t
 **Example:**
 ```html
 <div class="pushin">
-    <div class="pushin-layer">
-        This is the first layer you'll see.
-    </div>
-    <div class="pushin-layer">
-        This is a second layer, which will be positioned behind the first one.
+    <div class="pushin-scene">
+        <div class="pushin-layer">
+            This is the first layer you'll see.
+        </div>
+        <div class="pushin-layer">
+            This is a second layer, which will be positioned behind the first one.
+        </div>
     </div>
 </div>
 ```
@@ -80,7 +82,7 @@ Once you have your HTML set up, you just need to call the `pushInStart()` functi
 **Example:**
 ```html
     <div class="pushin">
-        <div class="pushin-layer">
+        <div class="pushin-scene">
             <!-- layer content... -->
         </div>
     </div>
@@ -100,7 +102,7 @@ By default, all layers will push in at once. You can configure each layer to ent
 The point at which the layer **should be visible** and at its **smallest scale** (beginning of the push-in effect). Expects a numerical value, representing the pageYOffset – the top of the viewport when scrolling.
 
 ```html
-<div class="layer" data-pushin-from="300">
+<div class="pushin-layer" data-pushin-from="300">
     <!--
     This layer will be active when the window top
     scrolls 300px below the top of the page.
@@ -113,7 +115,7 @@ The point at which the layer **should be visible** and at its **smallest scale**
 The point at which the layer should **stop growing** and no longer be visible. Expects a numerical value, representing the pageYOffset – the top of the viewport when scrolling.
 
 ```html
-<div class="layer" data-pushin-to="600">
+<div class="pushin-layer" data-pushin-to="600">
     <!--
     This layer will no longer be active when the
     window top scrolls 600px below the top of the page.
@@ -126,7 +128,7 @@ The point at which the layer should **stop growing** and no longer be visible. E
 A numerical value representing how fast or slow the element should move when scrolling. Expects a numerical value. Default: 8.
 
 ```html
-<div class="layer" data-pushin-speed="25">
+<div class="pushin-layer" data-pushin-speed="25">
     <!--
     This layer will move faster than the default speed.
     -->

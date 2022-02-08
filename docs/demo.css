@@ -21,18 +21,34 @@ h1 {
     margin-bottom: 1em;
 }
 
+h2 {
+    margin-bottom: 0.8em;
+}
+
 p {
     margin-bottom: 0.8em;
+    line-height: 1.5;
 }
 
 ul {
     margin-top: 1.2em;
 }
 
+li {
+    margin-bottom: 0.65em;
+}
+
+section {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+main {
+    padding-bottom: 60px;
+}
+
 .demo-scroller {
     background-color: rgba( 0,0,0,0.2 );
-    left: 0;
-    top: 0;
     z-index: -1;
 }
 
@@ -178,4 +194,8 @@ footer img {
 
 .demo-layer-end-text {
     font-size: 1.75em;
+}
+
+.demo-bg-white {
+    background: white;
 }

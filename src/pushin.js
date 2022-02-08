@@ -6,16 +6,27 @@
  */
 class pushIn {
 
-	constructor( scene ) {
+	constructor( container ) {
 		this.layers = [];
-		this.scene = scene || null;
+		this.container = container;
 	}
 
 	/**
 	 * Initialize the object to start everything up.
 	 */
 	 start() {
-		if ( this.scene ) {
+		if ( this.container ) {
+			this.scene = this.container.querySelector('.pushin-scene');
+
+			if ( ! this.scene ) {
+				const innerHtml = this.container.innerHTML;
+				this.scene = document.createElement( 'div' );
+				this.scene.classList.add('pushin-scene');
+				this.scene.innerHTML = innerHtml;
+				this.container.innerHTML = '';
+				this.container.appendChild( this.scene );
+			}
+
 			this.scrollPos = window.pageYOffset;
 			this.getLayers();
 			this.setScrollLength();
@@ -24,7 +35,7 @@ class pushIn {
 			// Set layer initial state
 			this.toggleLayers();
 		} else {
-			console.error( 'No parent element provided to pushIn.js. Effect will not be applied.' );
+			console.error( 'No container element provided to pushIn.js. Effect will not be applied.' );
 		}
 	}
 
@@ -32,7 +43,7 @@ class pushIn {
 	 * Find all layers on the page and store them with their parameters
 	 */
 	 getLayers() {
-		const layers = this.scene.getElementsByClassName('pushin-layer');
+		const layers = this.container.getElementsByClassName('pushin-layer');
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
 				const elem = layers[i];
@@ -42,7 +53,7 @@ class pushIn {
 				const speed    = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
 	
 				// Default for first layers
-				let top = this.scene.getBoundingClientRect().top;
+				let top = this.container.getBoundingClientRect().top;
 				if ( this.scene.dataset.hasOwnProperty('pushinFrom') ) {
 					// custom inpoint
 					top = this.scene.dataset.pushinFrom;
@@ -52,7 +63,7 @@ class pushIn {
 				}
 
 				// Default for last layers
-				let bottom = this.scene.getBoundingClientRect().bottom;
+				let bottom = this.container.getBoundingClientRect().bottom;
 				if ( this.scene.dataset.hasOwnProperty('pushinTo') ) {
 					// custom outpoint
 					bottom = this.scene.dataset.pushinTo;
@@ -230,9 +241,8 @@ class pushIn {
 	}
 
 	setScrollLength() {
-		const parent = this.scene.parentElement;
-		const height = getComputedStyle( parent ).height.replace('px', '');
-		parent.style.height = Math.max( height, this.layers.length * ( screen.height + 100 ) ) + 'px';
+		const height = getComputedStyle( this.container ).height.replace('px', '');
+		this.container.style.height = Math.max( height, this.layers.length * ( screen.height + 100 ) ) + 'px';
 	}
 }
 
