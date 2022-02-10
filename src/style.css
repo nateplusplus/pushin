@@ -1,6 +1,19 @@
-.pushin-layer {
-    width: 100%;
-    height: 100%;
+.pushin {
+    position: relative;
+}
+.pushin-scene {
+    height: 100vh;
+    left: 0;
     position: fixed;
+    width: 100%;
+    top: 0;
+}
+.pushin-layer {
+    align-items: center;
+    display:flex;
+    height: 100%;
+    justify-content: center;
     opacity: 0;
+    position: fixed;
+    width: 100%;
 }

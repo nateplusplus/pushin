@@ -1,5 +1,4 @@
 const path = require( 'path' );
-const FileManagerPlugin = require('filemanager-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const webpack = require( 'webpack' );
@@ -14,7 +13,6 @@ module.exports = {
         static: {
             directory: path.join(__dirname, ''),
         },
-        compress: true,
         port: 8080,
     },
     output: {

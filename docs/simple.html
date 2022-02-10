@@ -8,40 +8,30 @@
 		<link rel='stylesheet' href='/pushin.min.css'>
 		<script src="/pushin.min.js" type="text/javascript"></script>
 		<style>
-			body {
+			/* body {
 				height: 4000px;
-			}
-
-			.push-in {
-				position: fixed;
-				width: 100%;
-				height: 100vh;
-			}
-
-			.pushin-layer {
-				display:flex;
-				align-items: center;
-				justify-content: center;
-			}
+			} */
 		</style>
 	</head>
 	<body>
-		<div class="push-in">
-			<div class="pushin-layer">
-				Layer 1
-			</div>
-			<div class="pushin-layer">
-				Layer 2
-			</div>
-			<div class="pushin-layer">
-				Layer 3
-			</div>
-			<div class="pushin-layer">
-				Layer 4
+		<div class="pushin">
+			<div class="pushin-scene">
+				<div class="pushin-layer">
+					This example demonstrates the simplest, zero-configuration setup for pushin.js.
+				</div>
+				<div class="pushin-layer">
+					These layers are added to the HTML without any parameters or extra CSS.
+				</div>
+				<div class="pushin-layer">
+					Pushin.js has configured the timing of this effect automatically to adjust for the number of layers.
+				</div>
+				<div class="pushin-layer">
+					The scroll length increases to accommodate all layers in an evenly-spaced animation.
+				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
-			pushInStart( '.push-in' );
+			pushInStart();
 		</script>
 	</body>
 </html>
