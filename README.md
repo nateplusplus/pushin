@@ -55,9 +55,7 @@ If you're not using npm, just download the CSS and JavaScript files from this re
 
 At the most basic level, there are a few things you need to set up on your page in order for this to work properly.
 
-First, you will need at least one parent element where the effect should be applied. It's helpful to have a unique selector for these parent elements so that you can target them easily.
-
-Inside that parent element, you'll also need to have one or more elements with the class name: `pushin-layer`. Each "layer" element will hold the content that grows or shinks to create the aninated push-in effect.
+Use the following example snippet to create a "scene" for the pushin effect.
 
 **Example:**
 ```html
@@ -73,6 +71,8 @@ Inside that parent element, you'll also need to have one or more elements with t
 </div>
 ```
 
+Each div with the class `pushin-layer` can hold the content that you want to grow or shrink when scrolling.
+
 ### 3. Initialize the effect
 
 Once you have your HTML set up, you just need to call the `pushInStart()` function, and give it the selector for your parent element.
@@ -87,8 +87,8 @@ Once you have your HTML set up, you just need to call the `pushInStart()` functi
         </div>
     </div>
     <script type="text/javascript">
-        // initialize push-in effect on the .pushin parent element
-        pushInStart( '.pushin' );
+        // initialize push-in effect
+        pushInStart();
     </script>
 </body>
 ```
