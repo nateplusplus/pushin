@@ -6,12 +6,12 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 const PACKAGE = require('./package.json');
 
-module.exports = {
+let config = {
     mode: 'production',
     target: 'browserslist',
     devServer: {
         static: {
-            directory: path.join(__dirname, ''),
+            directory: path.join(__dirname, 'docs'),
         },
         port: 8080,
     },
@@ -54,4 +54,15 @@ module.exports = {
             }
         ]
     }
+};
+
+module.exports = (env, argv) => {
+    if ( argv.name === 'docs' ) {
+        config.output = {
+            path: path.resolve( __dirname, 'docs' ),
+            filename: 'pushin.min.js',
+        };
+    }
+
+    return config;
 };

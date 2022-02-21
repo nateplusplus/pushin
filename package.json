@@ -5,7 +5,8 @@
   "main": "dist/pushin.min.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack serve",
+    "docs": "webpack --name=docs",
+    "start": "webpack serve --name=docs --mode=development",
     "test": "mocha --watch",
     "test:once": "mocha"
   },
