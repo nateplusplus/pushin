@@ -1,10 +1,11 @@
-const path = require( 'path' );
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const path    = require( 'path' );
 const webpack = require( 'webpack' );
-const TerserPlugin = require("terser-webpack-plugin");
-
 const PACKAGE = require('./package.json');
+
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin   = require("css-minimizer-webpack-plugin");
+const HtmlWebpackPlugin    = require('html-webpack-plugin');
+const TerserPlugin         = require("terser-webpack-plugin");
 
 let config = {
     mode: 'production',
@@ -62,6 +63,15 @@ module.exports = (env, argv) => {
             path: path.resolve( __dirname, 'docs' ),
             filename: 'pushin.min.js',
         };
+
+        config.plugins.push(
+            new HtmlWebpackPlugin({
+                title: 'PushIn JS',
+                filename: 'index.html',
+                minify: false,
+                template: '!!pug-loader!docs/home.pug'
+            })
+        );
     }
 
     return config;
