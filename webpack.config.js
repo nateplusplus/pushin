@@ -66,10 +66,14 @@ module.exports = (env, argv) => {
 
         config.plugins.push(
             new HtmlWebpackPlugin({
-                title: 'PushIn JS',
                 filename: 'index.html',
                 minify: false,
                 template: '!!pug-loader!docs/home.pug'
+            }),
+            new HtmlWebpackPlugin({
+                filename: 'simple.html',
+                minify: false,
+                template: '!!pug-loader!docs/simple.pug'
             })
         );
     }
