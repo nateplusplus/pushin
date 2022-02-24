@@ -12,7 +12,7 @@ html
 					p.demo-subhead Scroll down below to try out the effect, or browse other examples:
 					ul
 						li
-							a(href='docs/simple.html') Simple - Zero configuration
+							a(href='/simple.html') Simple - Zero configuration
 		main
 			section.demo-scroller.pushin
 				div.pusin-scene
@@ -57,5 +57,8 @@ html
 				ul
 					li
 						a(href="https://github.com/nateplusplus/pushin-js") View on github 
-							img(src="github.png", alt="GitHub icon")
-		script(defer src='demo.js', type='text/javascript')
+							include github.svg
+		script( defer ).
+			document.addEventListener( 'DOMContentLoaded', function() {
+				pushInStart();
+			} );

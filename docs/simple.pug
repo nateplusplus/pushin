@@ -14,5 +14,8 @@ html
 		ul
 			li
 				a(href="https://github.com/nateplusplus/pushin-js") View on github 
-					img(src="github.png", alt="GitHub icon")
-		script(defer src='demo.js', type='text/javascript')
+					include github.svg
+		script( defer ).
+			document.addEventListener( 'DOMContentLoaded', function() {
+				pushInStart();
+			} );
