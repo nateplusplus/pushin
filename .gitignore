@@ -1,3 +1,9 @@
 node_modules
 .DS_Store
 lt.log
+
+# Docs
+docs/pushin.min.css
+docs/pushin.min.js
+docs/index.html
+docs/simple.html

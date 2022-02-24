@@ -14,7 +14,7 @@ class pushIn {
 	/**
 	 * Initialize the object to start everything up.
 	 */
-	 start() {
+	start() {
 		if ( this.container ) {
 			this.scene = this.container.querySelector('.pushin-scene');
 
@@ -42,7 +42,7 @@ class pushIn {
 	/**
 	 * Find all layers on the page and store them with their parameters
 	 */
-	 getLayers() {
+	getLayers() {
 		const layers = this.container.getElementsByClassName('pushin-layer');
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
