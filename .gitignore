@@ -3,7 +3,7 @@ node_modules
 lt.log
 
 #docs
-docs/index.html
-docs/simple.html
-docs/pushin.min.css
-docs/pushin.min.js
+/docs/index.html
+/docs/simple.html
+/docs/pushin.min.css
+/docs/pushin.min.js
