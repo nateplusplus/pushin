@@ -1,0 +1,64 @@
+doctype html
+html
+	head
+		title PushIn.js
+		link( href='demo.css' rel='stylesheet' )
+	body
+		header.demo-header.demo-bg-white
+			div.demo-padded
+				h1 PushIn.js
+				div.demo-subhead
+					p PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
+					p.demo-subhead Scroll down below to try out the effect, or browse other examples:
+					ul
+						li
+							a(href='simple.html') Simple - Zero configuration
+		main
+			section.demo-scroller.pushin
+				div.pusin-scene
+					div.pushin-layer.demo-layer-1(data-pushin-from='200', data-pushin-to='1000')
+						div.demo-text-box.demo-layer-1-text Scroll to push in
+					div.pushin-layer.demo-layer-2(data-pushin-from='700', data-pushin-to='2500')
+						div.demo-text-box.demo-layer-2-text Each layer can come into view at different times.
+					div.pushin-layer.demo-layer-3(data-pushin-from='1500', data-pushin-to='3000')
+						div.demo-text-box.demo-layer-3-text Use HTML data-attributes to control the timing and speed of each layer.
+					div.pushin-layer.demo-layer-end(data-pushin-from='2000', data-pushin-to='6000' data-pusin-speed='25')
+						div.demo-text-box.demo-layer-end-text PushIn.js
+			section.demo-bg-white
+				div.demo-padded
+					h2 Compatibility
+					p PushIn.js supports all browsers that are ES5-compliant (IE8 and below are not supported).
+				div.demo-padded
+					h2 How does it work?
+					p
+						| This plugin uses a combination of JavaScript and CSS to create the illusion of objects moving forward or backward by manipulating their scale while the user scrolls on the page. The effect uses the modern browser's built in 
+						a(href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame", target="_blank", rel="noopener noreferrer nofollow") requestAnimationFrame
+						|  to deliver a performant experience that is cross-browser compatible.
+					ul
+						li No canvas elements!
+						li No webGL!
+						li No flash!
+				div.demo-padded
+					h2 How much does this cost?
+					p It's completely free open source code under the MIT License!
+				div.demo-padded
+					h2 How can I use it on my site?
+					p
+						| Check out the 
+						a(href="https://github.com/nateplusplus/pushIn-js") GitHub README
+						|  to learn more about how to use this on your own projects.
+				div.demo-padded
+					h2 What do I do if I'm experiencing an issue?
+					p
+						| Please submit a 
+						a(href="https://github.com/nateplusplus/pushIn-js/issues/new?assignees=&labels=&template=bug_report.md&title=") bug report
+						|  so I can put on my detective hat and look into it further!
+			footer
+				ul
+					li
+						a(href="https://github.com/nateplusplus/pushin-js") View on github 
+							include github.svg
+		script( defer ).
+			document.addEventListener( 'DOMContentLoaded', function() {
+				pushInStart();
+			} );
