@@ -43,7 +43,10 @@ class pushIn {
 	 * Find all layers on the page and store them with their parameters
 	 */
 	getLayers() {
-		const layers = this.container.getElementsByClassName('pushin-layer');
+		const layers      = this.container.getElementsByClassName('pushin-layer');
+		const sceneTop    = this.scene.getBoundingClientRect().top;
+		const sceneBottom = this.scene.getBoundingClientRect().bottom;
+
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
 				const elem = layers[i];
@@ -53,7 +56,7 @@ class pushIn {
 				const speed    = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
 	
 				// Default for first layers
-				let top = this.container.getBoundingClientRect().top;
+				let top = sceneTop;
 				if ( this.scene.dataset.hasOwnProperty('pushinFrom') ) {
 					// custom inpoint
 					top = this.scene.dataset.pushinFrom;
@@ -63,7 +66,7 @@ class pushIn {
 				}
 
 				// Default for last layers
-				let bottom = this.container.getBoundingClientRect().bottom;
+				let bottom = sceneBottom;
 				if ( this.scene.dataset.hasOwnProperty('pushinTo') ) {
 					// custom outpoint
 					bottom = this.scene.dataset.pushinTo;
@@ -86,6 +89,8 @@ class pushIn {
 				this.layers.push( layer );
 				this.setZIndex( layer, layers.length );
 			}
+
+			console.log( this.layers )
 		}
 	}
 
