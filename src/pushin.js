@@ -45,7 +45,6 @@ class pushIn {
 	getLayers() {
 		const layers      = this.container.getElementsByClassName('pushin-layer');
 		const sceneTop    = this.scene.getBoundingClientRect().top;
-		const sceneBottom = this.scene.getBoundingClientRect().bottom;
 
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
@@ -65,12 +64,14 @@ class pushIn {
 					top = this.layers[ i - 1 ].params.outpoint - 100;
 				}
 
-				// Default for last layers
-				let bottom = sceneBottom;
+				let bottom;
 				if ( this.scene.dataset.hasOwnProperty('pushinTo') ) {
 					// custom outpoint
 					bottom = this.scene.dataset.pushinTo;
-				} else if ( i > 0 ) {
+				} else if ( i === 0 ) {
+					// Set default for first layer
+					bottom = 1000;
+				} else {
 					// Set default for middle layers
 					bottom = top + 1000;
 				}
@@ -244,8 +245,15 @@ class pushIn {
 	}
 
 	setScrollLength() {
-		const height = getComputedStyle( this.container ).height.replace('px', '');
-		this.container.style.height = Math.max( height, this.layers.length * ( screen.height + 100 ) ) + 'px';
+		const sceneHeight     = getComputedStyle( this.scene ).height.replace('px', '');
+		const containerHeight = getComputedStyle( this.container ).height.replace('px', '');
+
+		const transitions = ( this.layers.length - 1 ) * 100;
+		const scrollLength = this.layers.length * 1000;
+
+		console.log( this.layers, sceneHeight );
+
+		this.container.style.height = Math.max( containerHeight, scrollLength - transitions ) + 'px';
 	}
 }
 
