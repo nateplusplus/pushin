@@ -88,10 +88,11 @@ describe( 'setLayerStyle', function() {
     } );
 
     it( 'should set opacity to 0 if its a middle layer and scroll position is exactly equal to its inpoint', function() {
-        let instance       = new pushIn();
-        instance.scrollPos = 500;
-        instance.layers    = this.layers;
-        instance.isActive  = () => true;
+        let instance              = new pushIn();
+        instance.scrollPos        = 500;
+        instance.layers           = this.layers;
+        instance.isActive         = () => true;
+        instance.transitionLength = 200;
 
         let element  = document.querySelector('.demo-layer-2');
 
@@ -103,10 +104,11 @@ describe( 'setLayerStyle', function() {
     } );
 
     it( 'should set opacity to 0.5 if its a middle layer and scroll position is 100px from its inpoint', function() {
-        let instance       = new pushIn();
-        instance.scrollPos = 600;
-        instance.layers    = this.layers;
-        instance.isActive  = () => true;
+        let instance              = new pushIn();
+        instance.scrollPos        = 600;
+        instance.layers           = this.layers;
+        instance.isActive         = () => true;
+        instance.transitionLength = 200;
 
         let element  = document.querySelector('.demo-layer-2');
 
@@ -118,10 +120,11 @@ describe( 'setLayerStyle', function() {
     } );
 
     it( 'should set opacity to 0 if its a middle layer and scroll position is exactly equal to its outpoint', function() {
-        let instance       = new pushIn();
-        instance.scrollPos = 800;
-        instance.layers    = this.layers;
-        instance.isActive  = () => true;
+        let instance              = new pushIn();
+        instance.scrollPos        = 800;
+        instance.layers           = this.layers;
+        instance.isActive         = () => true;
+        instance.transitionLength = 200;
 
         let element  = document.querySelector('.demo-layer-2');
 
@@ -133,10 +136,11 @@ describe( 'setLayerStyle', function() {
     } );
 
     it( 'should set opacity to 0.5 if its a middle layer and scroll position is 100px from its outpoint', function() {
-        let instance       = new pushIn();
-        instance.scrollPos = 700;
-        instance.layers    = this.layers;
-        instance.isActive  = () => true;
+        let instance              = new pushIn();
+        instance.scrollPos        = 700;
+        instance.layers           = this.layers;
+        instance.isActive         = () => true;
+        instance.transitionLength = 200;
 
         let element  = document.querySelector('.demo-layer-2');
 
