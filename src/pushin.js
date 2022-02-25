@@ -7,7 +7,7 @@
 class pushIn {
 
 	constructor( container ) {
-		this.layers = [];
+		this.layers    = [];
 		this.container = container;
 	}
 
@@ -16,18 +16,15 @@ class pushIn {
 	 */
 	start() {
 		if ( this.container ) {
-			this.scene = this.container.querySelector('.pushin-scene');
 
-			if ( ! this.scene ) {
-				const innerHtml = this.container.innerHTML;
-				this.scene = document.createElement( 'div' );
-				this.scene.classList.add('pushin-scene');
-				this.scene.innerHTML = innerHtml;
-				this.container.innerHTML = '';
-				this.container.appendChild( this.scene );
-			}
+			this.addScene();
+
+			this.speedDelta       = 100;
+			this.transitionLength = 200;
+			this.layerDepth       = 1000;
 
 			this.scrollPos = window.pageYOffset;
+
 			this.getLayers();
 			this.setScrollLength();
 			this.bindEvents();
@@ -40,11 +37,28 @@ class pushIn {
 	}
 
 	/**
+	 * Get the "scene" element from the DOM.
+	 * If it doesn't exist, make one.
+	 */
+	addScene() {
+		this.scene = this.container.querySelector('.pushin-scene');
+
+		if ( ! this.scene ) {
+			this.scene = document.createElement( 'div' );
+			this.scene.classList.add('pushin-scene');
+
+			this.scene.innerHTML = this.container.innerHTML;
+			this.container.innerHTML = '';
+			this.container.appendChild( this.scene );
+		}
+	}
+
+	/**
 	 * Find all layers on the page and store them with their parameters
 	 */
 	getLayers() {
-		const layers      = this.container.getElementsByClassName('pushin-layer');
-		const sceneTop    = this.scene.getBoundingClientRect().top;
+		const layers   = this.container.getElementsByClassName('pushin-layer');
+		const sceneTop = this.scene.getBoundingClientRect().top;
 
 		if ( layers ) {
 			for (let i = 0; i < layers.length; i++) {
@@ -61,7 +75,7 @@ class pushIn {
 					top = this.scene.dataset.pushinFrom;
 				} else if ( i > 0 ) {
 					// Set default for middle layers
-					top = this.layers[ i - 1 ].params.outpoint - 100;
+					top = this.layers[ i - 1 ].params.outpoint - this.speedDelta;
 				}
 
 				let bottom;
@@ -70,10 +84,10 @@ class pushIn {
 					bottom = this.scene.dataset.pushinTo;
 				} else if ( i === 0 ) {
 					// Set default for first layer
-					bottom = 1000;
+					bottom = this.layerDepth;
 				} else {
 					// Set default for middle layers
-					bottom = top + 1000;
+					bottom = top + this.layerDepth;
 				}
 
 				const layer = {
@@ -228,12 +242,12 @@ class pushIn {
 		} else if ( this.isActive( layer ) ) {
 			this.setScale( layer.elem, this.getScaleValue( layer ) );
 
-			let inpointDistance = Math.max( Math.min( this.scrollPos - layer.params.inpoint, 200 ), 0) / 200;
+			let inpointDistance = Math.max( Math.min( this.scrollPos - layer.params.inpoint, this.transitionLength ), 0) / this.transitionLength;
 			if ( isFirst ) {
 				inpointDistance = 1;
 			}
 
-			let outpointDistance = Math.max( Math.min( layer.params.outpoint - this.scrollPos, 200 ), 0) / 200;
+			let outpointDistance = Math.max( Math.min( layer.params.outpoint - this.scrollPos, this.transitionLength ), 0) / this.transitionLength;
 			if ( isLast ) {
 				outpointDistance = 1;
 			}
@@ -245,13 +259,10 @@ class pushIn {
 	}
 
 	setScrollLength() {
-		const sceneHeight     = getComputedStyle( this.scene ).height.replace('px', '');
 		const containerHeight = getComputedStyle( this.container ).height.replace('px', '');
 
-		const transitions = ( this.layers.length - 1 ) * 100;
-		const scrollLength = this.layers.length * 1000;
-
-		console.log( this.layers, sceneHeight );
+		const transitions = ( this.layers.length - 1 ) * this.speedDelta;
+		const scrollLength = this.layers.length * ( this.layerDepth + this.transitionLength );
 
 		this.container.style.height = Math.max( containerHeight, scrollLength - transitions ) + 'px';
 	}
