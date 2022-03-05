@@ -34,67 +34,46 @@ describe( 'getInpoints', function() {
         global.document = window.document;
 
         pushIn = require( '../src/pushin' ).pushIn;
-    } );
 
-    it( 'Should return scene top value as the default for first layer', function() {
-        var instance   = new pushIn();
-        instance.scene = document.querySelector( '.pushin-scene' );
-        instance.scene.getBoundingClientRect = () => {
+        this.pushIn       = new pushIn();
+        this.pushIn.scene = document.querySelector( '.pushin-scene' );
+        this.pushIn.scene.getBoundingClientRect = () => {
             return { top: 10 };
         };
+        this.pushIn.speedDelta = 100;
 
-        const elem = document.querySelector( '#layer-0' );
-        result     = instance.getInpoints( elem, 0 );
-
-        result.should.deep.equal( [ 10 ] );
-    } );
-
-    it( 'Should return value provided by data attribute', function() {
-        var instance   = new pushIn();
-        instance.scene = document.querySelector( '.pushin-scene' );
-        instance.scene.getBoundingClientRect = () => {
-            return { top: 10 };
-        };
-
-        const elem = document.querySelector( '#layer-1' );
-        result     = instance.getInpoints( elem, 1 );
-
-        result.should.deep.equal( [ 300 ] );
-    } );
-
-    it( 'Should return array of values provided by data attribute', function() {
-        var instance   = new pushIn();
-        instance.scene = document.querySelector( '.pushin-scene' );
-        instance.scene.getBoundingClientRect = () => {
-            return { top: 10 };
-        };
-
-        const elem = document.querySelector( '#layer-2' );
-        result     = instance.getInpoints( elem, 2 );
-
-        result.should.deep.equal( [ 300, 500 ] );
-    } );
-
-    it( 'Should return generated value based on previous layer outpoint', function() {
-        var instance   = new pushIn();
-        instance.scene = document.querySelector( '.pushin-scene' );
-        instance.scene.getBoundingClientRect = () => {
-            return { top: 10 };
-        };
-        instance.layers = [
+        this.pushIn.layers = [
             null,
             null,
             {
                 params: {
-                    outpoints: [ 1000 ]
+                    outpoint: 1000
                 }
             }
         ];
-        instance.speedDelta = 100;
+    } );
 
-        const elem = document.querySelector( '#layer-3' );
-        result     = instance.getInpoints( elem, 3 );
+    it( 'Should return scene top value as the default for first layer', function() {
+        const elem   = document.querySelector( '#layer-0' );
+        const result = this.pushIn.getInpoints( elem, 0 );
+        result.should.deep.equal( [ 10 ] );
+    } );
 
+    it( 'Should return value provided by data attribute', function() {
+        const elem   = document.querySelector( '#layer-1' );
+        const result = this.pushIn.getInpoints( elem, 1 );
+        result.should.deep.equal( [ 300 ] );
+    } );
+
+    it( 'Should return array of values provided by data attribute', function() {
+        const elem   = document.querySelector( '#layer-2' );
+        const result = this.pushIn.getInpoints( elem, 2 );
+        result.should.deep.equal( [ 300, 500 ] );
+    } );
+
+    it( 'Should return generated value based on previous layer outpoint', function() {
+        const elem   = document.querySelector( '#layer-3' );
+        const result = this.pushIn.getInpoints( elem, 3 );
         result.should.deep.equal( [ 900 ] );
     } );
 } );

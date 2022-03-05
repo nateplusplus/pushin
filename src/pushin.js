@@ -84,21 +84,26 @@ class pushIn {
 	 * Find all layers on the page and store them with their parameters
 	 */
 	getLayers() {
-		const layers   = this.container.getElementsByClassName( 'pushin-layer' );
+		const layers = this.container.getElementsByClassName( 'pushin-layer' );
 
 		if ( layers ) {
 			for ( let i = 0; i < layers.length; i++ ) {
-				const elem    = layers[i];
-				const inpoints = this.getInpoints( elem, i );
+				const elem      = layers[i];
+				const inpoints  = this.getInpoints( elem, i );
+				const outpoints = this.getOutpoints( elem, inpoints[0], i );
 
 				const layer = {
 					elem : elem,
 					index: i,
 					originalScale: this.getElementScaleX( elem ),
+					ref: {
+						inpoints,
+						outpoints
+					},
 					params: {
-						inpoints  : inpoints,
-						outpoints : this.getOutpoints( elem, inpoints[0], i ),
-						speed     : this.getSpeed( elem )
+						inpoint  : this.getInpoint( inpoints ),
+						outpoint : this.getOutpoint( outpoints ),
+						speed    : this.getSpeed( elem )
 					}
 				};
 
@@ -120,8 +125,8 @@ class pushIn {
 			sceneInpoints = this.scene.dataset.pushinFrom.split( ',' );
 			sceneInpoints = sceneInpoints.map( inpoint => parseInt( inpoint.trim() ) );
 		} else if ( i > 0 ) {
-			// Set default for middle layers if none provided (always use lowest breakpoint)
-			const outpoint = this.layers[ i - 1 ].params.outpoints[0];
+			// Set default for middle layers if none provided
+			const outpoint = this.layers[ i - 1 ].params.outpoint;
 			inpoints = [ outpoint - this.speedDelta ];
 		}
 
@@ -186,6 +191,27 @@ class pushIn {
 		window.addEventListener("touchend", function (event) {
 			this.scrollEnd = this.scrollPos;
 		}.bind(this));
+
+		let resizeTimeout;
+		window.addEventListener( 'resize', ( event ) => {
+			clearTimeout( resizeTimeout );
+
+			resizeTimeout = setTimeout( () => {
+				this.resetLayerParams();
+				this.setScrollLength();
+				this.toggleLayers();
+			}, 300 );
+		} );
+	}
+
+	resetLayerParams() {
+		this.layers.forEach( ( layer ) => {
+			layer.params = {
+				inpoint  : this.getInpoint( layer.ref.inpoints ),
+				outpoint : this.getOutpoint( layer.ref.outpoints ),
+				speed    : this.getSpeed( layer.elem )
+			}
+		} );
 	}
 
 	/**
@@ -233,17 +259,17 @@ class pushIn {
 	 * @returns Boolean
 	 */
 	isActive( layer ) {
-		const inpoint  = this.getInpoint( layer );
-		const outpoint = this.getOutpoint( layer );
+		const inpoint  = layer.params.inpoint;
+		const outpoint = layer.params.outpoint;
 		return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
 	}
 
-	getInpoint( layer ) {
-		return layer.params.inpoints[ this.getBreakpointIndex() ] || layer.params.inpoints[ 0 ];
+	getInpoint( inpoints ) {
+		return inpoints[ this.getBreakpointIndex() ] || inpoints[ 0 ];
 	}
 
-	getOutpoint( layer ) {
-		return layer.params.outpoints[ this.getBreakpointIndex() ] || layer.params.outpoints[ 0 ];
+	getOutpoint( outpoints ) {
+		return outpoints[ this.getBreakpointIndex() ] || outpoints[ 0 ];
 	}
 
 	/**
@@ -253,8 +279,7 @@ class pushIn {
 	 * @return {Number}
 	 */
 	getScaleValue( layer ) {
-		const inpoint  = this.getInpoint( layer );
-		const distance = this.scrollPos - inpoint;
+		const distance = this.scrollPos - layer.params.inpoint;
 		const speed    = Math.min( layer.params.speed, 100 ) / 100;
 		const delta    = ( distance * speed ) / 100;
 
@@ -288,8 +313,8 @@ class pushIn {
 		let opacity    = 0;
 		const isFirst  = layer.index === 0;
 		const isLast   = layer.index + 1 === this.layers.length;
-		const inpoint  = this.getInpoint( layer );
-		const outpoint = this.getOutpoint( layer );
+		const inpoint  = layer.params.inpoint;
+		const outpoint = layer.params.outpoint;
 
 		if ( isFirst && this.scrollPos < inpoint ) {
 			opacity = 1;
