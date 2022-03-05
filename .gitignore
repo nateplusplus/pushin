@@ -1,6 +1,10 @@
 node_modules
 .DS_Store
+
+#testing
 lt.log
+.nyc_output
+coverage
 
 #docs
 /docs/index.html
