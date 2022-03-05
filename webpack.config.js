@@ -11,6 +11,7 @@ let config = {
     mode: 'production',
     target: 'browserslist',
     devServer: {
+        open: true,
         static: {
             directory: path.join(__dirname, 'docs'),
         },

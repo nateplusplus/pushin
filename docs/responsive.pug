@@ -7,18 +7,17 @@ html
 		link( href='demo.css' rel='stylesheet' )
 		style.
 			.pushin-layer { padding: 0 3em; }
-			.scroll-counter {
-				padding: 1em;
-				position: fixed;
-				top: 0;
-				width: 100%;
-				text-align: center;
-				background-color: white;
-				border-bottom: 1px solid black;
-			}
 			.pushin {
 				background-color: lightgrey;
 				z-index: -1;
+			}
+			.demo-header {
+				margin-top: 50px;
+			}
+			@media (min-width: 768px) {
+				.demo-header {
+					margin-top: 0;
+				}
 			}
 	body
 		header.demo-header
@@ -41,7 +40,6 @@ html
 					div.pushin-layer Layer 2
 					div.pushin-layer Layer 3
 					div.pushin-layer Layer 4
-		div.scroll-counter
 		footer
 			ul
 				li
@@ -49,12 +47,5 @@ html
 						include github.svg
 			script( defer ).
 				document.addEventListener( 'DOMContentLoaded', function() {
-					pushInStart();
-				} );
-
-				var scrollCounter = document.querySelector('.scroll-counter');
-				scrollCounter.innerText = 'Scroll position: ' + window.pageYOffset + 'px';
-
-				window.addEventListener( 'scroll', function( event ) {
-					scrollCounter.innerText = 'Scroll position: ' + window.pageYOffset + 'px';
+					pushInStart( { debug: true } );
 				} );

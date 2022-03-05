@@ -6,9 +6,13 @@
  */
 class pushIn {
 
-	constructor( container ) {
+	constructor( container, options ) {
 		this.layers    = [];
 		this.container = container;
+
+		if ( options ) {
+			this.debug = ( options.debug || false );
+		}
 	}
 
 	/**
@@ -33,6 +37,10 @@ class pushIn {
 			this.toggleLayers();
 		} else {
 			console.error( 'No container element provided to pushIn.js. Effect will not be applied.' );
+		}
+
+		if ( this.debug ) {
+			this.showDebugger();
 		}
 	}
 
@@ -313,6 +321,28 @@ class pushIn {
 		const scrollLength = this.layers.length * ( this.layerDepth + this.transitionLength );
 
 		this.container.style.height = Math.max( containerHeight, scrollLength - transitions ) + 'px';
+	}
+
+	showDebugger() {
+		const scrollCounter = document.createElement( 'div' );
+		scrollCounter.classList.add( 'pushin-debug' );
+
+		const scrollTitle = document.createElement( 'p' );
+		scrollTitle.innerText = 'Pushin.js Debugger'
+		scrollTitle.classList.add( 'pushin-debug__title' )
+
+		const debuggerContent = document.createElement( 'div' );
+		debuggerContent.classList.add( 'pushin-debug__content' );
+		debuggerContent.innerText = 'Scroll position: ' + window.pageYOffset + 'px';
+
+		scrollCounter.appendChild( scrollTitle );
+		scrollCounter.appendChild( debuggerContent );
+
+		document.body.appendChild( scrollCounter );
+
+		window.addEventListener( 'scroll', function( evt ) {
+			debuggerContent.innerText = 'Scroll position: ' + window.pageYOffset + 'px';
+		} );
 	}
 }
 
