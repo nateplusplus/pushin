@@ -75,6 +75,9 @@ class pushIn {
 			this.breakpoints = this.scene.dataset.breakpoints.split(',');
 			this.breakpoints = this.breakpoints.map( bp => parseInt( bp.trim() ) );
 		}
+
+		// Always include break point 0 for anything under first breakpoint
+		this.breakpoints.unshift( 0 );
 	}
 
 	/**
@@ -94,8 +97,8 @@ class pushIn {
 					originalScale: this.getElementScaleX( elem ),
 					params: {
 						inpoints  : inpoints,
-						outpoint : this.getOutpoints( elem, inpoints[0], i ),
-						speed    : this.getSpeed( elem )
+						outpoints : this.getOutpoints( elem, inpoints[0], i ),
+						speed     : this.getSpeed( elem )
 					}
 				};
 
@@ -106,44 +109,35 @@ class pushIn {
 	}
 
 	getInpoints( elem, i ) {
-		const sceneTop = this.scene.getBoundingClientRect().top;
+		let top = this.scene.getBoundingClientRect().top;
 
-		let inpoints = null;
+		let inpoints = [ top ];
 		if ( elem.dataset.hasOwnProperty( 'pushinFrom' ) ) {
 			inpoints = elem.dataset.pushinFrom.split( ',' );
 			inpoints = inpoints.map( inpoint => parseInt( inpoint.trim() ) );
-		}
-
-		// Default for first layers
-		let sceneInpoints = [ sceneTop ];
-		if ( this.scene.dataset.hasOwnProperty( 'pushinFrom' ) ) {
+		} else if ( i === 0 && this.scene.dataset.hasOwnProperty( 'pushinFrom' ) ) {
 			// custom inpoint
 			sceneInpoints = this.scene.dataset.pushinFrom.split( ',' );
 			sceneInpoints = sceneInpoints.map( inpoint => parseInt( inpoint.trim() ) );
 		} else if ( i > 0 ) {
-			// Set default for middle layers
-			top = [ this.layers[ i - 1 ].params.outpoint - this.speedDelta ];
+			// Set default for middle layers if none provided (always use lowest breakpoint)
+			const outpoint = this.layers[ i - 1 ].params.outpoints[0];
+			inpoints = [ outpoint - this.speedDelta ];
 		}
 
-		return ( inpoints || top );
+		return inpoints;
 	}
 
-	getOutpoints( elem, inpoint, i ) {
-		const outpoint = elem.dataset.hasOwnProperty( 'pushinTo' ) ? elem.dataset.pushinTo : null;
 
-		let bottom;
-		if ( this.scene.dataset.hasOwnProperty( 'pushinTo' ) ) {
-			// custom outpoint
-			bottom = this.scene.dataset.pushinTo;
-		} else if ( i === 0 ) {
-			// Set default for first layer
-			bottom = this.layerDepth;
-		} else {
-			// Set default for middle layers
-			bottom = inpoint + this.layerDepth;
+	getOutpoints( elem, inpoint, i ) {
+		let outpoints = [ inpoint + this.layerDepth ];
+
+		if ( elem.dataset.hasOwnProperty( 'pushinTo' ) ) {
+			const values = elem.dataset.pushinTo.split( ',' );
+			outpoints = values.map( val => parseInt( val.trim() ) );
 		}
 
-		return (outpoint || bottom);
+		return outpoints;
 	}
 
 	getSpeed( elem ) {
@@ -152,8 +146,8 @@ class pushIn {
 	}
 
 	getBreakpointIndex() {
-		const index = this.breakpoints.reverse().findIndex( bp => bp <= window.innerWidth );
-		return Math.max( index, 0 );
+		const searchIndex = this.breakpoints.reverse().findIndex( bp => bp <= window.innerWidth );
+		return ( searchIndex === -1 ) ? 0 : this.breakpoints.length - 1 - searchIndex;
 	}
 
 	/**
@@ -239,12 +233,17 @@ class pushIn {
 	 * @returns Boolean
 	 */
 	isActive( layer ) {
-		const inpoint = this.getInpoint( layer );
-		return this.scrollPos >= inpoint && this.scrollPos <= layer.params.outpoint;
+		const inpoint  = this.getInpoint( layer );
+		const outpoint = this.getOutpoint( layer );
+		return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
 	}
 
 	getInpoint( layer ) {
 		return layer.params.inpoints[ this.getBreakpointIndex() ] || layer.params.inpoints[ 0 ];
+	}
+
+	getOutpoint( layer ) {
+		return layer.params.outpoints[ this.getBreakpointIndex() ] || layer.params.outpoints[ 0 ];
 	}
 
 	/**
@@ -286,14 +285,15 @@ class pushIn {
 	 * @param Element layer    Layer element
 	 */
 	setLayerStyle( layer ) {
-		let opacity   = 0;
-		const isFirst = layer.index === 0;
-		const isLast  = layer.index + 1 === this.layers.length;
-		const inpoint = this.getInpoint( layer );
+		let opacity    = 0;
+		const isFirst  = layer.index === 0;
+		const isLast   = layer.index + 1 === this.layers.length;
+		const inpoint  = this.getInpoint( layer );
+		const outpoint = this.getOutpoint( layer );
 
 		if ( isFirst && this.scrollPos < inpoint ) {
 			opacity = 1;
-		} else if ( isLast && this.scrollPos > layer.params.outpoint ) {
+		} else if ( isLast && this.scrollPos > outpoint ) {
 			opacity = 1;
 		} else if ( this.isActive( layer ) ) {
 			this.setScale( layer.elem, this.getScaleValue( layer ) );
@@ -303,7 +303,7 @@ class pushIn {
 				inpointDistance = 1;
 			}
 
-			let outpointDistance = Math.max( Math.min( layer.params.outpoint - this.scrollPos, this.transitionLength ), 0) / this.transitionLength;
+			let outpointDistance = Math.max( Math.min( outpoint - this.scrollPos, this.transitionLength ), 0) / this.transitionLength;
 			if ( isLast ) {
 				outpointDistance = 1;
 			}

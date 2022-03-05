@@ -30,44 +30,35 @@ describe( 'getScaleValue', function() {
         global.document = window.document;
 
         pushIn = require( '../src/pushin' ).pushIn;
+
+        this.pushIn = new pushIn();
+        this.pushIn.getInpoint = layer => layer.params.inpoint;
     } );
 
     it( 'should return original scale if scroll position and inpoint are the same', function() {
-        var instance = new pushIn();
-
-        instance.scrollPos = 10;
-
-        var result = instance.getScaleValue( this.layerMock );
+        this.pushIn.scrollPos = 10;
+        const result = this.pushIn.getScaleValue( this.layerMock );
 
         result.should.equal(2);
     } );
 
     it( 'should reduce scale if scrollPos is less than inpoint', function() {
-        var instance = new pushIn();
-
-        instance.scrollPos = 6;
-
-        var result = instance.getScaleValue( this.layerMock );
+        this.pushIn.scrollPos = 6;
+        const result = this.pushIn.getScaleValue( this.layerMock );
 
         result.should.be.lessThan( 2 );
     } );
 
     it( 'should increase scale if scrollPos is greater than inpoint', function() {
-        var instance = new pushIn();
-
-        instance.scrollPos = 20;
-
-        var result = instance.getScaleValue( this.layerMock );
+        this.pushIn.scrollPos = 20;
+        const result = this.pushIn.getScaleValue( this.layerMock );
 
         result.should.greaterThan(2);
     } );
 
     it( 'should not return a negative number', function() {
-        var instance = new pushIn();
-
-        instance.scrollPos = 1;
-
-        var result = instance.getScaleValue( this.layerMock2 );
+        this.pushIn.scrollPos = 1;
+        const result = this.pushIn.getScaleValue( this.layerMock2 );
 
         result.should.equal(0);
     } );
