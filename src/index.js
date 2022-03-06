@@ -1,2 +1,2 @@
-require( './style.css' );
-require( './helpers' );
+import './style.css';
+import './helpers';
