@@ -6,9 +6,13 @@
  */
 class pushIn {
 
-	constructor( container ) {
+	constructor( container, options ) {
 		this.layers    = [];
 		this.container = container;
+
+		if ( options ) {
+			this.debug = ( options.debug || false );
+		}
 	}
 
 	/**
@@ -16,7 +20,6 @@ class pushIn {
 	 */
 	start() {
 		if ( this.container ) {
-
 			this.addScene();
 
 			this.speedDelta       = 100;
@@ -25,6 +28,7 @@ class pushIn {
 
 			this.scrollPos = window.pageYOffset;
 
+			this.setBreakpoints();
 			this.getLayers();
 			this.setScrollLength();
 			this.bindEvents();
@@ -33,6 +37,10 @@ class pushIn {
 			this.toggleLayers();
 		} else {
 			console.error( 'No container element provided to pushIn.js. Effect will not be applied.' );
+		}
+
+		if ( this.debug ) {
+			this.showDebugger();
 		}
 	}
 
@@ -54,50 +62,48 @@ class pushIn {
 	}
 
 	/**
+	 * Set breakpoints for responsive design settings.
+	 */
+	setBreakpoints() {
+		this.breakpoints = [
+			768,
+			1440,
+			1920
+		];
+
+		if ( this.scene.dataset.pushinBreakpoints ) {
+			this.breakpoints = this.scene.dataset.pushinBreakpoints.split(',');
+			this.breakpoints = this.breakpoints.map( bp => parseInt( bp.trim() ) );
+		}
+
+		// Always include break point 0 for anything under first breakpoint
+		this.breakpoints.unshift( 0 );
+	}
+
+	/**
 	 * Find all layers on the page and store them with their parameters
 	 */
 	getLayers() {
-		const layers   = this.container.getElementsByClassName('pushin-layer');
-		const sceneTop = this.scene.getBoundingClientRect().top;
+		const layers = this.container.getElementsByClassName( 'pushin-layer' );
 
 		if ( layers ) {
-			for (let i = 0; i < layers.length; i++) {
-				const elem = layers[i];
-	
-				const inpoint  = elem.dataset.hasOwnProperty( 'pushinFrom' ) ? elem.dataset.pushinFrom : null;
-				const outpoint = elem.dataset.hasOwnProperty( 'pushinTo' ) ? elem.dataset.pushinTo : null;
-				const speed    = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
-	
-				// Default for first layers
-				let top = sceneTop;
-				if ( this.scene.dataset.hasOwnProperty('pushinFrom') ) {
-					// custom inpoint
-					top = this.scene.dataset.pushinFrom;
-				} else if ( i > 0 ) {
-					// Set default for middle layers
-					top = this.layers[ i - 1 ].params.outpoint - this.speedDelta;
-				}
-
-				let bottom;
-				if ( this.scene.dataset.hasOwnProperty('pushinTo') ) {
-					// custom outpoint
-					bottom = this.scene.dataset.pushinTo;
-				} else if ( i === 0 ) {
-					// Set default for first layer
-					bottom = this.layerDepth;
-				} else {
-					// Set default for middle layers
-					bottom = top + this.layerDepth;
-				}
+			for ( let i = 0; i < layers.length; i++ ) {
+				const elem      = layers[i];
+				const inpoints  = this.getInpoints( elem, i );
+				const outpoints = this.getOutpoints( elem, inpoints[0], i );
 
 				const layer = {
 					elem : elem,
 					index: i,
 					originalScale: this.getElementScaleX( elem ),
+					ref: {
+						inpoints,
+						outpoints
+					},
 					params: {
-						inpoint  : (inpoint || top),
-						outpoint : (outpoint || bottom),
-						speed    : (speed || 8)
+						inpoint  : this.getInpoint( inpoints ),
+						outpoint : this.getOutpoint( outpoints ),
+						speed    : this.getSpeed( elem )
 					}
 				};
 
@@ -105,6 +111,48 @@ class pushIn {
 				this.setZIndex( layer, layers.length );
 			}
 		}
+	}
+
+	getInpoints( elem, i ) {
+		let top = this.scene.getBoundingClientRect().top;
+
+		let inpoints = [ top ];
+		if ( elem.dataset.hasOwnProperty( 'pushinFrom' ) ) {
+			inpoints = elem.dataset.pushinFrom.split( ',' );
+			inpoints = inpoints.map( inpoint => parseInt( inpoint.trim() ) );
+		} else if ( i === 0 && this.scene.dataset.hasOwnProperty( 'pushinFrom' ) ) {
+			// custom inpoint
+			sceneInpoints = this.scene.dataset.pushinFrom.split( ',' );
+			sceneInpoints = sceneInpoints.map( inpoint => parseInt( inpoint.trim() ) );
+		} else if ( i > 0 ) {
+			// Set default for middle layers if none provided
+			const outpoint = this.layers[ i - 1 ].params.outpoint;
+			inpoints = [ outpoint - this.speedDelta ];
+		}
+
+		return inpoints;
+	}
+
+
+	getOutpoints( elem, inpoint, i ) {
+		let outpoints = [ inpoint + this.layerDepth ];
+
+		if ( elem.dataset.hasOwnProperty( 'pushinTo' ) ) {
+			const values = elem.dataset.pushinTo.split( ',' );
+			outpoints = values.map( val => parseInt( val.trim() ) );
+		}
+
+		return outpoints;
+	}
+
+	getSpeed( elem ) {
+		const speed = elem.dataset.hasOwnProperty( 'pushinSpeed' ) ? elem.dataset.pushinSpeed : null;
+		return (speed || 8);
+	}
+
+	getBreakpointIndex() {
+		const searchIndex = this.breakpoints.reverse().findIndex( bp => bp <= window.innerWidth );
+		return ( searchIndex === -1 ) ? 0 : this.breakpoints.length - 1 - searchIndex;
 	}
 
 	/**
@@ -143,6 +191,27 @@ class pushIn {
 		window.addEventListener("touchend", function (event) {
 			this.scrollEnd = this.scrollPos;
 		}.bind(this));
+
+		let resizeTimeout;
+		window.addEventListener( 'resize', ( event ) => {
+			clearTimeout( resizeTimeout );
+
+			resizeTimeout = setTimeout( () => {
+				this.resetLayerParams();
+				this.setScrollLength();
+				this.toggleLayers();
+			}, 300 );
+		} );
+	}
+
+	resetLayerParams() {
+		this.layers.forEach( ( layer ) => {
+			layer.params = {
+				inpoint  : this.getInpoint( layer.ref.inpoints ),
+				outpoint : this.getOutpoint( layer.ref.outpoints ),
+				speed    : this.getSpeed( layer.elem )
+			}
+		} );
 	}
 
 	/**
@@ -190,7 +259,17 @@ class pushIn {
 	 * @returns Boolean
 	 */
 	isActive( layer ) {
-		return this.scrollPos >= layer.params.inpoint && this.scrollPos <= layer.params.outpoint;
+		const inpoint  = layer.params.inpoint;
+		const outpoint = layer.params.outpoint;
+		return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
+	}
+
+	getInpoint( inpoints ) {
+		return inpoints[ this.getBreakpointIndex() ] || inpoints[ 0 ];
+	}
+
+	getOutpoint( outpoints ) {
+		return outpoints[ this.getBreakpointIndex() ] || outpoints[ 0 ];
 	}
 
 	/**
@@ -199,7 +278,7 @@ class pushIn {
 	 * @param {Object} layer 
 	 * @return {Number}
 	 */
-	getScaleValue(layer) {
+	getScaleValue( layer ) {
 		const distance = this.scrollPos - layer.params.inpoint;
 		const speed    = Math.min( layer.params.speed, 100 ) / 100;
 		const delta    = ( distance * speed ) / 100;
@@ -231,23 +310,25 @@ class pushIn {
 	 * @param Element layer    Layer element
 	 */
 	setLayerStyle( layer ) {
-		let opacity   = 0;
-		const isFirst = layer.index === 0;
-		const isLast  = layer.index + 1 === this.layers.length;
+		let opacity    = 0;
+		const isFirst  = layer.index === 0;
+		const isLast   = layer.index + 1 === this.layers.length;
+		const inpoint  = layer.params.inpoint;
+		const outpoint = layer.params.outpoint;
 
-		if ( isFirst && this.scrollPos < layer.params.inpoint ) {
+		if ( isFirst && this.scrollPos < inpoint ) {
 			opacity = 1;
-		} else if ( isLast && this.scrollPos > layer.params.outpoint ) {
+		} else if ( isLast && this.scrollPos > outpoint ) {
 			opacity = 1;
 		} else if ( this.isActive( layer ) ) {
 			this.setScale( layer.elem, this.getScaleValue( layer ) );
 
-			let inpointDistance = Math.max( Math.min( this.scrollPos - layer.params.inpoint, this.transitionLength ), 0) / this.transitionLength;
+			let inpointDistance = Math.max( Math.min( this.scrollPos - inpoint, this.transitionLength ), 0) / this.transitionLength;
 			if ( isFirst ) {
 				inpointDistance = 1;
 			}
 
-			let outpointDistance = Math.max( Math.min( layer.params.outpoint - this.scrollPos, this.transitionLength ), 0) / this.transitionLength;
+			let outpointDistance = Math.max( Math.min( outpoint - this.scrollPos, this.transitionLength ), 0) / this.transitionLength;
 			if ( isLast ) {
 				outpointDistance = 1;
 			}
@@ -265,6 +346,28 @@ class pushIn {
 		const scrollLength = this.layers.length * ( this.layerDepth + this.transitionLength );
 
 		this.container.style.height = Math.max( containerHeight, scrollLength - transitions ) + 'px';
+	}
+
+	showDebugger() {
+		const scrollCounter = document.createElement( 'div' );
+		scrollCounter.classList.add( 'pushin-debug' );
+
+		const scrollTitle = document.createElement( 'p' );
+		scrollTitle.innerText = 'Pushin.js Debugger'
+		scrollTitle.classList.add( 'pushin-debug__title' )
+
+		const debuggerContent = document.createElement( 'div' );
+		debuggerContent.classList.add( 'pushin-debug__content' );
+		debuggerContent.innerText = 'Scroll position: ' + window.pageYOffset + 'px';
+
+		scrollCounter.appendChild( scrollTitle );
+		scrollCounter.appendChild( debuggerContent );
+
+		document.body.appendChild( scrollCounter );
+
+		window.addEventListener( 'scroll', function( evt ) {
+			debuggerContent.innerText = 'Scroll position: ' + window.pageYOffset + 'px';
+		} );
 	}
 }
 
