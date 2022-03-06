@@ -71,8 +71,8 @@ class pushIn {
 			1920
 		];
 
-		if ( this.scene.dataset.breakpoints ) {
-			this.breakpoints = this.scene.dataset.breakpoints.split(',');
+		if ( this.scene.dataset.pushinBreakpoints ) {
+			this.breakpoints = this.scene.dataset.pushinBreakpoints.split(',');
 			this.breakpoints = this.breakpoints.map( bp => parseInt( bp.trim() ) );
 		}
 
