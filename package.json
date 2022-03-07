@@ -8,7 +8,7 @@
     "docs": "webpack --name=docs",
     "start": "webpack serve --name=docs --mode=development",
     "test": "mocha --watch",
-    "coverage": "nyc --reporter=html --reporter=text mocha",
+    "coverage": "nyc --reporter=html --reporter=text mocha && open coverage/index.html -a 'Google Chrome'",
     "test:once": "mocha"
   },
   "repository": {
