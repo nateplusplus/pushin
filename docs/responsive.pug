@@ -19,6 +19,12 @@ html
 					margin-top: 0;
 				}
 			}
+			.demo-responsive {
+				max-width: 320px;
+				padding: 2em;
+				border-radius: 15px;
+				background-color: rgb(243, 204, 154);
+			}
 	body
 		header.demo-header
 			h1.demo-padded Responsive design
@@ -37,11 +43,13 @@ html
 			div.pushin
 				div.pushin-scene(data-pushin-breakpoints='768, 1440')
 					div.pushin-layer(data-pushin-from='580,280,200')
-						p This should begin animating at:
-						ul 
-							li Mobile: 580px
-							li Tablet: 280px
-							li Desktop: 200px
+						div.demo-responsive
+							p Watch the debugger floating near the top of your browser.
+							p This should begin animating at:
+							ul 
+								li Mobile: 580px
+								li Tablet: 280px
+								li Desktop: 200px
 		footer
 			ul
 				li

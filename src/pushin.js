@@ -363,7 +363,7 @@ class pushIn {
     document.body.appendChild(scrollCounter);
 
     window.addEventListener('scroll', (evt) => {
-      debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
+      debuggerContent.innerText = `Scroll position: ${Math.round(window.pageYOffset)}px`;
     });
   }
 }
