@@ -1,9 +1,14 @@
 node_modules
 .DS_Store
+
+#testing
 lt.log
+.nyc_output
+coverage
 
 #docs
 /docs/index.html
 /docs/simple.html
+/docs/responsive.html
 /docs/pushin.min.css
 /docs/pushin.min.js

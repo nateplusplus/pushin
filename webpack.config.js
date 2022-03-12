@@ -11,6 +11,7 @@ let config = {
     mode: 'production',
     target: 'browserslist',
     devServer: {
+        open: true,
         static: {
             directory: path.join(__dirname, 'docs'),
         },
@@ -74,6 +75,11 @@ module.exports = (env, argv) => {
                 filename: 'simple.html',
                 minify: false,
                 template: '!!pug-loader!docs/simple.pug'
+            }),
+            new HtmlWebpackPlugin({
+                filename: 'responsive.html',
+                minify: false,
+                template: '!!pug-loader!docs/responsive.pug'
             })
         );
     }
