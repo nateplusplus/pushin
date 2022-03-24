@@ -89,42 +89,6 @@ main {
     background-color: white;
 }
 
-/* footer {
-    position: fixed;
-    z-index: 10;
-    bottom: 8px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-} 
-
-footer ul {
-    padding: 0;
-    list-style: none;
-    text-align: right;
-}
-
-footer svg {
-    height: 18px;
-}
-
-footer li {
-    display: inline-block;
-}
-
-footer a {
-    padding: 1em;
-    background-color: white;
-    border-radius: 13px 0 0;
-    border: 1px solid #ccc;
-}
-
-footer img {
-    height: 16px;
-    vertical-align: text-top;
-} */
-
 /*
  *  LAYERS
  */

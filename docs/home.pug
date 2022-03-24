@@ -1,11 +1,14 @@
-doctype html
-html
-	head
-		title PushIn.js
-		meta(charset='utf-8')
-		meta(name='viewport' content='width=device-width, initial-scale=1')
-		link( href='demo.css' rel='stylesheet' )
-	body
+extends layout.pug
+
+block append head
+	title PushIn.js
+	meta(charset='utf-8')
+	meta(name='viewport' content='width=device-width, initial-scale=1')
+
+block append scripts
+	link( href='demo.css' rel='stylesheet' )
+
+block content
 		header.demo-header.demo-bg-white
 			div.demo-padded
 				h1 PushIn.js
@@ -57,12 +60,3 @@ html
 						| Please submit a 
 						a(href="https://github.com/nateplusplus/pushIn-js/issues/new?assignees=&labels=&template=bug_report.md&title=") bug report
 						|  so I can put on my detective hat and look into it further!
-			footer
-				ul
-					li
-						a(href="https://github.com/nateplusplus/pushin-js") View on github 
-							include github.svg
-		script( defer ).
-			document.addEventListener( 'DOMContentLoaded', function() {
-				pushInStart();
-			} );
