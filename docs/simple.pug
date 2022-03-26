@@ -1,25 +1,19 @@
-doctype html
-html
-	head
-		title PushIn.js - Examples: Simple
-		meta(charset='utf-8')
-		meta(name='viewport' content='width=device-width, initial-scale=1')
-		link( href='demo.css' rel='stylesheet' )
-		style.
-			.pushin-layer { padding: 0 3em; }
-	body
-		div.pushin
-			div.pushin-scene
-				div.pushin-layer This example demonstrates the simplest, zero-configuration setup for pushin.js.
-				div.pushin-layer These layers are added to the HTML without any parameters and minimal CSS.
-				div.pushin-layer Pushin.js has configured the timing of this effect automatically to adjust for the number of layers.
-				div.pushin-layer The scroll length increases to accommodate all layers in an evenly-spaced animation.
-		footer
-			ul
-				li
-					a(href="https://github.com/nateplusplus/pushin-js") View on github 
-						include github.svg
-			script( defer ).
-				document.addEventListener( 'DOMContentLoaded', function() {
-					pushInStart();
-				} );
+extends layout.pug
+
+block append head
+	title PushIn.js - Examples: Simple
+
+block append styles
+	style.
+		.pushin-layer { padding: 0 3em; }
+		.github-link:hover {
+			fill: white;
+		}
+
+block content
+	div.pushin
+		div.pushin-scene
+			div.pushin-layer This example demonstrates the simplest, zero-configuration setup for pushin.js.
+			div.pushin-layer These layers are added to the HTML without any parameters and minimal CSS.
+			div.pushin-layer Pushin.js has configured the timing of this effect automatically to adjust for the number of layers.
+			div.pushin-layer The scroll length increases to accommodate all layers in an evenly-spaced animation.
