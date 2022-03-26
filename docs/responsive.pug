@@ -3,51 +3,35 @@ extends layout.pug
 block append head
 	title PushIn.js - Examples: Responsive
 
-block append scripts
-	link( href='demo.css' rel='stylesheet' )
-	style.
-		.pushin-layer { padding: 0 3em; }
-		.pushin {
-			background-color: lightgrey;
-			z-index: -1;
-		}
-		.demo-header {
-			margin-top: 50px;
-		}
-		@media (min-width: 768px) {
-			.demo-header {
-				margin-top: 0;
-			}
-		}
-		.demo-responsive {
-			max-width: 320px;
-			padding: 2em;
-			border-radius: 15px;
-			background-color: rgb(243, 204, 154);
-		}
-
 block content
-	header.demo-header
-		h1.demo-padded Responsive design
-		p.demo-padded
-			| This example illustrates some of the responsive design features built into pushIn.js. 
-			| These features can help you control the layout and behavior of the effect for each of your breakpoints,
-			| giving you a great amount of flexibility.
-		h2.demo-padded Why is this necessary?
-		p.demo-padded
-			| When there is a lot of wrapping content like paragraphs of text,
-			| the page content could become longer on smaller screens like phones or tablets.
-			| This could interfere with the timing of pushIn.js animations, since it relies directly 
-			| on the window scroll position. This is where specifying different settings per breakpoint
-			| can come in handy.
+	header.container-fluid.py-5.bg-white.mt-5.mt-md-0
+		div.row.justify-content-center
+			h1.col-10.col-lg-7.my-4 Responsive design
+			p.col-10.col-lg-7.lead
+				| This example illustrates some of the responsive design features built into pushIn.js. 
+				| These features can help you control the layout and behavior of the effect for each of your breakpoints,
+				| giving you a great amount of flexibility.
+			h2.col-10.col-lg-7 Why is this necessary?
+			p.col-10.col-lg-7
+				| When there is a lot of wrapping content like paragraphs of text,
+				| the page content could become longer on smaller screens like phones or tablets.
+				| This could interfere with the timing of pushIn.js animations, since it relies directly 
+				| on the window scroll position. This is where specifying different settings per breakpoint
+				| can come in handy.
 	main
-		div.pushin
+		div.pushin.bg-secondary.bg-opacity-25(style="z-index:-1")
 			div.pushin-scene(data-pushin-breakpoints='768, 1440')
 				div.pushin-layer(data-pushin-from='580,280,200')
-					div.demo-responsive
-						p Watch the debugger floating near the top of your browser.
-						p This should begin animating at:
-						ul 
-							li Mobile: 580px
-							li Tablet: 280px
-							li Desktop: 200px
+					div.card.bg-info.bg-gradient.shadow-lg(style="max-width: 20rem;")
+						div.card-body
+							p Watch the debugger floating near the top of your browser.
+							p This should begin animating at:
+							ul 
+								li Mobile: 580px
+								li Tablet: 280px
+								li Desktop: 200px
+block scripts
+	script( defer ).
+		document.addEventListener( 'DOMContentLoaded', function() {
+			pushInStart( { debug: true } );
+		} );
