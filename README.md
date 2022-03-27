@@ -111,13 +111,13 @@ See a working demo of this tool here: [Responsive design](http://nateplusplus.gi
 
 The "scene" is the container element for all layers. There are some scene configurations you can customize for your unique project, which will affect all layers.
 
-**Refer to [docs/html-attributes]('docs/html-attributes.md') for a detailed breakdown of available scene configurations.**
+**Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available scene configurations.**
 
 ### 5. Layer configuration and animation timing
 
 By default, all layers will push in at once. You can configure each layer to enter and exit the frame at specific times by using the following data parameters:
 
-**Refer to [docs/html-attributes]('docs/html-attributes.md') for a detailed breakdown of available layer configurations.**
+**Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available layer configurations.**
 
 ## Contributing
 
