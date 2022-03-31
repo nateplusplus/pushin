@@ -1,6 +1,6 @@
 {
   "extends": "airbnb-base",
-  "ignorePatterns" : [ "dist/*" ],
+  "ignorePatterns": ["dist/*"],
   "browser": true,
-  "node": true,
+  "node": true
 }

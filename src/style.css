@@ -1,51 +1,50 @@
 .pushin {
-    position: relative;
+  position: relative;
 }
 .pushin-scene {
-    height: 100vh;
-    left: 0;
-    position: fixed;
-    width: 100%;
-    top: 0;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 .pushin-layer {
-    align-items: center;
-    display:flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 /* Debug */
 .pushin-debug {
-    background-color: white;
-    border: 0;
-    border-bottom: 1px;
-    box-shadow: -2px 8px 19px 2px rgba(0,0,0,0.26);
-    padding: 1em;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    -webkit-box-shadow: -2px 8px 19px 2px rgba(0,0,0,0.26); 
+  background-color: white;
+  border: 0;
+  border-bottom: 1px;
+  box-shadow: -2px 8px 19px 2px rgba(0, 0, 0, 0.26);
+  padding: 1em;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  -webkit-box-shadow: -2px 8px 19px 2px rgba(0, 0, 0, 0.26);
 }
 
-
 @media (min-width: 768px) {
-    .pushin-debug {
-        border: 1px solid black;
-        border-radius: 15px 0 0 15px;
-        border-right: 0;
-        right: 0;
-        top: 50px;
-        width: 250px;
-    }
+  .pushin-debug {
+    border: 1px solid black;
+    border-radius: 15px 0 0 15px;
+    border-right: 0;
+    right: 0;
+    top: 50px;
+    width: 250px;
+  }
 }
 
 .pushin-debug__title {
-    font-weight: bold;
+  font-weight: bold;
 }

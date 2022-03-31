@@ -1,5 +1,4 @@
-pushIn.js
-=========
+# pushIn.js
 
 [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/nateplusplus/pushin-js/graphs/commit-activity)
@@ -7,12 +6,12 @@ pushIn.js
 [![GitHub license](https://img.shields.io/github/license/nateplusplus/pushin-js.svg)](https://github.com/nateplusplus/pushin-js/blob/main/LICENSE)
 [![Node.js CI](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml)
 
-
 PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 
 Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a working example.
 
 ## Compatibility
+
 PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
 
 ## Getting started
@@ -32,22 +31,23 @@ const pushin = require('pushin');
 const css = require('pushin/dist/pushin.min.css');
 ```
 
-* _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
+- _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
 
 ### 1b. Manually download and include the JavaScript and CSS
 
 If you're not using npm, just download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
 
 **Example:**
+
 ```html
 <html>
-    <head>
-        <link rel='stylesheet' href='pushin.min.css'>
-        <script type="text/javascript" src="pushin.min.js"></script>
-    </head>
-    <body>
-        <!-- page content... -->
-    </body>
+  <head>
+    <link rel="stylesheet" href="pushin.min.css" />
+    <script type="text/javascript" src="pushin.min.js"></script>
+  </head>
+  <body>
+    <!-- page content... -->
+  </body>
 </html>
 ```
 
@@ -58,16 +58,15 @@ At the most basic level, there are a few things you need to set up on your page 
 Use the following example snippet to create a "scene" for the pushin effect.
 
 **Example:**
+
 ```html
 <div class="pushin">
-    <div class="pushin-scene">
-        <div class="pushin-layer">
-            This is the first layer you'll see.
-        </div>
-        <div class="pushin-layer">
-            This is a second layer, which will be positioned behind the first one.
-        </div>
+  <div class="pushin-scene">
+    <div class="pushin-layer">This is the first layer you'll see.</div>
+    <div class="pushin-layer">
+      This is a second layer, which will be positioned behind the first one.
     </div>
+  </div>
 </div>
 ```
 
@@ -80,6 +79,7 @@ Once you have your HTML set up, you just need to call the `pushInStart()` functi
 **IMPORTANT:** you need to call this function **after** the `pushin.js` file has been included. For best results, call this function at the bottom of the `<body>` tag.
 
 **Example:**
+
 ```html
     <div class="pushin">
         <div class="pushin-scene">
@@ -98,6 +98,7 @@ To assist in setting up your effect, you can use the debug tool to easily deteri
 See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushIn-js/responsive.html)
 
 **Example:**
+
 ```html
     <script type="text/javascript">
         // initialize push-in effect
@@ -105,7 +106,6 @@ See a working demo of this tool here: [Responsive design](http://nateplusplus.gi
     </script>
 </body>
 ```
-
 
 ### 4. Scene configuration
 

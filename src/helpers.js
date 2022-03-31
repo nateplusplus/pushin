@@ -6,18 +6,18 @@ import { pushIn } from './pushin';
  *
  * @param { string } selector    Optional (legacy) - specify a unique selector for the container of the effect
  */
- window.pushInStart = ( options ) => {
+window.pushInStart = options => {
   let selector = '.pushin';
-  if ( options ) {
+  if (options) {
     // Backward compatibility <3.3.0 - first parameter was selector, not options
-    if ( typeof options === 'string' ) {
+    if (typeof options === 'string') {
       selector = options;
-      options  = null;
+      options = null;
     }
   }
 
-  const elements = document.querySelectorAll( selector );
+  const elements = document.querySelectorAll(selector);
   for (let i = 0; i < elements.length; i++) {
-    new pushIn( elements[i], options ).start();
+    new pushIn(elements[i], options).start();
   }
-}
+};
