@@ -1,4 +1,4 @@
-import { pushIn } from './pushin';
+import { PushIn } from './pushin';
 
 /**
  * Helper function: Set up and start push-in effect on all elements
@@ -18,6 +18,6 @@ window.pushInStart = options => {
 
   const elements = document.querySelectorAll(selector);
   for (let i = 0; i < elements.length; i++) {
-    new pushIn(elements[i], options).start();
+    new PushIn(elements[i], options).start();
   }
 };

@@ -1,6 +1,15 @@
 {
-  "extends": "airbnb-base",
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["prettier"],
   "ignorePatterns": ["dist/*"],
-  "browser": true,
-  "node": true
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "rules": {
+    "no-plusplus": "off",
+    "no-param-reassign": "off",
+    "class-methods-use-this": "off",
+    "prettier/prettier": ["error"]
+  }
 }

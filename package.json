@@ -6,6 +6,7 @@
   "scripts": {
     "husky": "husky",
     "lint-staged": "lint-staged",
+    "lint": "eslint -- ./src/**/*.js",
     "build": "webpack",
     "docs": "webpack --name=docs",
     "start": "webpack serve --name=docs --mode=development",
@@ -41,7 +42,9 @@
     "css-minimizer-webpack-plugin": "^3.4.1",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
@@ -66,6 +69,8 @@
     "bracketSpacing": true
   },
   "lint-staged": {
-    "*.{js,css,md}": ["prettier --write"]
+    "*.{js,css,md}": [
+      "prettier --write"
+    ]
   }
 }

@@ -1,10 +1,12 @@
+const { hasOwnProperty } = Object.prototype;
+
 /**
  * PushIn object
  *
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-class pushIn {
+class PushIn {
   constructor(container, options) {
     this.layers = [];
     this.container = container;
@@ -70,7 +72,7 @@ class pushIn {
 
     if (this.scene.dataset.pushinBreakpoints) {
       this.breakpoints = this.scene.dataset.pushinBreakpoints.split(',');
-      this.breakpoints = this.breakpoints.map(bp => parseInt(bp.trim()));
+      this.breakpoints = this.breakpoints.map(bp => parseInt(bp.trim(), 10));
     }
 
     // Always include break point 0 for anything under first breakpoint
@@ -87,7 +89,7 @@ class pushIn {
       for (let i = 0; i < layers.length; i++) {
         const elem = layers[i];
         const inpoints = this.getInpoints(elem, i);
-        const outpoints = this.getOutpoints(elem, inpoints[0], i);
+        const outpoints = this.getOutpoints(elem, inpoints[0]);
 
         const layer = {
           elem,
@@ -114,13 +116,17 @@ class pushIn {
     const { top } = this.scene.getBoundingClientRect();
 
     let inpoints = [top];
-    if (elem.dataset.hasOwnProperty('pushinFrom')) {
+    if (hasOwnProperty.call(elem.dataset, 'pushinFrom')) {
       inpoints = elem.dataset.pushinFrom.split(',');
-      inpoints = inpoints.map(inpoint => parseInt(inpoint.trim()));
-    } else if (i === 0 && this.scene.dataset.hasOwnProperty('pushinFrom')) {
+      inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
+    } else if (i === 0 && hasOwnProperty(this.scene.dataset, 'pushinFrom')) {
       // custom inpoint
+      // eslint-disable-next-line no-undef
       sceneInpoints = this.scene.dataset.pushinFrom.split(',');
-      sceneInpoints = sceneInpoints.map(inpoint => parseInt(inpoint.trim()));
+      // eslint-disable-next-line no-undef
+      sceneInpoints = sceneInpoints.map(inpoint =>
+        parseInt(inpoint.trim(), 10)
+      );
     } else if (i > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.layers[i - 1].params;
@@ -130,19 +136,19 @@ class pushIn {
     return inpoints;
   }
 
-  getOutpoints(elem, inpoint, i) {
+  getOutpoints(elem, inpoint) {
     let outpoints = [inpoint + this.layerDepth];
 
-    if (elem.dataset.hasOwnProperty('pushinTo')) {
+    if (hasOwnProperty.call(elem.dataset, 'pushinTo')) {
       const values = elem.dataset.pushinTo.split(',');
-      outpoints = values.map(val => parseInt(val.trim()));
+      outpoints = values.map(val => parseInt(val.trim(), 10));
     }
 
     return outpoints;
   }
 
   getSpeed(elem) {
-    const speed = elem.dataset.hasOwnProperty('pushinSpeed')
+    const speed = hasOwnProperty.call(elem.dataset, 'pushinSpeed')
       ? elem.dataset.pushinSpeed
       : null;
     return speed || 8;
@@ -169,7 +175,7 @@ class pushIn {
    * Bind event listeners to watch for page load and user interaction.
    */
   bindEvents() {
-    window.addEventListener('scroll', event => {
+    window.addEventListener('scroll', () => {
       this.scrollPos = window.pageYOffset;
       this.dolly();
     });
@@ -191,15 +197,15 @@ class pushIn {
         this.pageHeight - window.innerHeight
       );
 
-      dolly();
+      this.dolly();
     });
 
-    window.addEventListener('touchend', event => {
+    window.addEventListener('touchend', () => {
       this.scrollEnd = this.scrollPos;
     });
 
     let resizeTimeout;
-    window.addEventListener('resize', event => {
+    window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = setTimeout(() => {
@@ -233,7 +239,7 @@ class pushIn {
 
     let scaleX = 1;
     if (transform && transform !== 'none') {
-      const match = transform.match(/[matrix|scale]\(([\d,\.\s]+)/);
+      const match = transform.match(/[matrix|scale]\(([\d,.\s]+)/);
       if (match && match[1]) {
         const matrix = match[1].split(', ');
         scaleX = parseFloat(matrix[0]);
@@ -299,13 +305,13 @@ class pushIn {
    * @param {HtmlElement} elem
    * @param {Number} value
    */
-  setScale(elem, value) {
+  setScale({ style }, value) {
     const scaleString = `scale(${value})`;
-    elem.style.webkitTransform = scaleString;
-    elem.style.mozTransform = scaleString;
-    elem.style.msTransform = scaleString;
-    elem.style.oTransform = scaleString;
-    elem.style.transform = scaleString;
+    style.webkitTransform = scaleString;
+    style.mozTransform = scaleString;
+    style.msTransform = scaleString;
+    style.oTransform = scaleString;
+    style.transform = scaleString;
   }
 
   /**
@@ -385,7 +391,7 @@ class pushIn {
 
     document.body.appendChild(scrollCounter);
 
-    window.addEventListener('scroll', evt => {
+    window.addEventListener('scroll', () => {
       debuggerContent.innerText = `Scroll position: ${Math.round(
         window.pageYOffset
       )}px`;
@@ -393,4 +399,4 @@ class pushIn {
   }
 }
 
-exports.pushIn = pushIn;
+exports.PushIn = PushIn;
