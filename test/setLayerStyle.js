@@ -76,8 +76,27 @@ describe( 'setLayerStyle', function() {
         result.should.equal('1');
     } );
 
+    it( 'should set opacity to 1 if its the first layer and it is active', function() {
+        this.pushIn.scrollPos = 205;
+        let element = document.querySelector('.demo-layer-1');
+        this.pushIn.setLayerStyle( this.pushIn.layers[0] );
+        const result = element.style.opacity;
+
+        result.should.equal('1');
+    } );
+
     it( 'should set opacity to 1 if its the last layer and the scroll position is after its outpoint', function() {
         this.pushIn.scrollPos = 1300;
+        let element = document.querySelector('.demo-layer-3');
+        this.pushIn.setLayerStyle( this.pushIn.layers[2] );
+
+        const result = element.style.opacity;
+
+        result.should.equal('1');
+    } );
+
+    it( 'should set opacity to 1 if its the last layer and it is active', function() {
+        this.pushIn.scrollPos = 1195;
         let element = document.querySelector('.demo-layer-3');
         this.pushIn.setLayerStyle( this.pushIn.layers[2] );
 
