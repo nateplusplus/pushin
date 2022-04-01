@@ -121,8 +121,8 @@ class pushIn {
       inpoints = inpoints.map((inpoint) => parseInt(inpoint.trim()));
     } else if (i === 0 && this.scene.dataset.hasOwnProperty('pushinFrom')) {
       // custom inpoint
-      sceneInpoints = this.scene.dataset.pushinFrom.split(',');
-      sceneInpoints = sceneInpoints.map((inpoint) => parseInt(inpoint.trim()));
+      inpoints = this.scene.dataset.pushinFrom.split(',');
+      inpoints = inpoints.map((inpoint) => parseInt(inpoint.trim()));
     } else if (i > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.layers[i - 1].params;
