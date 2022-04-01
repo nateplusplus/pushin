@@ -112,6 +112,13 @@ class pushIn {
     }
   }
 
+  /**
+   * Get all inpoints for the layer.
+   *
+   * @param {HTMLElement} elem 
+   * @param {int} i 
+   * @return {array}
+   */
   getInpoints(elem, i) {
     const { top } = this.scene.getBoundingClientRect();
 
@@ -132,6 +139,14 @@ class pushIn {
     return inpoints;
   }
 
+  /**
+   * Get all outpoints for the layer.
+   *
+   * @param {HTMLElement} elem 
+   * @param {int} inpoint 
+   * @param {int} i 
+   * @return {array}
+   */
   getOutpoints(elem, inpoint, i) {
     let outpoints = [inpoint + this.layerDepth];
 
@@ -143,9 +158,24 @@ class pushIn {
     return outpoints;
   }
 
+  /**
+   * Get the push-in speed for the layer.
+   * Default: 8.
+   *
+   * @param {HTMLElement} elem 
+   * @return {int}
+   */
   getSpeed(elem) {
-    const speed = elem.dataset.hasOwnProperty('pushinSpeed') ? elem.dataset.pushinSpeed : null;
-    return (speed || 8);
+    const defaultSpeed = 8;
+
+    const speed  = elem.dataset.hasOwnProperty('pushinSpeed') ? elem.dataset.pushinSpeed : defaultSpeed;
+    let speedInt = parseInt( speed );
+
+    if ( isNaN( speedInt ) ) {
+      speedInt = defaultSpeed;
+    }
+
+    return speedInt || 8;
   }
 
   getBreakpointIndex() {
