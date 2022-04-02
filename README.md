@@ -95,6 +95,8 @@ Once you have your HTML set up, you just need to call the `pushInStart()` functi
 
 To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
 
+> :warning: the `debug` option is not configurable in production mode, since we tree-shake debugging stuff in production.
+
 See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushIn-js/responsive.html)
 
 **Example:**

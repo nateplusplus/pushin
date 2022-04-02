@@ -1,3 +1,6 @@
+/** This will be provided through `DefinePlugin` by Webpack itself. */
+const isProduction = process.env.NODE_ENV === 'production';
+
 /**
  * PushIn object
  *
@@ -9,7 +12,7 @@ class PushIn {
     this.layers = [];
     this.container = container;
 
-    if (options) {
+    if (options && !isProduction) {
       this.debug = options.debug || false;
     }
   }
@@ -34,14 +37,15 @@ class PushIn {
 
       // Set layer initial state
       this.toggleLayers();
-    } else {
+    } else if (!isProduction) {
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
     }
 
     if (this.debug) {
-      this.showDebugger();
+      // eslint-disable-next-line no-use-before-define
+      showDebugger();
     }
   }
 
@@ -113,9 +117,9 @@ class PushIn {
   /**
    * Get all inpoints for the layer.
    *
-   * @param {HTMLElement} elem 
-   * @param {int} i 
-   * @return {array}
+   * @param {HTMLElement} elem
+   * @param {number} i
+   * @returns {number[]}
    */
   getInpoints(elem, i) {
     const { top } = this.scene.getBoundingClientRect();
@@ -127,7 +131,7 @@ class PushIn {
     } else if (i === 0 && 'pushinFrom' in this.scene.dataset) {
       // custom inpoint
       inpoints = this.scene.dataset.pushinFrom.split(',');
-      inpoints = inpoints.map((inpoint) => parseInt(inpoint.trim()));
+      inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
     } else if (i > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.layers[i - 1].params;
@@ -140,10 +144,9 @@ class PushIn {
   /**
    * Get all outpoints for the layer.
    *
-   * @param {HTMLElement} elem 
-   * @param {int} inpoint 
-   * @param {int} i 
-   * @return {array}
+   * @param {HTMLElement} elem
+   * @param {number} inpoint
+   * @returns {number[]}
    */
   getOutpoints(elem, inpoint) {
     let outpoints = [inpoint + this.layerDepth];
@@ -160,18 +163,21 @@ class PushIn {
    * Get the push-in speed for the layer.
    * Default: 8.
    *
-   * @param {HTMLElement} elem 
-   * @return {int}
+   * @param {HTMLElement} elem
+   * @returns {number}
    */
   getSpeed(elem) {
     const defaultSpeed = 8;
-    const speed = Object.prototype.hasOwnProperty.call(elem.dataset, 'pushinSpeed')
+    const speed = Object.prototype.hasOwnProperty.call(
+      elem.dataset,
+      'pushinSpeed'
+    )
       ? elem.dataset.pushinSpeed
       : defaultSpeed;
 
-    let speedInt = parseInt( speed );
+    let speedInt = parseInt(speed, 10);
 
-    if ( isNaN( speedInt ) ) {
+    if (Number.isNaN(speedInt)) {
       speedInt = defaultSpeed;
     }
 
@@ -181,7 +187,7 @@ class PushIn {
   /**
    * Get the array index of the current window breakpoint.
    *
-   * @return {int}
+   * @returns {number}
    */
   getBreakpointIndex() {
     const searchIndex = this.breakpoints
@@ -194,7 +200,7 @@ class PushIn {
    * Set the z-index of each layer so they overlap correctly.
    *
    * @param {object} layer
-   * @param {int} total
+   * @param {number} total
    */
   setZIndex(layer, total) {
     layer.elem.style.zIndex = total - layer.index;
@@ -265,7 +271,7 @@ class PushIn {
    * Get the initial scale of the element at time of DOM load.
    *
    * @param {Element} elem
-   * @return {Number} scaleX
+   * @returns {number}
    */
   getElementScaleX(elem) {
     const transform = window
@@ -304,7 +310,7 @@ class PushIn {
    * Whether or not a layer should currently be zooming.
    *
    * @param {Object} layer
-   * @returns Boolean
+   * @returns {boolean}
    */
   isActive(layer) {
     const { inpoint } = layer.params;
@@ -316,8 +322,8 @@ class PushIn {
    * Get the current inpoint for a layer,
    * depending on window breakpoint.
    *
-   * @param {array} inpoints 
-   * @return {int}
+   * @param {number[]} inpoints
+   * @returns {number}
    */
   getInpoint(inpoints) {
     return inpoints[this.getBreakpointIndex()] || inpoints[0];
@@ -327,8 +333,8 @@ class PushIn {
    * Get the current outpoint for a layer,
    * depending on window breakpoint.
    *
-   * @param {array} outpoints 
-   * @return {int}
+   * @param {number[]} outpoints
+   * @returns {number}
    */
   getOutpoint(outpoints) {
     return outpoints[this.getBreakpointIndex()] || outpoints[0];
@@ -338,7 +344,7 @@ class PushIn {
    * Get the scaleX value for the layer.
    *
    * @param {Object} layer
-   * @return {Number}
+   * @returns {number}
    */
   getScaleValue(layer) {
     const distance = this.scrollPos - layer.params.inpoint;
@@ -435,34 +441,36 @@ class PushIn {
       scrollLength - transitions
     )}px`;
   }
+}
 
-  /**
-   * Show a debugging tool appended to the frontend of the page.
-   * Can be used to determine best "pushin-from" and "pushin-to" values.
-   */
-  showDebugger() {
-    const scrollCounter = document.createElement('div');
-    scrollCounter.classList.add('pushin-debug');
+/**
+ * Show a debugging tool appended to the frontend of the page.
+ * Can be used to determine best "pushin-from" and "pushin-to" values.
+ * This should exist as a separate function so it's tree-shakable when the code
+ * is built in production mode.
+ */
+function showDebugger() {
+  const scrollCounter = document.createElement('div');
+  scrollCounter.classList.add('pushin-debug');
 
-    const scrollTitle = document.createElement('p');
-    scrollTitle.innerText = 'Pushin.js Debugger';
-    scrollTitle.classList.add('pushin-debug__title');
+  const scrollTitle = document.createElement('p');
+  scrollTitle.innerText = 'Pushin.js Debugger';
+  scrollTitle.classList.add('pushin-debug__title');
 
-    const debuggerContent = document.createElement('div');
-    debuggerContent.classList.add('pushin-debug__content');
-    debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
+  const debuggerContent = document.createElement('div');
+  debuggerContent.classList.add('pushin-debug__content');
+  debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
 
-    scrollCounter.appendChild(scrollTitle);
-    scrollCounter.appendChild(debuggerContent);
+  scrollCounter.appendChild(scrollTitle);
+  scrollCounter.appendChild(debuggerContent);
 
-    document.body.appendChild(scrollCounter);
+  document.body.appendChild(scrollCounter);
 
-    window.addEventListener('scroll', () => {
-      debuggerContent.innerText = `Scroll position: ${Math.round(
-        window.pageYOffset
-      )}px`;
-    });
-  }
+  window.addEventListener('scroll', () => {
+    debuggerContent.innerText = `Scroll position: ${Math.round(
+      window.pageYOffset
+    )}px`;
+  });
 }
 
 exports.PushIn = PushIn;
