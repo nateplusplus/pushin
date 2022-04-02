@@ -1,5 +1,3 @@
-const { hasOwnProperty } = Object.prototype;
-
 /**
  * PushIn object
  *
@@ -123,10 +121,10 @@ class PushIn {
     const { top } = this.scene.getBoundingClientRect();
 
     let inpoints = [top];
-    if (hasOwnProperty.call(elem.dataset, 'pushinFrom')) {
+    if ('pushinFrom' in elem.dataset) {
       inpoints = elem.dataset.pushinFrom.split(',');
       inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
-    } else if (i === 0 && hasOwnProperty(this.scene.dataset, 'pushinFrom')) {
+    } else if (i === 0 && 'pushinFrom' in this.scene.dataset) {
       // custom inpoint
       inpoints = this.scene.dataset.pushinFrom.split(',');
       inpoints = inpoints.map((inpoint) => parseInt(inpoint.trim()));
@@ -150,7 +148,7 @@ class PushIn {
   getOutpoints(elem, inpoint) {
     let outpoints = [inpoint + this.layerDepth];
 
-    if (hasOwnProperty.call(elem.dataset, 'pushinTo')) {
+    if (Object.prototype.hasOwnProperty.call(elem.dataset, 'pushinTo')) {
       const values = elem.dataset.pushinTo.split(',');
       outpoints = values.map(val => parseInt(val.trim(), 10));
     }
@@ -167,7 +165,7 @@ class PushIn {
    */
   getSpeed(elem) {
     const defaultSpeed = 8;
-    const speed = hasOwnProperty.call(elem.dataset, 'pushinSpeed')
+    const speed = Object.prototype.hasOwnProperty.call(elem.dataset, 'pushinSpeed')
       ? elem.dataset.pushinSpeed
       : defaultSpeed;
 

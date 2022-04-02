@@ -19,7 +19,7 @@ describe( 'setScrollLength', function() {
         global.document = window.document;
         global.getComputedStyle = window.getComputedStyle;
 
-        pushIn = require( '../src/pushin' ).pushIn;
+        pushIn = require( '../src/pushin' ).PushIn;
 
         const container = document.querySelector( '.pushin' );
         this.pushIn = new pushIn( container );

@@ -32,7 +32,7 @@ describe('getInpoints', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    pushIn = require('../src/pushin').pushIn;
+    pushIn = require('../src/pushin').PushIn;
   });
 
   it('Should return inpoint + layerDepth by default for first layer', function () {

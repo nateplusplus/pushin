@@ -55,7 +55,7 @@ describe('setLayerStyle', function () {
           }
       ];
 
-      pushIn = require( '../src/pushin' ).pushIn;
+      pushIn = require( '../src/pushin' ).PushIn;
 
       this.pushIn                  = new pushIn();
       this.pushIn.getInpoint       = layer => layer.params.inpoint;

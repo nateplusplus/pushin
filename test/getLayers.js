@@ -25,7 +25,7 @@ describe( 'getLayers', function() {
         global.window   = dom.window;
         global.document = window.document;
 
-        pushIn = require( '../src/pushin' ).pushIn;
+        pushIn = require( '../src/pushin' ).PushIn;
 
         const container   = document.querySelector( '.pushin' );
         this.pushIn       = new pushIn( container );
