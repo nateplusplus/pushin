@@ -112,6 +112,13 @@ class PushIn {
     }
   }
 
+  /**
+   * Get all inpoints for the layer.
+   *
+   * @param {HTMLElement} elem 
+   * @param {int} i 
+   * @return {array}
+   */
   getInpoints(elem, i) {
     const { top } = this.scene.getBoundingClientRect();
 
@@ -121,12 +128,8 @@ class PushIn {
       inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
     } else if (i === 0 && hasOwnProperty(this.scene.dataset, 'pushinFrom')) {
       // custom inpoint
-      // eslint-disable-next-line no-undef
-      sceneInpoints = this.scene.dataset.pushinFrom.split(',');
-      // eslint-disable-next-line no-undef
-      sceneInpoints = sceneInpoints.map(inpoint =>
-        parseInt(inpoint.trim(), 10)
-      );
+      inpoints = this.scene.dataset.pushinFrom.split(',');
+      inpoints = inpoints.map((inpoint) => parseInt(inpoint.trim()));
     } else if (i > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.layers[i - 1].params;
@@ -136,6 +139,14 @@ class PushIn {
     return inpoints;
   }
 
+  /**
+   * Get all outpoints for the layer.
+   *
+   * @param {HTMLElement} elem 
+   * @param {int} inpoint 
+   * @param {int} i 
+   * @return {array}
+   */
   getOutpoints(elem, inpoint) {
     let outpoints = [inpoint + this.layerDepth];
 
@@ -147,13 +158,33 @@ class PushIn {
     return outpoints;
   }
 
+  /**
+   * Get the push-in speed for the layer.
+   * Default: 8.
+   *
+   * @param {HTMLElement} elem 
+   * @return {int}
+   */
   getSpeed(elem) {
+    const defaultSpeed = 8;
     const speed = hasOwnProperty.call(elem.dataset, 'pushinSpeed')
       ? elem.dataset.pushinSpeed
-      : null;
-    return speed || 8;
+      : defaultSpeed;
+
+    let speedInt = parseInt( speed );
+
+    if ( isNaN( speedInt ) ) {
+      speedInt = defaultSpeed;
+    }
+
+    return speedInt || 8;
   }
 
+  /**
+   * Get the array index of the current window breakpoint.
+   *
+   * @return {int}
+   */
   getBreakpointIndex() {
     const searchIndex = this.breakpoints
       .reverse()
@@ -216,6 +247,12 @@ class PushIn {
     });
   }
 
+  /**
+   * Reset all the layer parameters.
+   *
+   * This is used if the window is resized
+   * and things need to be recalculated.
+   */
   resetLayerParams() {
     this.layers.forEach(layer => {
       layer.params = {
@@ -277,10 +314,24 @@ class PushIn {
     return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
   }
 
+  /**
+   * Get the current inpoint for a layer,
+   * depending on window breakpoint.
+   *
+   * @param {array} inpoints 
+   * @return {int}
+   */
   getInpoint(inpoints) {
     return inpoints[this.getBreakpointIndex()] || inpoints[0];
   }
 
+  /**
+   * Get the current outpoint for a layer,
+   * depending on window breakpoint.
+   *
+   * @param {array} outpoints 
+   * @return {int}
+   */
   getOutpoint(outpoints) {
     return outpoints[this.getBreakpointIndex()] || outpoints[0];
   }
@@ -339,6 +390,8 @@ class PushIn {
       let inpointDistance =
         Math.max(Math.min(this.scrollPos - inpoint, this.transitionLength), 0) /
         this.transitionLength;
+
+      // Set opacity to 1 if its the first layer and it is active (no fading in here)
       if (isFirst) {
         inpointDistance = 1;
       }
@@ -348,6 +401,8 @@ class PushIn {
           Math.min(outpoint - this.scrollPos, this.transitionLength),
           0
         ) / this.transitionLength;
+
+      // Set opacity to 1 if its the last layer and it is active (no fading out)
       if (isLast) {
         outpointDistance = 1;
       }
@@ -358,6 +413,15 @@ class PushIn {
     layer.elem.style.opacity = opacity;
   }
 
+  /**
+   * Set the default container height based on a few factors:
+   * 1. Number of layers present
+   * 2. The transition length between layers
+   * 3. The length of scrolling time during each layer
+   *
+   * If this calculation is smaller than the container's current height,
+   * the current height will be used instead.
+   */
   setScrollLength() {
     const containerHeight = getComputedStyle(this.container).height.replace(
       'px',
@@ -374,6 +438,10 @@ class PushIn {
     )}px`;
   }
 
+  /**
+   * Show a debugging tool appended to the frontend of the page.
+   * Can be used to determine best "pushin-from" and "pushin-to" values.
+   */
   showDebugger() {
     const scrollCounter = document.createElement('div');
     scrollCounter.classList.add('pushin-debug');

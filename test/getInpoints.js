@@ -52,11 +52,20 @@ describe('getInpoints', function () {
     ];
   });
 
-  it('Should return scene top value as the default for first layer', function () {
-    const elem = document.querySelector('#layer-0');
-    const result = this.pushIn.getInpoints(elem, 0);
-    result.should.deep.equal([10]);
-  });
+  it( 'Should return scene top value as the default for first layer', function() {
+      const scene  = document.querySelector( '.pushin-scene' );
+      scene.setAttribute( 'data-pushin-from', '30' );
+
+      const elem   = document.querySelector( '#layer-0' );
+      const result = this.pushIn.getInpoints( elem, 0 );
+      result.should.deep.equal( [ 30 ] );
+  } );
+
+  it( 'Should return scene[pushinFrom] value, if available for first layer', function() {
+      const elem   = document.querySelector( '#layer-0' );
+      const result = this.pushIn.getInpoints( elem, 0 );
+      result.should.deep.equal( [ 10 ] );
+  } );
 
   it('Should return value provided by data attribute', function () {
     const elem = document.querySelector('#layer-1');
