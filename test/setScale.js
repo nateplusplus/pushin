@@ -1,33 +1,32 @@
 require('chai').should();
 
-var jsdom = require("jsdom");
+var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
-describe( 'setScale', function() {
-
-    this.beforeEach( function() {
-        var dom = new JSDOM(`
+describe('setScale', function () {
+  this.beforeEach(function () {
+    var dom = new JSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="foo">Hello World</div>
             </body>
         </html>`);
-        
-        global.window   = dom.window;
-        global.document = window.document;
 
-        pushIn = require( '../src/pushin' ).pushIn;
-    });
+    global.window = dom.window;
+    global.document = window.document;
 
-    it( 'should set element scale value', function() {
-        var instance = new pushIn();
+    pushIn = require('../src/pushin').PushIn;
+  });
 
-        var element = document.querySelector('.foo');
+  it('should set element scale value', function () {
+    var instance = new pushIn();
 
-        instance.setScale( element, '10' );
+    var element = document.querySelector('.foo');
 
-        var result = element.style.transform;
+    instance.setScale(element, '10');
 
-        result.should.equal('scale(10)');
-    } );
-} );
+    var result = element.style.transform;
+
+    result.should.equal('scale(10)');
+  });
+});
