@@ -1,12 +1,11 @@
 require('chai').should();
 
-var jsdom = require("jsdom");
+var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
-describe( 'setLayerStyle', function() {
-
-    this.beforeEach( function() {
-        var dom = new JSDOM(`
+describe('setLayerStyle', function () {
+  this.beforeEach(function () {
+    var dom = new JSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin-layer demo-layer-1">
@@ -21,50 +20,49 @@ describe( 'setLayerStyle', function() {
             </body>
         </html>`);
 
-        global.window   = dom.window;
-        global.document = window.document;
+    global.window = dom.window;
+    global.document = window.document;
+      const layers = [
+          {
+              elem     : document.querySelector('.demo-layer-1'),
+              index    : 0,
+              originalScale: 1,
+              params: {
+                  inpoint  : '200',
+                  outpoint : '500',
+                  speed    : 8,
+              }
+          },
+          {
+              elem     : document.querySelector('.demo-layer-2'),
+              index    : 1,
+              originalScale: 1,
+              params: {
+                  inpoint  : '500',
+                  outpoint : '800',
+                  speed    : 8,
+              }
+          },
+          {
+              elem     : document.querySelector('.demo-layer-3'),
+              index    : 2,
+              originalScale: 1,
+              params: {
+                  inpoint  : '800',
+                  outpoint : '1200',
+                  speed    : 8,
+              }
+          }
+      ];
 
-        const layers = [
-            {
-                elem     : document.querySelector('.demo-layer-1'),
-                index    : 0,
-                originalScale: 1,
-                params: {
-                    inpoint  : '200',
-                    outpoint : '500',
-                    speed    : 8,
-                }
-            },
-            {
-                elem     : document.querySelector('.demo-layer-2'),
-                index    : 1,
-                originalScale: 1,
-                params: {
-                    inpoint  : '500',
-                    outpoint : '800',
-                    speed    : 8,
-                }
-            },
-            {
-                elem     : document.querySelector('.demo-layer-3'),
-                index    : 2,
-                originalScale: 1,
-                params: {
-                    inpoint  : '800',
-                    outpoint : '1200',
-                    speed    : 8,
-                }
-            }
-        ];
+      pushIn = require( '../src/pushin' ).pushIn;
 
-        pushIn = require( '../src/pushin' ).pushIn;
-
-        this.pushIn                  = new pushIn();
-        this.pushIn.getInpoint       = layer => layer.params.inpoint;
-        this.pushIn.getOutpoint      = layer => layer.params.outpoint;
-        this.pushIn.isActive         = () => true;
-        this.pushIn.layers           = layers;
-        this.pushIn.transitionLength = 200;
+      this.pushIn                  = new pushIn();
+      this.pushIn.getInpoint       = layer => layer.params.inpoint;
+      this.pushIn.getOutpoint      = layer => layer.params.outpoint;
+      this.pushIn.isActive         = () => true;
+      this.pushIn.layers           = layers;
+      this.pushIn.transitionLength = 200;
     });
 
     it( 'should set opacity to 1 if its the first layer and the scroll position is before its inpoint', function() {
