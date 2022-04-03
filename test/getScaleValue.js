@@ -3,6 +3,8 @@ require('chai').should();
 var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
+import { PushIn } from '../src/pushin';
+
 describe('getScaleValue', function () {
   before(function () {
     this.layerMock = {
@@ -28,9 +30,7 @@ describe('getScaleValue', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    pushIn = require('../src/pushin').PushIn;
-
-    this.pushIn = new pushIn();
+    this.pushIn = new PushIn();
     this.pushIn.getInpoint = layer => layer.params.inpoint;
   });
 

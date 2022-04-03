@@ -1,2 +1,3 @@
-import './style.css';
 import './helpers';
+
+export { PushIn } from './pushin';

@@ -1,13 +1,11 @@
 const path = require('path');
-const webpack = require('webpack');
-const PACKAGE = require('./package.json');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-let config = {
+module.exports = {
   mode: 'production',
   target: 'browserslist',
   devServer: {
@@ -18,7 +16,7 @@ let config = {
     port: 8080,
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
     filename: 'pushin.min.js',
   },
   optimization: {
@@ -31,11 +29,23 @@ let config = {
     ],
   },
   plugins: [
-    new webpack.BannerPlugin({
-      banner: `Pushin.js - v${PACKAGE.version}\nAuthor: ${PACKAGE.author}\nLicense: ${PACKAGE.license}`,
-    }),
     new MiniCssExtractPlugin({
       filename: 'pushin.min.css',
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      minify: false,
+      template: '!!pug-loader!docs/home.pug',
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'simple.html',
+      minify: false,
+      template: '!!pug-loader!docs/simple.pug',
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'responsive.html',
+      minify: false,
+      template: '!!pug-loader!docs/responsive.pug',
     }),
   ],
   module: {
@@ -56,33 +66,4 @@ let config = {
       },
     ],
   },
-};
-
-module.exports = (env, argv) => {
-  if (argv.name === 'docs') {
-    config.output = {
-      path: path.resolve(__dirname, 'docs'),
-      filename: 'pushin.min.js',
-    };
-
-    config.plugins.push(
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        minify: false,
-        template: '!!pug-loader!docs/home.pug',
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'simple.html',
-        minify: false,
-        template: '!!pug-loader!docs/simple.pug',
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'responsive.html',
-        minify: false,
-        template: '!!pug-loader!docs/responsive.pug',
-      })
-    );
-  }
-
-  return config;
 };
