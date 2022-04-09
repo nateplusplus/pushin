@@ -1,0 +1,53 @@
+extends layout.pug
+
+block append head
+	title PushIn.js - Examples: Images
+
+block append styles
+	style.
+		body {
+			background-color: #EBE6CD;
+		}
+		.pushin {
+			height: 5000px;
+		}
+		.layer-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+		}
+
+		.layer-4 svg {
+			transform: scale(0.7);
+			position: absolute;
+			top: 8%;
+			width: 440px;
+		}
+
+		.floor {
+			background-color: #BCC0C9;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 33%;
+		}
+
+block content
+	div.pushin
+		div.pushin-scene
+			//- div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="10")
+			//- 	include images/livingroom-3.svg
+			div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="10")
+				div.layer-container
+					div.floor
+			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5000")
+				div.layer-container
+					include images/livingroom-4.svg
+
+block scripts
+	script( defer ).
+		document.addEventListener( 'DOMContentLoaded', function() {
+			pushInStart( { debug: true } );
+		} );
