@@ -1,6 +1,6 @@
 import copy from 'rollup-plugin-copy';
 
-import package$ from './package.json';
+const banner = require('./build/banner');
 
 function createConfig(format) {
   return {
@@ -10,7 +10,7 @@ function createConfig(format) {
       sourcemap: true,
       file: `dist/${format}/pushin.js`,
       name: format === 'umd' ? 'pushin' : undefined,
-      banner: `/* Pushin.js - v${package$.version}\nAuthor: ${package$.author}\nLicense: ${package$.license} */`,
+      banner: `/* ${banner} */`,
     },
     plugins: [
       copy({

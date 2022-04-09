@@ -1,7 +1,6 @@
 const path = require('path');
-
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -27,14 +26,10 @@ module.exports = {
   },
   optimization: {
     minimize: true,
-    minimizer: [
-      new CssMinimizerPlugin(),
-      new TerserPlugin({
-        extractComments: false,
-      }),
-    ],
+    minimizer: [new TerserPlugin({ extractComments: false })],
   },
   plugins: [
+    new webpack.BannerPlugin({ banner: require('./build/banner') }),
     new MiniCssExtractPlugin({
       filename: 'pushin.min.css',
     }),
