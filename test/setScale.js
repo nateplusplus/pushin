@@ -3,6 +3,8 @@ require('chai').should();
 var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
+import { PushIn } from '../src/pushin';
+
 describe('setScale', function () {
   this.beforeEach(function () {
     var dom = new JSDOM(`
@@ -14,12 +16,10 @@ describe('setScale', function () {
 
     global.window = dom.window;
     global.document = window.document;
-
-    pushIn = require('../src/pushin').PushIn;
   });
 
   it('should set element scale value', function () {
-    var instance = new pushIn();
+    var instance = new PushIn();
 
     var element = document.querySelector('.foo');
 

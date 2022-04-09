@@ -3,6 +3,8 @@ require('chai').should();
 var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
+import { PushIn } from '../src/pushin';
+
 describe('getInpoints', function () {
   before(function () {
     this.layerMock = {
@@ -32,9 +34,7 @@ describe('getInpoints', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    pushIn = require('../src/pushin').PushIn;
-
-    this.pushIn = new pushIn();
+    this.pushIn = new PushIn();
     this.pushIn.scene = document.querySelector('.pushin-scene');
     this.pushIn.scene.getBoundingClientRect = () => {
       return { top: 10 };
@@ -52,21 +52,20 @@ describe('getInpoints', function () {
     ];
   });
 
-  
-  it( 'Should return scene[pushinFrom] value, if available for first layer', function() {
-      // const scene = document.querySelector( '.pushin-scene' );
-      this.pushIn.scene.setAttribute( 'data-pushin-from', '30' );
+  it('Should return scene[pushinFrom] value, if available for first layer', function () {
+    // const scene = document.querySelector( '.pushin-scene' );
+    this.pushIn.scene.setAttribute('data-pushin-from', '30');
 
-      const elem   = document.querySelector( '#layer-0' );
-      const result = this.pushIn.getInpoints( elem, 0 );
-      result.should.deep.equal( [ 30 ] );
-  } );
+    const elem = document.querySelector('#layer-0');
+    const result = this.pushIn.getInpoints(elem, 0);
+    result.should.deep.equal([30]);
+  });
 
-  it( 'Should return scene top value as the default for first layer', function() {
-      const elem   = document.querySelector( '#layer-0' );
-      const result = this.pushIn.getInpoints( elem, 0 );
-      result.should.deep.equal( [ 10 ] );
-  } );
+  it('Should return scene top value as the default for first layer', function () {
+    const elem = document.querySelector('#layer-0');
+    const result = this.pushIn.getInpoints(elem, 0);
+    result.should.deep.equal([10]);
+  });
 
   it('Should return value provided by data attribute', function () {
     const elem = document.querySelector('#layer-1');

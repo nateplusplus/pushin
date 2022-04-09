@@ -10,6 +10,7 @@
     "no-plusplus": "off",
     "no-param-reassign": "off",
     "class-methods-use-this": "off",
-    "prettier/prettier": ["error"]
+    "prettier/prettier": ["error"],
+    "import/prefer-default-export": "off"
   }
 }

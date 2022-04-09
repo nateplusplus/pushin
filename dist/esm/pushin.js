@@ -1,10 +1,13 @@
+/* Pushin.js - v3.5.0
+Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
+License: MIT */
 /**
  * PushIn object
  *
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-export class PushIn {
+class PushIn {
   constructor(container, options) {
     this.layers = [];
     this.container = container;
@@ -467,3 +470,28 @@ export class PushIn {
     });
   }
 }
+
+/**
+ * Helper function: Set up and start push-in effect on all elements
+ * matching the provided selector.
+ *
+ * @param { string } selector    Optional (legacy) - specify a unique selector for the container of the effect
+ */
+window.pushInStart = options => {
+  let selector = '.pushin';
+  if (options) {
+    // Backward compatibility <3.3.0 - first parameter was selector, not options
+    if (typeof options === 'string') {
+      selector = options;
+      options = null;
+    }
+  }
+
+  const elements = document.querySelectorAll(selector);
+  for (let i = 0; i < elements.length; i++) {
+    new PushIn(elements[i], options).start();
+  }
+};
+
+export { PushIn };
+//# sourceMappingURL=pushin.js.map
