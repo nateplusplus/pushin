@@ -4,7 +4,7 @@
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-class PushIn {
+export class PushIn {
   constructor(container, options) {
     this.layers = [];
     this.container = container;
@@ -113,8 +113,8 @@ class PushIn {
   /**
    * Get all inpoints for the layer.
    *
-   * @param {HTMLElement} elem 
-   * @param {int} i 
+   * @param {HTMLElement} elem
+   * @param {int} i
    * @return {array}
    */
   getInpoints(elem, i) {
@@ -127,7 +127,7 @@ class PushIn {
     } else if (i === 0 && 'pushinFrom' in this.scene.dataset) {
       // custom inpoint
       inpoints = this.scene.dataset.pushinFrom.split(',');
-      inpoints = inpoints.map((inpoint) => parseInt(inpoint.trim()));
+      inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
     } else if (i > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.layers[i - 1].params;
@@ -140,9 +140,9 @@ class PushIn {
   /**
    * Get all outpoints for the layer.
    *
-   * @param {HTMLElement} elem 
-   * @param {int} inpoint 
-   * @param {int} i 
+   * @param {HTMLElement} elem
+   * @param {int} inpoint
+   * @param {int} i
    * @return {array}
    */
   getOutpoints(elem, inpoint) {
@@ -160,18 +160,21 @@ class PushIn {
    * Get the push-in speed for the layer.
    * Default: 8.
    *
-   * @param {HTMLElement} elem 
+   * @param {HTMLElement} elem
    * @return {int}
    */
   getSpeed(elem) {
     const defaultSpeed = 8;
-    const speed = Object.prototype.hasOwnProperty.call(elem.dataset, 'pushinSpeed')
+    const speed = Object.prototype.hasOwnProperty.call(
+      elem.dataset,
+      'pushinSpeed'
+    )
       ? elem.dataset.pushinSpeed
       : defaultSpeed;
 
-    let speedInt = parseInt( speed );
+    let speedInt = parseInt(speed, 10);
 
-    if ( isNaN( speedInt ) ) {
+    if (Number.isNaN(speedInt)) {
       speedInt = defaultSpeed;
     }
 
@@ -316,7 +319,7 @@ class PushIn {
    * Get the current inpoint for a layer,
    * depending on window breakpoint.
    *
-   * @param {array} inpoints 
+   * @param {array} inpoints
    * @return {int}
    */
   getInpoint(inpoints) {
@@ -327,7 +330,7 @@ class PushIn {
    * Get the current outpoint for a layer,
    * depending on window breakpoint.
    *
-   * @param {array} outpoints 
+   * @param {array} outpoints
    * @return {int}
    */
   getOutpoint(outpoints) {
@@ -464,5 +467,3 @@ class PushIn {
     });
   }
 }
-
-exports.PushIn = PushIn;

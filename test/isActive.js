@@ -3,14 +3,14 @@ require('chai').should();
 var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
+import { PushIn } from '../src/pushin';
+
 describe('isActive', function () {
   this.beforeEach(function () {
     var dom = new JSDOM(`<!DOCTYPE html></html>`);
 
     global.window = dom.window;
     global.document = window.document;
-
-    pushIn = require('../src/pushin').PushIn;
 
     this.layer = {
       params: {
@@ -19,7 +19,7 @@ describe('isActive', function () {
       },
     };
 
-    this.pushIn = new pushIn();
+    this.pushIn = new PushIn();
     this.pushIn.getInpoint = layer => layer.params.inpoint;
     this.pushIn.getOutpoint = layer => layer.params.outpoint;
   });
