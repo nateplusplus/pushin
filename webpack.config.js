@@ -15,9 +15,15 @@ module.exports = {
     },
     port: 8080,
   },
+  entry: './docs/main.js',
   output: {
     path: path.resolve(__dirname, 'docs'),
     filename: 'pushin.min.js',
+  },
+  resolve: {
+    alias: {
+      pushin: path.resolve('./src'),
+    },
   },
   optimization: {
     minimize: true,
