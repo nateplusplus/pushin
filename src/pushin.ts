@@ -50,6 +50,7 @@ export class PushIn {
       // Set layer initial state
       this.toggleLayers();
     } else {
+      // eslint-disable-next-line no-console
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );

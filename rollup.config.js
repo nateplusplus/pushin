@@ -1,6 +1,9 @@
 import copy from 'rollup-plugin-copy';
 import typescript from '@rollup/plugin-typescript';
+import { terser } from 'rollup-plugin-terser';
+import getBabelOutputPlugin from '@rollup/plugin-babel';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const banner = require('./build/banner');
 
 function createConfig(format) {
@@ -32,4 +35,37 @@ function createConfig(format) {
   };
 }
 
-export default [createConfig('umd'), createConfig('esm')];
+/** This outputs a minified JS file which can then be shipped to CDN. */
+function createConfigForCdn() {
+  return {
+    input: 'src/index.js',
+    output: {
+      format: 'iife',
+      sourcemap: false,
+      file: 'dist/umd/pushin.min.js',
+      name: 'pushin',
+      banner: `/* ${banner} */`,
+    },
+    plugins: [
+      terser({
+        ecma: '5',
+        mangle: true,
+        compress: true,
+      }),
+      getBabelOutputPlugin({
+        babelHelpers: 'bundled',
+        presets: [
+          [
+            '@babel/preset-env',
+            {
+              targets:
+                '> 0.25%, last 2 versions, Firefox ESR, not dead, IE 9-11',
+            },
+          ],
+        ],
+      }),
+    ],
+  };
+}
+
+export default [createConfig('umd'), createConfig('esm'), createConfigForCdn()];
