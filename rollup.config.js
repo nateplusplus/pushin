@@ -1,10 +1,11 @@
 import copy from 'rollup-plugin-copy';
+import typescript from '@rollup/plugin-typescript';
 
 const banner = require('./build/banner');
 
 function createConfig(format) {
   return {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
       format,
       sourcemap: true,
@@ -15,6 +16,17 @@ function createConfig(format) {
     plugins: [
       copy({
         targets: [{ src: 'src/pushin.css', dest: 'dist' }],
+      }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        compilerOptions:
+          format === 'esm'
+            ? {
+                sourceMap: true,
+                declaration: true,
+                declarationDir: '.',
+              }
+            : {},
       }),
     ],
   };

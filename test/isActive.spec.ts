@@ -19,7 +19,7 @@ describe('isActive', function () {
       },
     };
 
-    this.pushIn = new PushIn();
+    this.pushIn = new PushIn(null);
     this.pushIn.getInpoint = layer => layer.params.inpoint;
     this.pushIn.getOutpoint = layer => layer.params.outpoint;
   });

@@ -24,7 +24,7 @@ describe('getLayers', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    const container = document.querySelector('.pushin');
+    const container = document.querySelector<HTMLElement>('.pushin');
     this.pushIn = new PushIn(container);
     const scene = document.querySelector('.pushin-scene');
     this.pushIn.scene = scene;
@@ -50,7 +50,7 @@ describe('getLayers', function () {
 
   it('Should include the element for each layer', function () {
     this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].elem.id;
+    const result = this.pushIn.layers[0].element.id;
     result.should.equal('layer-0');
   });
 

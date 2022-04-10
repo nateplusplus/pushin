@@ -29,22 +29,22 @@ describe('getElementScaleX', function () {
   });
 
   it('Should return default element scale if never altered', function () {
-    var instance = new PushIn();
+    var instance = new PushIn(null);
 
-    var element = document.querySelector('.foo');
-    var result = instance.getElementScaleX(element);
+    var element = document.querySelector<HTMLElement>('.foo');
+    var result = instance['getElementScaleX'](element);
 
     result.should.equal(1);
   });
 
   it('Should return element scale if it was previously set', function () {
-    var instance = new PushIn();
+    var instance = new PushIn(null);
 
-    var element = document.querySelector('.foo');
+    var element = document.querySelector<HTMLElement>('.foo');
 
     element.style.transform = 'scale(5)';
 
-    var result = instance.getElementScaleX(element);
+    var result = instance['getElementScaleX'](element);
 
     result.should.equal(5);
   });

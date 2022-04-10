@@ -18,7 +18,7 @@ describe('setScrollLength', function () {
     global.document = window.document;
     global.getComputedStyle = window.getComputedStyle;
 
-    const container = document.querySelector('.pushin');
+    const container = document.querySelector<HTMLElement>('.pushin');
     this.pushIn = new PushIn(container);
 
     this.pushIn.layers = [1, 2, 3];

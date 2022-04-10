@@ -30,7 +30,7 @@ describe('getScaleValue', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    this.pushIn = new PushIn();
+    this.pushIn = new PushIn(null);
     this.pushIn.getInpoint = layer => layer.params.inpoint;
   });
 

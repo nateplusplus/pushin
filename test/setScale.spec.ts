@@ -19,11 +19,11 @@ describe('setScale', function () {
   });
 
   it('should set element scale value', function () {
-    var instance = new PushIn();
+    var instance = new PushIn(null);
 
-    var element = document.querySelector('.foo');
+    var element = document.querySelector<HTMLElement>('.foo');
 
-    instance.setScale(element, '10');
+    instance['setScale'](element, 10);
 
     var result = element.style.transform;
 

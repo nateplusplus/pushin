@@ -34,7 +34,7 @@ describe('getInpoints', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    this.pushIn = new PushIn();
+    this.pushIn = new PushIn(null);
     this.pushIn.scene = document.querySelector('.pushin-scene');
     this.pushIn.scene.getBoundingClientRect = () => {
       return { top: 10 };
