@@ -5,6 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+const banner = require('./build/banner');
+
 module.exports = (env, { mode }) => {
   const isProduction = mode === 'production';
 
@@ -30,7 +32,7 @@ module.exports = (env, { mode }) => {
       },
     },
     plugins: [
-      new webpack.BannerPlugin({ banner: require('./build/banner') }),
+      new webpack.BannerPlugin({ banner }),
       new MiniCssExtractPlugin({
         filename: 'pushin.min.css',
       }),
