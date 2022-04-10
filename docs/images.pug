@@ -11,43 +11,99 @@ block append styles
 		.pushin {
 			height: 5000px;
 		}
+
 		.layer-container {
 			position: relative;
 			width: 100%;
-			height: 100%;
+			padding-top: 50%;
+		}
+		.layer-inner {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
 			display: flex;
 			justify-content: center;
+			align-items: center;
+		}
+
+		.layer-4-container,
+		.layer-2-container,
+		.layer-1-container {
+			padding-top: 100%;
 		}
 
 		.layer-4 svg {
-			transform: scale(0.7);
+			width: 40%;
+		}
+
+		.layer-3 svg {
+			width: 40%;
+			align-self: flex-end;
+			margin-bottom: 6%;
+		}
+
+		.layer-2 .light {
+			width: 13%;
 			position: absolute;
-			top: 8%;
-			width: 440px;
+			top: 16%;
+		}
+
+		.layer-2 .chair {
+			width: 38%;
+			position: absolute;
+			top: 49%;
+			left: 0%;
+		}
+
+		.layer-2 .tv {
+			width: 38%;
+			position: absolute;
+			top: 48%;
+			right: 0%;
+		}
+
+		.layer-1 .plant {
+			width: 9%;
+			position: absolute;
+			bottom: 27%;
+			left: 26%;
 		}
 
 		.floor {
 			background-color: #BCC0C9;
 			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 33%;
+			height: 38%;
+			align-self: flex-end;
 		}
 
 block content
 	div.pushin
 		div.pushin-scene
-			//- div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="10")
-			//- 	include images/livingroom-3.svg
+			div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="80")
+				div.layer-container.layer-1-container
+					div.layer-inner
+						div.plant
+							include images/livingroom-1.svg
+			div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="16")
+				div.layer-container.layer-2-container
+					div.layer-inner
+						div.light
+							include images/light.svg
+						div.chair
+							include images/chair.svg
+						div.tv
+							include images/tv.svg
 			div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="10")
 				div.layer-container
-					div.floor
+					div.layer-inner
+						include images/livingroom-3.svg
+			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5000")
+				div.layer-container.layer-4-container
+					div.layer-inner
+						div.floor
 			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5000")
 				div.layer-container
-					include images/livingroom-4.svg
-
-block scripts
-	script( defer ).
-		document.addEventListener( 'DOMContentLoaded', function() {
-			pushInStart( { debug: true } );
-		} );
+					div.layer-inner
+						include images/livingroom-4.svg
