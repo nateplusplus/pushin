@@ -1,2 +1,2 @@
-import './helpers.ts';
+import './helpers';
 export { PushIn } from './pushin';

@@ -38,15 +38,16 @@ function createConfig(format) {
 /** This outputs a minified JS file which can then be shipped to CDN. */
 function createConfigForCdn() {
   return {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
-      format: 'iife',
+      format: 'umd',
       sourcemap: false,
       file: 'dist/umd/pushin.min.js',
       name: 'pushin',
       banner: `/* ${banner} */`,
     },
     plugins: [
+      typescript({ tsconfig: './tsconfig.json' }),
       terser({
         ecma: '5',
         mangle: true,
