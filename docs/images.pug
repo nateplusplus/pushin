@@ -28,66 +28,88 @@ block append styles
 			align-items: center;
 		}
 
-		.layer-4-container,
-		.layer-2-container,
-		.layer-1-container {
-			padding-top: 100%;
+		.square-container {
+			padding-top: 101%;
 		}
 
-		.layer-4 svg {
+		.vertical-container {
+			padding-top: 201%;
+		}
+
+		.wall {
+			position: absolute;
 			width: 40%;
+			top: 41.3%
 		}
 
 		.layer-3 svg {
 			width: 40%;
 			align-self: flex-end;
-			margin-bottom: 6%;
+			margin-bottom: 5%;
 		}
 
-		.layer-2 .light {
+		.light {
 			width: 13%;
 			position: absolute;
 			top: 16%;
 		}
 
-		.layer-2 .chair {
-			width: 38%;
+		.chair {
+			width: 30%;
 			position: absolute;
 			top: 49%;
 			left: 0%;
 		}
 
-		.layer-2 .tv {
-			width: 38%;
+		.tv {
+			width: 30%;
 			position: absolute;
 			top: 48%;
 			right: 0%;
 		}
 
-		.layer-1 .plant {
-			width: 9%;
+		.plant {
+			width: 10%;
 			position: absolute;
-			bottom: 27%;
-			left: 26%;
+			bottom: 32%;
+			right: 31%;
 		}
 
 		.floor {
 			background-color: #BCC0C9;
 			width: 100%;
-			height: 38%;
-			align-self: flex-end;
+			height: 41%;
+			position: absolute;
+			bottom: 0;
+		}
+
+		.ceiling {
+			background-color: #C0A592;
+			width: 100%;
+			height: 42.2%;
+			position: absolute;
+			top: 0;
+		}
+
+		.table {
+			background-color: #3A596B;
+			width: 100%;
+			height: 32%;
+			position: absolute;
+			bottom: 0;
 		}
 
 block content
 	div.pushin
 		div.pushin-scene
-			div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="80")
-				div.layer-container.layer-1-container
+			div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="1000" data-pushin-speed="80")
+				div.layer-container.square-container
 					div.layer-inner
+						div.table
 						div.plant
-							include images/livingroom-1.svg
-			div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="16")
-				div.layer-container.layer-2-container
+							include images/plant.svg
+			div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="16")
+				div.layer-container.square-container
 					div.layer-inner
 						div.light
 							include images/light.svg
@@ -95,15 +117,17 @@ block content
 							include images/chair.svg
 						div.tv
 							include images/tv.svg
-			div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5000" data-pushin-speed="10")
+			div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="10")
 				div.layer-container
 					div.layer-inner
 						include images/livingroom-3.svg
-			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5000")
-				div.layer-container.layer-4-container
+			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5200")
+				div.layer-container.vertical-container
 					div.layer-inner
 						div.floor
-			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5000")
-				div.layer-container
+			div.pushin-layer.layer-5(data-pushin-from="-200" data-pushin-to="5000")
+				div.layer-container.vertical-container
 					div.layer-inner
-						include images/livingroom-4.svg
+						div.ceiling
+						div.wall
+							include images/livingroom-4.svg
