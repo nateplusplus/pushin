@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": false,
+    "module": "CommonJS",
+    "types": ["node", "mocha", "chai"]
+  },
+  "include": ["test/*.spec.ts"]
+}

@@ -3,6 +3,8 @@ require('chai').should();
 var jsdom = require('jsdom');
 var JSDOM = jsdom.JSDOM;
 
+import { PushIn } from '../src/pushin';
+
 describe('getElementScaleX', function () {
   before(function () {
     this.layerMock = {
@@ -24,27 +26,25 @@ describe('getElementScaleX', function () {
 
     global.window = dom.window;
     global.document = window.document;
-
-    pushIn = require('../src/pushin').PushIn;
   });
 
   it('Should return default element scale if never altered', function () {
-    var instance = new pushIn();
+    var instance = new PushIn(null);
 
-    var element = document.querySelector('.foo');
-    var result = instance.getElementScaleX(element);
+    var element = document.querySelector<HTMLElement>('.foo');
+    var result = instance['getElementScaleX'](element);
 
     result.should.equal(1);
   });
 
   it('Should return element scale if it was previously set', function () {
-    var instance = new pushIn();
+    var instance = new PushIn(null);
 
-    var element = document.querySelector('.foo');
+    var element = document.querySelector<HTMLElement>('.foo');
 
     element.style.transform = 'scale(5)';
 
-    var result = instance.getElementScaleX(element);
+    var result = instance['getElementScaleX'](element);
 
     result.should.equal(5);
   });

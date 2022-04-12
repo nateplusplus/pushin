@@ -1,6 +1,6 @@
 # pushIn.js
 
-[![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
+[![made-with-javascript](https://img.shields.io/badge/Made%20with-TypeScript-1f425f.svg)](https://www.typescriptlang.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/nateplusplus/pushin-js/graphs/commit-activity)
 ![Maintainer](https://img.shields.io/badge/maintainer-nateplusplus-blue)
 [![GitHub license](https://img.shields.io/github/license/nateplusplus/pushin-js.svg)](https://github.com/nateplusplus/pushin-js/blob/main/LICENSE)
@@ -24,11 +24,16 @@ If you're using npm, you can install the package by running:
 npm install --save pushin
 ```
 
-Then, in your Javascript, require the assets:
+Then, in your Javascript, you can import the `PushIn` class:
 
 ```js
-const pushin = require('pushin');
-const css = require('pushin/dist/pushin.min.css');
+import { PushIn } from 'pushin';
+```
+
+And also require assets in your CSS:
+
+```css
+@import 'pushin/pushin.css';
 ```
 
 - _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
@@ -42,8 +47,8 @@ If you're not using npm, just download the CSS and JavaScript files from this re
 ```html
 <html>
   <head>
-    <link rel="stylesheet" href="pushin.min.css" />
-    <script type="text/javascript" src="pushin.min.js"></script>
+    <link rel="stylesheet" href="pushin.css" />
+    <script type="text/javascript" src="pushin.js"></script>
   </head>
   <body>
     <!-- page content... -->
@@ -74,23 +79,23 @@ Each div with the class `pushin-layer` can hold the content that you want to gro
 
 ### 3. Initialize the effect
 
-Once you have your HTML set up, you just need to call the `pushInStart()` function, and give it the selector for your parent element.
+Once you have your HTML set up, there're two ways to initialize the effect:
 
-**IMPORTANT:** you need to call this function **after** the `pushin.js` file has been included. For best results, call this function at the bottom of the `<body>` tag.
+- call `new PushIn().start()`:
 
-**Example:**
+```js
+import { PushIn } from 'pushin';
 
-```html
-    <div class="pushin">
-        <div class="pushin-scene">
-            <!-- layer content... -->
-        </div>
-    </div>
-    <script type="text/javascript">
-        // initialize push-in effect
-        pushInStart();
-    </script>
-</body>
+const container = document.querySelector('.pushin');
+new PushIn(container).start();
+```
+
+- call `pushInStart()` function (which is exported onto the global scope):
+
+```js
+import 'pushin';
+
+pushInStart();
 ```
 
 To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
@@ -99,12 +104,11 @@ See a working demo of this tool here: [Responsive design](http://nateplusplus.gi
 
 **Example:**
 
-```html
-    <script type="text/javascript">
-        // initialize push-in effect
-        pushInStart( { debug: true } );
-    </script>
-</body>
+```js
+import 'pushin';
+
+// initialize push-in effect
+pushInStart({ debug: true });
 ```
 
 ### 4. Scene configuration

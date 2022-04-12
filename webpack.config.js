@@ -1,71 +1,41 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
-const PACKAGE = require('./package.json');
-
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-let config = {
-  mode: 'production',
-  target: 'browserslist',
-  devServer: {
-    open: true,
-    static: {
-      directory: path.join(__dirname, 'docs'),
-    },
-    port: 8080,
-  },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'pushin.min.js',
-  },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new CssMinimizerPlugin(),
-      new TerserPlugin({
-        extractComments: false,
-      }),
-    ],
-  },
-  plugins: [
-    new webpack.BannerPlugin({
-      banner: `Pushin.js - v${PACKAGE.version}\nAuthor: ${PACKAGE.author}\nLicense: ${PACKAGE.license}`,
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'pushin.min.css',
-    }),
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
-      },
-    ],
-  },
-};
+const banner = require('./build/banner');
 
-module.exports = (env, argv) => {
-  if (argv.name === 'docs') {
-    config.output = {
+module.exports = (env, { mode }) => {
+  const isProduction = mode === 'production';
+
+  const config = {
+    mode,
+    target: 'browserslist',
+    devServer: {
+      open: true,
+      static: {
+        directory: path.join(__dirname, 'docs'),
+      },
+      port: 8080,
+    },
+    entry: './docs/main.ts',
+    output: {
       path: path.resolve(__dirname, 'docs'),
       filename: 'pushin.min.js',
-    };
-
-    config.plugins.push(
+    },
+    resolve: {
+      extensions: ['.ts', '.js'],
+      alias: {
+        pushin: path.resolve('./src'),
+      },
+    },
+    plugins: [
+      new webpack.BannerPlugin({ banner }),
+      new MiniCssExtractPlugin({
+        filename: 'pushin.min.css',
+      }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         minify: false,
@@ -85,8 +55,28 @@ module.exports = (env, argv) => {
         filename: 'cat.html',
         minify: false,
         template: '!!pug-loader!docs/cat.pug',
-      })
-    );
+      }),
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        },
+        {
+          test: /.ts$/,
+          exclude: /node_modules/,
+          loader: 'ts-loader',
+        },
+      ],
+    },
+  };
+
+  if (isProduction) {
+    config.optimization = {
+      minimize: true,
+      minimizer: [new TerserPlugin({ extractComments: false })],
+    };
   }
 
   return config;

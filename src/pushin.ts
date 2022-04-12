@@ -1,29 +1,44 @@
+import {
+  DEFAULT_SPEED,
+  PUSH_IN_TO_DATA_ATTRIBUTE,
+  PUSH_IN_FROM_DATA_ATTRIBUTE,
+  PUSH_IN_SPEED_DATA_ATTRIBUTE,
+  PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
+} from './constants';
+import { PushInLayer, PushInOptions } from './types';
+
 /**
  * PushIn object
  *
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-class PushIn {
-  constructor(container, options) {
-    this.layers = [];
-    this.container = container;
+export class PushIn {
+  private scene!: HTMLElement;
+  private breakpoints: number[] = [];
 
-    if (options) {
-      this.debug = options.debug || false;
-    }
+  private scrollPos = 0;
+  private scrollEnd: number | null = null;
+  private touchStart: number | null = null;
+  private pageHeight: number | null = null;
+
+  private readonly layers: PushInLayer[] = [];
+  private readonly debug: boolean;
+
+  private speedDelta = 100;
+  private transitionLength = 200;
+  private layerDepth = 1000;
+
+  constructor(private container: HTMLElement, options?: PushInOptions) {
+    this.debug = options?.debug ?? false;
   }
 
   /**
    * Initialize the object to start everything up.
    */
-  start() {
+  start(): void {
     if (this.container) {
       this.addScene();
-
-      this.speedDelta = 100;
-      this.transitionLength = 200;
-      this.layerDepth = 1000;
 
       this.scrollPos = window.pageYOffset;
 
@@ -35,7 +50,7 @@ class PushIn {
       // Set layer initial state
       this.toggleLayers();
     } else {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-console
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
@@ -50,10 +65,12 @@ class PushIn {
    * Get the "scene" element from the DOM.
    * If it doesn't exist, make one.
    */
-  addScene() {
-    this.scene = this.container.querySelector('.pushin-scene');
+  private addScene(): void {
+    const scene = this.container.querySelector<HTMLElement>('.pushin-scene');
 
-    if (!this.scene) {
+    if (scene) {
+      this.scene = scene;
+    } else {
       this.scene = document.createElement('div');
       this.scene.classList.add('pushin-scene');
 
@@ -66,12 +83,13 @@ class PushIn {
   /**
    * Set breakpoints for responsive design settings.
    */
-  setBreakpoints() {
+  private setBreakpoints(): void {
     this.breakpoints = [768, 1440, 1920];
 
-    if (this.scene.dataset.pushinBreakpoints) {
-      this.breakpoints = this.scene.dataset.pushinBreakpoints.split(',');
-      this.breakpoints = this.breakpoints.map(bp => parseInt(bp.trim(), 10));
+    if (this.scene.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
+      this.breakpoints = this.scene.dataset[
+        PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE
+      ]!.split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
     }
 
     // Always include break point 0 for anything under first breakpoint
@@ -81,57 +99,52 @@ class PushIn {
   /**
    * Find all layers on the page and store them with their parameters
    */
-  getLayers() {
-    const layers = this.container.getElementsByClassName('pushin-layer');
+  private getLayers(): void {
+    const layers = Array.from(
+      this.container.getElementsByClassName('pushin-layer')
+    );
 
-    if (layers) {
-      for (let i = 0; i < layers.length; i++) {
-        const elem = layers[i];
-        const inpoints = this.getInpoints(elem, i);
-        const outpoints = this.getOutpoints(elem, inpoints[0]);
+    for (let index = 0; index < layers.length; index++) {
+      const element = <HTMLElement>layers[index];
+      const inpoints = this.getInpoints(element, index);
+      const outpoints = this.getOutpoints(element, inpoints[0]);
 
-        const layer = {
-          elem,
-          index: i,
-          originalScale: this.getElementScaleX(elem),
-          ref: {
-            inpoints,
-            outpoints,
-          },
-          params: {
-            inpoint: this.getInpoint(inpoints),
-            outpoint: this.getOutpoint(outpoints),
-            speed: this.getSpeed(elem),
-          },
-        };
+      const layer: PushInLayer = {
+        element,
+        index,
+        originalScale: this.getElementScaleX(element),
+        ref: { inpoints, outpoints },
+        params: {
+          inpoint: this.getInpoint(inpoints),
+          outpoint: this.getOutpoint(outpoints),
+          speed: this.getSpeed(element),
+        },
+      };
 
-        this.layers.push(layer);
-        this.setZIndex(layer, layers.length);
-      }
+      this.layers.push(layer);
+      this.setZIndex(layer, layers.length);
     }
   }
 
   /**
    * Get all inpoints for the layer.
-   *
-   * @param {HTMLElement} elem
-   * @param {int} i
-   * @return {array}
    */
-  getInpoints(elem, i) {
+  private getInpoints(element: HTMLElement, index: number): number[] {
     const { top } = this.scene.getBoundingClientRect();
 
     let inpoints = [top];
-    if ('pushinFrom' in elem.dataset) {
-      inpoints = elem.dataset.pushinFrom.split(',');
-      inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
-    } else if (i === 0 && 'pushinFrom' in this.scene.dataset) {
-      // custom inpoint
-      inpoints = this.scene.dataset.pushinFrom.split(',');
-      inpoints = inpoints.map(inpoint => parseInt(inpoint.trim(), 10));
-    } else if (i > 0) {
+    if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
+      inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(',').map(
+        inpoint => parseInt(inpoint.trim(), 10)
+      );
+    } else if (index === 0 && this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
+      // Custom inpoint
+      inpoints = this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(
+        ','
+      ).map(inpoint => parseInt(inpoint.trim(), 10));
+    } else if (index > 0) {
       // Set default for middle layers if none provided
-      const { outpoint } = this.layers[i - 1].params;
+      const { outpoint } = this.layers[index - 1].params;
       inpoints = [outpoint - this.speedDelta];
     }
 
@@ -140,18 +153,13 @@ class PushIn {
 
   /**
    * Get all outpoints for the layer.
-   *
-   * @param {HTMLElement} elem
-   * @param {int} inpoint
-   * @param {int} i
-   * @return {array}
    */
-  getOutpoints(elem, inpoint) {
+  private getOutpoints(element: HTMLElement, inpoint: number): number[] {
     let outpoints = [inpoint + this.layerDepth];
 
-    if (Object.prototype.hasOwnProperty.call(elem.dataset, 'pushinTo')) {
-      const values = elem.dataset.pushinTo.split(',');
-      outpoints = values.map(val => parseInt(val.trim(), 10));
+    if (element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]) {
+      const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]!.split(',');
+      outpoints = values.map(value => parseInt(value.trim(), 10));
     }
 
     return outpoints;
@@ -159,35 +167,24 @@ class PushIn {
 
   /**
    * Get the push-in speed for the layer.
-   * Default: 8.
-   *
-   * @param {HTMLElement} elem
-   * @return {int}
    */
-  getSpeed(elem) {
-    const defaultSpeed = 8;
-    const speed = Object.prototype.hasOwnProperty.call(
-      elem.dataset,
-      'pushinSpeed'
-    )
-      ? elem.dataset.pushinSpeed
-      : defaultSpeed;
+  private getSpeed(element: HTMLElement): number {
+    let speed: number | null = null;
 
-    let speedInt = parseInt(speed, 10);
-
-    if (Number.isNaN(speedInt)) {
-      speedInt = defaultSpeed;
+    if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
+      speed = parseInt(element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]!, 10);
+      if (Number.isNaN(speed)) {
+        speed = DEFAULT_SPEED;
+      }
     }
 
-    return speedInt || 8;
+    return speed || DEFAULT_SPEED;
   }
 
   /**
    * Get the array index of the current window breakpoint.
-   *
-   * @return {int}
    */
-  getBreakpointIndex() {
+  private getBreakpointIndex(): number {
     const searchIndex = this.breakpoints
       .reverse()
       .findIndex(bp => bp <= window.innerWidth);
@@ -196,18 +193,15 @@ class PushIn {
 
   /**
    * Set the z-index of each layer so they overlap correctly.
-   *
-   * @param {object} layer
-   * @param {int} total
    */
-  setZIndex(layer, total) {
-    layer.elem.style.zIndex = total - layer.index;
+  private setZIndex(layer: PushInLayer, total: number): void {
+    layer.element.style.zIndex = (total - layer.index).toString();
   }
 
   /**
    * Bind event listeners to watch for page load and user interaction.
    */
-  bindEvents() {
+  private bindEvents(): void {
     window.addEventListener('scroll', () => {
       this.scrollPos = window.pageYOffset;
       this.dolly();
@@ -222,12 +216,12 @@ class PushIn {
 
       const touchMove = event.changedTouches[0].screenY;
       this.scrollPos = Math.max(
-        this.scrollEnd + this.touchStart - touchMove,
+        this.scrollEnd! + this.touchStart! - touchMove,
         0
       );
       this.scrollPos = Math.min(
         this.scrollPos,
-        this.pageHeight - window.innerHeight
+        this.pageHeight! - window.innerHeight
       );
 
       this.dolly();
@@ -237,11 +231,11 @@ class PushIn {
       this.scrollEnd = this.scrollPos;
     });
 
-    let resizeTimeout;
+    let resizeTimeout: number;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
 
-      resizeTimeout = setTimeout(() => {
+      resizeTimeout = window.setTimeout(() => {
         this.resetLayerParams();
         this.setScrollLength();
         this.toggleLayers();
@@ -255,25 +249,22 @@ class PushIn {
    * This is used if the window is resized
    * and things need to be recalculated.
    */
-  resetLayerParams() {
+  private resetLayerParams(): void {
     this.layers.forEach(layer => {
       layer.params = {
         inpoint: this.getInpoint(layer.ref.inpoints),
         outpoint: this.getOutpoint(layer.ref.outpoints),
-        speed: this.getSpeed(layer.elem),
+        speed: this.getSpeed(layer.element),
       };
     });
   }
 
   /**
    * Get the initial scale of the element at time of DOM load.
-   *
-   * @param {Element} elem
-   * @return {Number} scaleX
    */
-  getElementScaleX(elem) {
+  private getElementScaleX(element: HTMLElement): number {
     const transform = window
-      .getComputedStyle(elem)
+      .getComputedStyle(element)
       .getPropertyValue('transform');
 
     let scaleX = 1;
@@ -291,7 +282,7 @@ class PushIn {
   /**
    * Animation effect, mimicking a camera dolly on the webpage.
    */
-  dolly() {
+  private dolly(): void {
     requestAnimationFrame(() => {
       this.toggleLayers();
     });
@@ -300,17 +291,14 @@ class PushIn {
   /**
    * Show or hide layers and set their scale, depending on if active.
    */
-  toggleLayers() {
+  private toggleLayers(): void {
     this.layers.forEach(layer => this.setLayerStyle(layer));
   }
 
   /**
    * Whether or not a layer should currently be zooming.
-   *
-   * @param {Object} layer
-   * @returns Boolean
    */
-  isActive(layer) {
+  private isActive(layer: PushInLayer): boolean {
     const { inpoint } = layer.params;
     const { outpoint } = layer.params;
     return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
@@ -319,32 +307,23 @@ class PushIn {
   /**
    * Get the current inpoint for a layer,
    * depending on window breakpoint.
-   *
-   * @param {array} inpoints
-   * @return {int}
    */
-  getInpoint(inpoints) {
+  private getInpoint(inpoints: number[]): number {
     return inpoints[this.getBreakpointIndex()] || inpoints[0];
   }
 
   /**
    * Get the current outpoint for a layer,
    * depending on window breakpoint.
-   *
-   * @param {array} outpoints
-   * @return {int}
    */
-  getOutpoint(outpoints) {
+  private getOutpoint(outpoints: number[]): number {
     return outpoints[this.getBreakpointIndex()] || outpoints[0];
   }
 
   /**
    * Get the scaleX value for the layer.
-   *
-   * @param {Object} layer
-   * @return {Number}
    */
-  getScaleValue(layer) {
+  private getScaleValue(layer: PushInLayer): number {
     const distance = this.scrollPos - layer.params.inpoint;
     const speed = Math.min(layer.params.speed, 100) / 100;
     const delta = (distance * speed) / 100;
@@ -354,16 +333,13 @@ class PushIn {
 
   /**
    * Set element scale.
-   *
-   * @param {HtmlElement} elem
-   * @param {Number} value
    */
-  setScale({ style }, value) {
+  private setScale({ style }: HTMLElement, value: number): void {
     const scaleString = `scale(${value})`;
     style.webkitTransform = scaleString;
-    style.mozTransform = scaleString;
-    style.msTransform = scaleString;
-    style.oTransform = scaleString;
+    (style as unknown as { mozTransform: string }).mozTransform = scaleString;
+    (style as unknown as { msTransform: string }).msTransform = scaleString;
+    (style as unknown as { oTransform: string }).oTransform = scaleString;
     style.transform = scaleString;
   }
 
@@ -372,10 +348,8 @@ class PushIn {
    *
    * This will control the scale and opacity of the layer
    * as the user scrolls.
-   *
-   * @param Element layer    Layer element
    */
-  setLayerStyle(layer) {
+  private setLayerStyle(layer: PushInLayer): void {
     let opacity = 0;
     const isFirst = layer.index === 0;
     const isLast = layer.index + 1 === this.layers.length;
@@ -387,7 +361,7 @@ class PushIn {
     } else if (isLast && this.scrollPos > outpoint) {
       opacity = 1;
     } else if (this.isActive(layer)) {
-      this.setScale(layer.elem, this.getScaleValue(layer));
+      this.setScale(layer.element, this.getScaleValue(layer));
 
       let inpointDistance =
         Math.max(Math.min(this.scrollPos - inpoint, this.transitionLength), 0) /
@@ -412,7 +386,7 @@ class PushIn {
       opacity = Math.min(inpointDistance, outpointDistance);
     }
 
-    layer.elem.style.opacity = opacity;
+    layer.element.style.opacity = opacity.toString();
   }
 
   /**
@@ -424,7 +398,7 @@ class PushIn {
    * If this calculation is smaller than the container's current height,
    * the current height will be used instead.
    */
-  setScrollLength() {
+  private setScrollLength(): void {
     const containerHeight = getComputedStyle(this.container).height.replace(
       'px',
       ''
@@ -435,7 +409,7 @@ class PushIn {
       this.layers.length * (this.layerDepth + this.transitionLength);
 
     this.container.style.height = `${Math.max(
-      containerHeight,
+      parseFloat(containerHeight),
       scrollLength - transitions
     )}px`;
   }
@@ -444,7 +418,7 @@ class PushIn {
    * Show a debugging tool appended to the frontend of the page.
    * Can be used to determine best "pushin-from" and "pushin-to" values.
    */
-  showDebugger() {
+  private showDebugger(): void {
     const scrollCounter = document.createElement('div');
     scrollCounter.classList.add('pushin-debug');
 
@@ -468,5 +442,3 @@ class PushIn {
     });
   }
 }
-
-exports.PushIn = PushIn;
