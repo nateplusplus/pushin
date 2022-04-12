@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nateplusplus/pushIn-js.git"
+    "url": "git+https://github.com/nateplusplus/pushin.git"
   },
   "keywords": [
     "parallax",
@@ -39,9 +39,9 @@
   "author": "Nathan Blair <nate@natehub.net> (https://natehub.net)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nateplusplus/pushIn-js/issues"
+    "url": "https://github.com/nateplusplus/pushin/issues"
   },
-  "homepage": "http://nateplusplus.github.io/pushIn-js/",
+  "homepage": "http://nateplusplus.github.io/pushin/",
   "devDependencies": {
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
