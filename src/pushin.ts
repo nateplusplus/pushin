@@ -29,6 +29,9 @@ export class PushIn {
   private transitionLength = 200;
   private layerDepth = 1000;
 
+  private lastAnimationFrameId = -1;
+  private readonly cleanupFns: VoidFunction[] = [];
+
   constructor(private container: HTMLElement, options?: PushInOptions) {
     this.debug = options?.debug ?? false;
   }
@@ -62,6 +65,17 @@ export class PushIn {
   }
 
   /**
+   * Does all necessary cleanups by removing event listeners.
+   */
+  destroy(): void {
+    cancelAnimationFrame(this.lastAnimationFrameId);
+
+    while (this.cleanupFns.length) {
+      this.cleanupFns.pop()!();
+    }
+  }
+
+  /**
    * Get the "scene" element from the DOM.
    * If it doesn't exist, make one.
    */
@@ -77,6 +91,8 @@ export class PushIn {
       this.scene.innerHTML = this.container.innerHTML;
       this.container.innerHTML = '';
       this.container.appendChild(this.scene);
+      // We register the cleanup function only for the manually created scene.
+      this.cleanupFns.push(() => this.container.removeChild(this.scene));
     }
   }
 
@@ -202,16 +218,22 @@ export class PushIn {
    * Bind event listeners to watch for page load and user interaction.
    */
   private bindEvents(): void {
-    window.addEventListener('scroll', () => {
+    const onScroll = () => {
       this.scrollPos = window.pageYOffset;
       this.dolly();
-    });
+    };
+    window.addEventListener('scroll', onScroll);
+    this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
 
-    window.addEventListener('touchstart', event => {
+    const onTouchstart = (event: TouchEvent) => {
       this.touchStart = event.changedTouches[0].screenY;
-    });
+    };
+    window.addEventListener('touchstart', onTouchstart);
+    this.cleanupFns.push(() =>
+      window.removeEventListener('touchstart', onTouchstart)
+    );
 
-    window.addEventListener('touchmove', event => {
+    const onTouchmove = (event: TouchEvent) => {
       event.preventDefault();
 
       const touchMove = event.changedTouches[0].screenY;
@@ -225,14 +247,22 @@ export class PushIn {
       );
 
       this.dolly();
-    });
+    };
+    window.addEventListener('touchmove', onTouchmove);
+    this.cleanupFns.push(() =>
+      window.removeEventListener('touchmove', onTouchmove)
+    );
 
-    window.addEventListener('touchend', () => {
+    const onTouchend = () => {
       this.scrollEnd = this.scrollPos;
-    });
+    };
+    window.addEventListener('touchend', onTouchend);
+    this.cleanupFns.push(() =>
+      window.removeEventListener('touchend', onTouchend)
+    );
 
     let resizeTimeout: number;
-    window.addEventListener('resize', () => {
+    const onResize = () => {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = window.setTimeout(() => {
@@ -240,7 +270,9 @@ export class PushIn {
         this.setScrollLength();
         this.toggleLayers();
       }, 300);
-    });
+    };
+    window.addEventListener('resize', onResize);
+    this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
   }
 
   /**
@@ -283,7 +315,9 @@ export class PushIn {
    * Animation effect, mimicking a camera dolly on the webpage.
    */
   private dolly(): void {
-    requestAnimationFrame(() => {
+    cancelAnimationFrame(this.lastAnimationFrameId);
+
+    this.lastAnimationFrameId = requestAnimationFrame(() => {
       this.toggleLayers();
     });
   }

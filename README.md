@@ -111,13 +111,43 @@ import 'pushin';
 pushInStart({ debug: true });
 ```
 
-### 4. Scene configuration
+### 4. Destroying the effect
+
+The `PushIn` has a `destroy()` method that may be called to do all cleanups once the view is destroyed. For instance, this is how you would want to do this in React:
+
+```jsx
+import { PushIn } from 'pushin';
+
+export default function PushInComponent() {
+  const pushInContainer = useRef();
+
+  useEffect(() => {
+    const pushIn = new PushIn(pushInContainer.current);
+    pushIn.start();
+
+    return () => pushIn.destroy();
+  });
+
+  return (
+    <div class="pushin" {ref}="pushInContainer">
+      <div class="pushin-scene">
+        <div class="pushin-layer">This is the first layer you'll see.</div>
+        <div class="pushin-layer">
+          This is a second layer, which will be positioned behind the first one.
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### 5. Scene configuration
 
 The "scene" is the container element for all layers. There are some scene configurations you can customize for your unique project, which will affect all layers.
 
 **Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available scene configurations.**
 
-### 5. Layer configuration and animation timing
+### 6. Layer configuration and animation timing
 
 By default, all layers will push in at once. You can configure each layer to enter and exit the frame at specific times by using the following data parameters:
 
