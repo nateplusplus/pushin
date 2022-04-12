@@ -16,13 +16,13 @@ _NOTE: This will be overriden if `data-pushin-from` is also added to the first l
 
 ```html
 <div class="pushin-scene" data-pushin-from="300,500">
-    <div class="pushin-layer">
-        <!--
+  <div class="pushin-layer">
+    <!--
         This layer will be active when the window top
         scrolls down to 300px on mobile devices,
         and 500px on tablets or larger.
         -->
-    </div>
+  </div>
 </div>
 ```
 
@@ -32,17 +32,17 @@ This can be used to specify custom breakpoints for responsive design. The defaul
 
 ```html
 <div class="pushin-scene" data-pushin-breakpoints="300,500,1000">
-    <div class="pushin-layer" data-pushin-from="200,150,100">
-        <!--
+  <div class="pushin-layer" data-pushin-from="200,150,100">
+    <!--
         This layer will begin scrolling on screens
         that are between 500-1000px wide when the
         page has scrolled at least 150px down.
         -->
-    </div>
+  </div>
 </div>
 ```
 
-See a working demo of breakpoints and responsive design here: [Responsive design](http://nateplusplus.github.io/pushIn-js/responsive.html)
+See a working demo of breakpoints and responsive design here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
 
 ---
 
@@ -56,7 +56,7 @@ The point at which the layer **should be visible** and at its **smallest scale**
 
 ```html
 <div class="pushin-layer" data-pushin-from="600,300,200">
-    <!--
+  <!--
     This layer will be active when the page is scrolled
     at least 600px on mobile screens, 300px on tablet
     screens, or 200px on desktop screens.
@@ -70,7 +70,7 @@ The point at which the layer should **stop growing** and no longer be visible. E
 
 ```html
 <div class="pushin-layer" data-pushin-to="600,300,200">
-    <!--
+  <!--
     This layer will no longer be active when the page is scrolled
     at least 600px on mobile screens, 300px on tablet
     screens, or 200px on desktop screens.
@@ -84,7 +84,7 @@ A numerical value representing how fast or slow the element should move when scr
 
 ```html
 <div class="pushin-layer" data-pushin-speed="25">
-    <!--
+  <!--
     This layer will move faster than the default speed.
     -->
 </div>
