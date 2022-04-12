@@ -19,7 +19,7 @@ describe('addScene', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    const container = document.querySelector('.pushin');
+    const container = document.querySelector<HTMLElement>('.pushin');
     this.pushIn = new PushIn(container);
     const scene = document.querySelector('.pushin-scene');
     this.pushIn.scene = scene;

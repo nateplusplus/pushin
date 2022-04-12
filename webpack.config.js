@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+
+const banner = require('./build/banner');
 
 module.exports = (env, { mode }) => {
   const isProduction = mode === 'production';
@@ -17,18 +20,19 @@ module.exports = (env, { mode }) => {
       },
       port: 8080,
     },
-    entry: './docs/main.js',
+    entry: './docs/main.ts',
     output: {
       path: path.resolve(__dirname, 'docs'),
       filename: 'pushin.min.js',
     },
     resolve: {
+      extensions: ['.ts', '.js'],
       alias: {
         pushin: path.resolve('./src'),
       },
     },
     plugins: [
-      new webpack.BannerPlugin({ banner: require('./build/banner') }),
+      new webpack.BannerPlugin({ banner }),
       new MiniCssExtractPlugin({
         filename: 'pushin.min.css',
       }),
@@ -55,14 +59,9 @@ module.exports = (env, { mode }) => {
           use: [MiniCssExtractPlugin.loader, 'css-loader'],
         },
         {
-          test: /\.m?js$/,
+          test: /.ts$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env'],
-            },
-          },
+          loader: 'ts-loader',
         },
       ],
     },

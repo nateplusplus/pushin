@@ -5,7 +5,7 @@ let JSDOM = jsdom.JSDOM;
 
 import { PushIn } from '../src/pushin';
 
-describe('setZIndex', function () {
+describe('getSpeed', function () {
   this.beforeEach(function () {
     var dom = new JSDOM(`
         <!DOCTYPE html>
@@ -23,22 +23,25 @@ describe('setZIndex', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    const container = document.querySelector('.pushin');
+    const container = document.querySelector<HTMLElement>('.pushin');
     this.pushIn = new PushIn(container);
   });
 
-  it('Should return the difference between the total number of layers and the current layer index', function () {
-    const mockLayer = {
-      elem: {
-        style: {
-          zIndex: null,
-        },
-      },
-      index: 1,
-    };
+  it('Should return 8 by default', function () {
+    const elem = document.querySelector('#layer-0');
+    const result = this.pushIn.getSpeed(elem);
+    result.should.equal(8);
+  });
 
-    this.pushIn.setZIndex(mockLayer, 10);
-    const result = mockLayer.elem.style.zIndex;
-    result.should.equal(9);
+  it('Should return integer value from data-pushin-speed attribute', function () {
+    const elem = document.querySelector('#layer-1');
+    const result = this.pushIn.getSpeed(elem);
+    result.should.equal(50);
+  });
+
+  it('Should return default if NaN', function () {
+    const elem = document.querySelector('#layer-2');
+    const result = this.pushIn.getSpeed(elem);
+    result.should.equal(8);
   });
 });

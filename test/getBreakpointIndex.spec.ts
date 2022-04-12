@@ -19,7 +19,7 @@ describe('getBreakpointIndex', function () {
     global.window = dom.window;
     global.document = window.document;
 
-    const container = document.querySelector('.pushin');
+    const container = document.querySelector<HTMLElement>('.pushin');
     this.pushIn = new PushIn(container);
     this.pushIn.breakpoints = [0, 768, 1440, 1920];
   });

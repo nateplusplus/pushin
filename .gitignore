@@ -5,6 +5,7 @@ node_modules
 lt.log
 .nyc_output
 coverage
+.eslintcache
 
 #docs
 /docs/index.html
