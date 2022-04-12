@@ -1,7 +1,7 @@
 extends layout.pug
 
 block append head
-	title PushIn.js - Examples: Images
+	title PushIn.js - Examples: The Cat
 
 block append styles
 	style.
@@ -15,7 +15,7 @@ block append styles
 		.layer-container {
 			position: relative;
 			width: 100%;
-			padding-top: 50%;
+			padding-top: 201%;
 		}
 		.layer-inner {
 			position: absolute;
@@ -28,51 +28,36 @@ block append styles
 			align-items: center;
 		}
 
-		.square-container {
-			padding-top: 101%;
-		}
-
-		.vertical-container {
-			padding-top: 201%;
-		}
-
 		.wall {
 			position: absolute;
 			width: 40%;
 			top: 41.3%
 		}
 
-		.layer-3 svg {
-			width: 40%;
-			align-self: flex-end;
-			margin-bottom: 5%;
-		}
-
 		.light {
 			width: 13%;
 			position: absolute;
-			top: 16%;
+			top: 33%;
 		}
 
 		.chair {
 			width: 30%;
 			position: absolute;
-			top: 49%;
+			top: 52%;
 			left: 0%;
 		}
 
 		.tv {
 			width: 30%;
 			position: absolute;
-			top: 48%;
+			top: 51%;
 			right: 0%;
 		}
 
-		.plant {
-			width: 10%;
+		.sofa {
+			width: 40%;
 			position: absolute;
-			bottom: 32%;
-			right: 31%;
+			bottom: 40%;
 		}
 
 		.floor {
@@ -91,10 +76,17 @@ block append styles
 			top: 0;
 		}
 
+		.plant {
+			width: 10%;
+			position: absolute;
+			bottom: 40%;
+			right: 31%;
+		}
+
 		.table {
 			background-color: #3A596B;
 			width: 100%;
-			height: 32%;
+			height: 40.5%;
 			position: absolute;
 			bottom: 0;
 		}
@@ -103,13 +95,13 @@ block content
 	div.pushin
 		div.pushin-scene
 			div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="1000" data-pushin-speed="80")
-				div.layer-container.square-container
+				div.layer-container
 					div.layer-inner
 						div.table
 						div.plant
 							include images/plant.svg
 			div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="16")
-				div.layer-container.square-container
+				div.layer-container
 					div.layer-inner
 						div.light
 							include images/light.svg
@@ -120,13 +112,14 @@ block content
 			div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="10")
 				div.layer-container
 					div.layer-inner
-						include images/livingroom-3.svg
+						div.sofa
+							include images/livingroom-3.svg
 			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5200")
-				div.layer-container.vertical-container
+				div.layer-container
 					div.layer-inner
 						div.floor
 			div.pushin-layer.layer-5(data-pushin-from="-200" data-pushin-to="5000")
-				div.layer-container.vertical-container
+				div.layer-container
 					div.layer-inner
 						div.ceiling
 						div.wall

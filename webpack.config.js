@@ -82,9 +82,9 @@ module.exports = (env, argv) => {
         template: '!!pug-loader!docs/responsive.pug',
       }),
       new HtmlWebpackPlugin({
-        filename: 'images.html',
+        filename: 'cat.html',
         minify: false,
-        template: '!!pug-loader!docs/images.pug',
+        template: '!!pug-loader!docs/cat.pug',
       })
     );
   }
