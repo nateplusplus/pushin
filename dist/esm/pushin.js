@@ -1,4 +1,4 @@
-/* Pushin.js - v4.0.0-0
+/* Pushin.js - v4.0.0-1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
