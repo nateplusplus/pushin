@@ -1,14 +1,14 @@
 # pushIn.js
 
 [![made-with-javascript](https://img.shields.io/badge/Made%20with-TypeScript-1f425f.svg)](https://www.typescriptlang.org/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/nateplusplus/pushin-js/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/nateplusplus/pushin/graphs/commit-activity)
 ![Maintainer](https://img.shields.io/badge/maintainer-nateplusplus-blue)
-[![GitHub license](https://img.shields.io/github/license/nateplusplus/pushin-js.svg)](https://github.com/nateplusplus/pushin-js/blob/main/LICENSE)
-[![Node.js CI](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/nateplusplus/pushIn-js/actions/workflows/node.js.yml)
+[![GitHub license](https://img.shields.io/github/license/nateplusplus/pushin.svg)](https://github.com/nateplusplus/pushin/blob/main/LICENSE)
+[![Node.js CI](https://github.com/nateplusplus/pushin/actions/workflows/node.js.yml/badge.svg)](https://github.com/nateplusplus/pushin/actions/workflows/node.js.yml)
 
 PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 
-Check out the [live demo](http://nateplusplus.github.io/pushIn-js/) for a working example.
+Check out the [live demo](http://nateplusplus.github.io/pushin/) for a working example.
 
 ## Compatibility
 
@@ -100,7 +100,7 @@ pushInStart();
 
 To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
 
-See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushIn-js/responsive.html)
+See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
 
 **Example:**
 
