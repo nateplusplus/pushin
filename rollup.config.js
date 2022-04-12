@@ -2,6 +2,7 @@ import copy from 'rollup-plugin-copy';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import getBabelOutputPlugin from '@rollup/plugin-babel';
+import CleanCSS from 'clean-css';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const banner = require('./build/banner');
@@ -47,6 +48,16 @@ function createConfigForCdn() {
       banner: `/* ${banner} */`,
     },
     plugins: [
+      copy({
+        targets: [
+          {
+            src: 'src/pushin.css',
+            dest: 'dist',
+            transform: contents => new CleanCSS().minify(contents).styles,
+            rename: 'pushin.min.css',
+          },
+        ],
+      }),
       typescript({ tsconfig: './tsconfig.json' }),
       terser({
         ecma: '5',

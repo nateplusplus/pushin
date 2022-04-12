@@ -1,5 +1,1 @@
-/*!
- * Pushin.js - v3.4.2
- * Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
- * License: MIT
- */.pushin{position:relative}.pushin-scene{height:100vh;left:0;position:fixed;top:0;width:100%}.pushin-layer{align-items:center;display:flex;flex-direction:column;height:100%;justify-content:center;left:0;opacity:0;position:absolute;top:0;width:100%}.pushin-debug{background-color:#fff;border:0;border-bottom:1px;box-shadow:-2px 8px 19px 2px rgba(0,0,0,.26);-webkit-box-shadow:-2px 8px 19px 2px rgba(0,0,0,.26);padding:1em;position:fixed;top:0;width:100%}@media (min-width:768px){.pushin-debug{border:1px solid #000;border-radius:15px 0 0 15px;border-right:0;right:0;top:50px;width:250px}}.pushin-debug__title{font-weight:700}
+.pushin{position:relative}.pushin-scene{height:100vh;left:0;position:fixed;width:100%;top:0}.pushin-layer{align-items:center;display:flex;flex-direction:column;height:100%;justify-content:center;left:0;opacity:0;position:absolute;top:0;width:100%}.pushin-debug{background-color:#fff;border:0;border-bottom:1px;box-shadow:-2px 8px 19px 2px rgba(0,0,0,.26);padding:1em;position:fixed;top:0;width:100%;-webkit-box-shadow:-2px 8px 19px 2px rgba(0,0,0,.26)}@media (min-width:768px){.pushin-debug{border:1px solid #000;border-radius:15px 0 0 15px;border-right:0;right:0;top:50px;width:250px}}.pushin-debug__title{font-weight:700}
