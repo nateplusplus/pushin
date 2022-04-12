@@ -51,6 +51,11 @@ module.exports = (env, { mode }) => {
         minify: false,
         template: '!!pug-loader!docs/responsive.pug',
       }),
+      new HtmlWebpackPlugin({
+        filename: 'cat.html',
+        minify: false,
+        template: '!!pug-loader!docs/cat.pug',
+      }),
     ],
     module: {
       rules: [
