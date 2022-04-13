@@ -1,3 +1,5 @@
+<img src="docs/images/pushin-logo.svg" width="100">
+
 # pushIn.js
 
 [![made-with-javascript](https://img.shields.io/badge/Made%20with-TypeScript-1f425f.svg)](https://www.typescriptlang.org/)
