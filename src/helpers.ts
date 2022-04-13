@@ -13,7 +13,7 @@ declare global {
  *
  * @param options - Optional (legacy) - specify a unique selector for the container of the effect
  */
-window.pushInStart = (options?: PushInOptions | string) => {
+window.pushInStart = (options?: PushInOptions | string): PushIn[] => {
   let selector = '.pushin';
   let pushInOptions: PushInOptions | undefined;
   if (options) {
@@ -26,7 +26,13 @@ window.pushInStart = (options?: PushInOptions | string) => {
   }
 
   const elements = document.querySelectorAll<HTMLElement>(selector);
+  const instances: PushIn[] = [];
   for (const element of elements) {
-    new PushIn(element, pushInOptions).start();
+    const instance = new PushIn(element, pushInOptions);
+    instance.start();
+
+    instances.push(instance);
   }
+
+  return instances;
 };
