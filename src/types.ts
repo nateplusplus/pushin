@@ -1,5 +1,18 @@
+export interface LayerOptions {
+  inpoints: number[];
+  outpoints: number[];
+  speed: number;
+}
+
+export interface SceneOptions {
+  breakpoints: number[];
+  inpoints: number[];
+}
+
 export interface PushInOptions {
   debug?: boolean;
+  layers?: LayerOptions[];
+  scene?: SceneOptions;
 }
 
 export interface PushInLayer {
@@ -9,6 +22,7 @@ export interface PushInLayer {
   ref: {
     inpoints: number[];
     outpoints: number[];
+    speed: number;
   };
   params: {
     inpoint: number;
