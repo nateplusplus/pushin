@@ -40,22 +40,18 @@ And also require assets in your CSS:
 
 - _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
 
-### 1b. Manually download and include the JavaScript and CSS
+### 1b. Use the CDN
 
-If you're not using npm, just download the CSS and JavaScript files from this repo: [dist/](dist/) and include them in your project. These two files will include all the functionality for the effect.
+If you're not using npm, you can use the CDN instead. These two files will include all the functionality for the effect.
 
 **Example:**
 
 ```html
-<html>
-  <head>
-    <link rel="stylesheet" href="pushin.css" />
-    <script type="text/javascript" src="pushin.js"></script>
-  </head>
-  <body>
-    <!-- page content... -->
-  </body>
-</html>
+<link rel="stylesheet" href="https://unpkg.com/pushin/dist/pushin.min.css" />
+<script
+  type="text/javascript"
+  src="https://unpkg.com/pushin/dist/pushin.min.js"
+></script>
 ```
 
 ### 2. Required HTML structure
