@@ -5,7 +5,7 @@ let JSDOM = jsdom.JSDOM;
 
 import { PushIn } from '../src/pushin';
 
-describe('addScene', function () {
+describe('setBreakpoints', function () {
   this.beforeEach(function () {
     var dom = new JSDOM(`
         <!DOCTYPE html>
@@ -27,7 +27,7 @@ describe('addScene', function () {
 
   it('Should set the default breakpoints', function () {
     this.pushIn.setBreakpoints();
-    const result = this.pushIn.breakpoints;
+    const result = this.pushIn.sceneOptions.breakpoints;
     const expected = [0, 768, 1440, 1920];
     result.should.deep.equal(expected);
   });
@@ -35,7 +35,7 @@ describe('addScene', function () {
   it('Should set the breakpoints provided by data-attributes', function () {
     this.pushIn.scene.setAttribute('data-pushin-breakpoints', '1,2,3');
     this.pushIn.setBreakpoints();
-    const result = this.pushIn.breakpoints;
+    const result = this.pushIn.sceneOptions.breakpoints;
     const expected = [0, 1, 2, 3];
     result.should.deep.equal(expected);
   });

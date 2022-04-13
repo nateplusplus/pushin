@@ -5,7 +5,12 @@ import {
   PUSH_IN_SPEED_DATA_ATTRIBUTE,
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
 } from './constants';
-import { PushInLayer, PushInOptions } from './types';
+import {
+  PushInLayer,
+  PushInOptions,
+  LayerOptions,
+  SceneOptions,
+} from './types';
 
 /**
  * PushIn object
@@ -15,7 +20,8 @@ import { PushInLayer, PushInOptions } from './types';
  */
 export class PushIn {
   private scene!: HTMLElement;
-  private breakpoints: number[] = [];
+  private layerOptions: LayerOptions[];
+  private sceneOptions: SceneOptions;
 
   private scrollPos = 0;
   private scrollEnd: number | null = null;
@@ -29,8 +35,13 @@ export class PushIn {
   private transitionLength = 200;
   private layerDepth = 1000;
 
+  private lastAnimationFrameId = -1;
+  private readonly cleanupFns: VoidFunction[] = [];
+
   constructor(private container: HTMLElement, options?: PushInOptions) {
     this.debug = options?.debug ?? false;
+    this.layerOptions = options?.layers ?? [];
+    this.sceneOptions = options?.scene ?? { breakpoints: [], inpoints: [] };
   }
 
   /**
@@ -62,6 +73,17 @@ export class PushIn {
   }
 
   /**
+   * Does all necessary cleanups by removing event listeners.
+   */
+  destroy(): void {
+    cancelAnimationFrame(this.lastAnimationFrameId);
+
+    while (this.cleanupFns.length) {
+      this.cleanupFns.pop()!();
+    }
+  }
+
+  /**
    * Get the "scene" element from the DOM.
    * If it doesn't exist, make one.
    */
@@ -77,6 +99,8 @@ export class PushIn {
       this.scene.innerHTML = this.container.innerHTML;
       this.container.innerHTML = '';
       this.container.appendChild(this.scene);
+      // We register the cleanup function only for the manually created scene.
+      this.cleanupFns.push(() => this.container.removeChild(this.scene));
     }
   }
 
@@ -84,16 +108,18 @@ export class PushIn {
    * Set breakpoints for responsive design settings.
    */
   private setBreakpoints(): void {
-    this.breakpoints = [768, 1440, 1920];
+    if (this.sceneOptions.breakpoints.length === 0) {
+      this.sceneOptions.breakpoints = [768, 1440, 1920];
+    }
 
     if (this.scene.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-      this.breakpoints = this.scene.dataset[
+      this.sceneOptions.breakpoints = this.scene.dataset[
         PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE
       ]!.split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
     }
 
     // Always include break point 0 for anything under first breakpoint
-    this.breakpoints.unshift(0);
+    this.sceneOptions.breakpoints.unshift(0);
   }
 
   /**
@@ -107,17 +133,18 @@ export class PushIn {
     for (let index = 0; index < layers.length; index++) {
       const element = <HTMLElement>layers[index];
       const inpoints = this.getInpoints(element, index);
-      const outpoints = this.getOutpoints(element, inpoints[0]);
+      const outpoints = this.getOutpoints(element, inpoints[0], index);
+      const speed = this.getSpeed(element, index);
 
       const layer: PushInLayer = {
         element,
         index,
         originalScale: this.getElementScaleX(element),
-        ref: { inpoints, outpoints },
+        ref: { inpoints, outpoints, speed },
         params: {
           inpoint: this.getInpoint(inpoints),
           outpoint: this.getOutpoint(outpoints),
-          speed: this.getSpeed(element),
+          speed,
         },
       };
 
@@ -137,11 +164,15 @@ export class PushIn {
       inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(',').map(
         inpoint => parseInt(inpoint.trim(), 10)
       );
+    } else if (this.layerOptions[index]?.inpoints) {
+      inpoints = this.layerOptions[index].inpoints;
     } else if (index === 0 && this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       // Custom inpoint
       inpoints = this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(
         ','
       ).map(inpoint => parseInt(inpoint.trim(), 10));
+    } else if (index === 0 && this.sceneOptions?.inpoints.length > 0) {
+      inpoints = this.sceneOptions.inpoints;
     } else if (index > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.layers[index - 1].params;
@@ -154,12 +185,18 @@ export class PushIn {
   /**
    * Get all outpoints for the layer.
    */
-  private getOutpoints(element: HTMLElement, inpoint: number): number[] {
+  private getOutpoints(
+    element: HTMLElement,
+    inpoint: number,
+    index: number
+  ): number[] {
     let outpoints = [inpoint + this.layerDepth];
 
     if (element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]) {
       const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]!.split(',');
       outpoints = values.map(value => parseInt(value.trim(), 10));
+    } else if (this.layerOptions[index]?.outpoints) {
+      outpoints = this.layerOptions[index].outpoints;
     }
 
     return outpoints;
@@ -168,7 +205,7 @@ export class PushIn {
   /**
    * Get the push-in speed for the layer.
    */
-  private getSpeed(element: HTMLElement): number {
+  private getSpeed(element: HTMLElement, index: number): number {
     let speed: number | null = null;
 
     if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
@@ -176,6 +213,8 @@ export class PushIn {
       if (Number.isNaN(speed)) {
         speed = DEFAULT_SPEED;
       }
+    } else if (this.layerOptions[index]?.speed) {
+      speed = this.layerOptions[index].speed;
     }
 
     return speed || DEFAULT_SPEED;
@@ -185,10 +224,12 @@ export class PushIn {
    * Get the array index of the current window breakpoint.
    */
   private getBreakpointIndex(): number {
-    const searchIndex = this.breakpoints
+    const searchIndex = this.sceneOptions.breakpoints
       .reverse()
       .findIndex(bp => bp <= window.innerWidth);
-    return searchIndex === -1 ? 0 : this.breakpoints.length - 1 - searchIndex;
+    return searchIndex === -1
+      ? 0
+      : this.sceneOptions.breakpoints.length - 1 - searchIndex;
   }
 
   /**
@@ -202,16 +243,22 @@ export class PushIn {
    * Bind event listeners to watch for page load and user interaction.
    */
   private bindEvents(): void {
-    window.addEventListener('scroll', () => {
+    const onScroll = () => {
       this.scrollPos = window.pageYOffset;
       this.dolly();
-    });
+    };
+    window.addEventListener('scroll', onScroll);
+    this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
 
-    window.addEventListener('touchstart', event => {
+    const onTouchstart = (event: TouchEvent) => {
       this.touchStart = event.changedTouches[0].screenY;
-    });
+    };
+    window.addEventListener('touchstart', onTouchstart);
+    this.cleanupFns.push(() =>
+      window.removeEventListener('touchstart', onTouchstart)
+    );
 
-    window.addEventListener('touchmove', event => {
+    const onTouchmove = (event: TouchEvent) => {
       event.preventDefault();
 
       const touchMove = event.changedTouches[0].screenY;
@@ -225,14 +272,22 @@ export class PushIn {
       );
 
       this.dolly();
-    });
+    };
+    window.addEventListener('touchmove', onTouchmove);
+    this.cleanupFns.push(() =>
+      window.removeEventListener('touchmove', onTouchmove)
+    );
 
-    window.addEventListener('touchend', () => {
+    const onTouchend = () => {
       this.scrollEnd = this.scrollPos;
-    });
+    };
+    window.addEventListener('touchend', onTouchend);
+    this.cleanupFns.push(() =>
+      window.removeEventListener('touchend', onTouchend)
+    );
 
     let resizeTimeout: number;
-    window.addEventListener('resize', () => {
+    const onResize = () => {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = window.setTimeout(() => {
@@ -240,7 +295,9 @@ export class PushIn {
         this.setScrollLength();
         this.toggleLayers();
       }, 300);
-    });
+    };
+    window.addEventListener('resize', onResize);
+    this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
   }
 
   /**
@@ -254,7 +311,7 @@ export class PushIn {
       layer.params = {
         inpoint: this.getInpoint(layer.ref.inpoints),
         outpoint: this.getOutpoint(layer.ref.outpoints),
-        speed: this.getSpeed(layer.element),
+        speed: layer.ref.speed,
       };
     });
   }
@@ -283,7 +340,9 @@ export class PushIn {
    * Animation effect, mimicking a camera dolly on the webpage.
    */
   private dolly(): void {
-    requestAnimationFrame(() => {
+    cancelAnimationFrame(this.lastAnimationFrameId);
+
+    this.lastAnimationFrameId = requestAnimationFrame(() => {
       this.toggleLayers();
     });
   }

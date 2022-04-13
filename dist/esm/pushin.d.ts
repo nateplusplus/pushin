@@ -8,7 +8,8 @@ import { PushInOptions } from './types';
 export declare class PushIn {
     private container;
     private scene;
-    private breakpoints;
+    private layerOptions;
+    private sceneOptions;
     private scrollPos;
     private scrollEnd;
     private touchStart;
@@ -18,11 +19,17 @@ export declare class PushIn {
     private speedDelta;
     private transitionLength;
     private layerDepth;
+    private lastAnimationFrameId;
+    private readonly cleanupFns;
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
      */
     start(): void;
+    /**
+     * Does all necessary cleanups by removing event listeners.
+     */
+    destroy(): void;
     /**
      * Get the "scene" element from the DOM.
      * If it doesn't exist, make one.

@@ -1,19 +1,29 @@
 {
   "name": "pushin",
   "description": "A javascript plugin to attach a 'dolly' or 'push-in' effect to a div element when user scrolls.",
-  "version": "4.0.0-1",
+  "version": "4.0.0",
   "sideEffects": true,
   "module": "dist/esm/pushin.js",
   "main": "dist/umd/pushin.js",
   "typings": "dist/esm/index.d.ts",
+  "unpkg": "dist/umd/pushin.min.js",
   "exports": {
     "./pushin.css": {
       "style": "./dist/pushin.css"
     }
   },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">= 16.0.0"
+  },
   "scripts": {
     "husky": "husky",
     "lint-staged": "lint-staged",
+    "clean-publish": "clean-publish",
     "lint": "eslint --cache src/*.ts",
     "build": "rollup -c",
     "docs": "webpack --mode=production",
@@ -22,6 +32,7 @@
     "test": "npm run mocha -- --watch",
     "coverage": "nyc --reporter=html --reporter=text npm run mocha && open coverage/index.html -a 'Google Chrome'",
     "test:once": "npm run mocha",
+    "publish": "clean-publish -- --fields scripts engines prettier lint-staged devDependencies",
     "postinstall": "husky install"
   },
   "repository": {
@@ -49,11 +60,14 @@
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-typescript": "^8.3.1",
     "@types/chai": "^4.3.0",
+    "@types/chai-spies": "^1.0.3",
     "@types/mocha": "^9.1.0",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "chai": "^4.3.4",
+    "chai-spies": "^1.0.0",
     "clean-css": "^5.3.0",
+    "clean-publish": "^4.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "eslint": "^8.10.0",
