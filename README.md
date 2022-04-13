@@ -1,4 +1,6 @@
-# <img src="docs/images/pushin-logo.svg" width="40" style="margin-right:10px;vertical-align:middle;"> pushIn.js
+<img src="docs/images/pushin-logo.svg" width="100">
+
+# pushIn.js
 
 [![made-with-javascript](https://img.shields.io/badge/Made%20with-TypeScript-1f425f.svg)](https://www.typescriptlang.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/nateplusplus/pushin/graphs/commit-activity)
