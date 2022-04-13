@@ -42,7 +42,7 @@ describe('getInpoints', function () {
     const inpoint = 100;
 
     const elem = document.querySelector<HTMLElement>('#layer-0');
-    const result = instance['getOutpoints'](elem, inpoint);
+    const result = instance['getOutpoints'](elem, inpoint, 0);
 
     result.should.deep.equal([400]);
   });
@@ -54,7 +54,7 @@ describe('getInpoints', function () {
     const inpoint = 100;
 
     const elem = document.querySelector<HTMLElement>('#layer-1');
-    const result = instance['getOutpoints'](elem, inpoint);
+    const result = instance['getOutpoints'](elem, inpoint, 1);
 
     result.should.deep.equal([300]);
   });
@@ -66,7 +66,7 @@ describe('getInpoints', function () {
     const inpoint = 100;
 
     const elem = document.querySelector<HTMLElement>('#layer-2');
-    const result = instance['getOutpoints'](elem, inpoint);
+    const result = instance['getOutpoints'](elem, inpoint, 2);
 
     result.should.deep.equal([300, 500]);
   });
@@ -78,7 +78,7 @@ describe('getInpoints', function () {
     const inpoint = 500;
 
     const elem = document.querySelector<HTMLElement>('#layer-3');
-    const result = instance['getOutpoints'](elem, inpoint);
+    const result = instance['getOutpoints'](elem, inpoint, 3);
 
     result.should.deep.equal([800]);
   });
