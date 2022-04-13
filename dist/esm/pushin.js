@@ -1,12 +1,12 @@
-/* Pushin.js - v4.0.0-1
+/* Pushin.js - v4.0.0
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
 // The data attribute which may be defined on the elemenet in the following way:
-// `<div class="pushin-scene" data-pushinBreakpoints="768,1440"></div>`.
+// `<div class="pushin-scene" data-pushin-breakpoints="768,1440"></div>`.
 const PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE = 'pushinBreakpoints';
 // The data attribute which may be defined on the elemenet in the following way:
-// `<div data-pushinSpeed="6"></div>`.
+// `<div data-pushin-speed="6"></div>`.
 const PUSH_IN_SPEED_DATA_ATTRIBUTE = 'pushinSpeed';
 const PUSH_IN_TO_DATA_ATTRIBUTE = 'pushinTo';
 const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
@@ -19,9 +19,8 @@ const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
  */
 class PushIn {
     constructor(container, options) {
-        var _a;
+        var _a, _b, _c;
         this.container = container;
-        this.breakpoints = [];
         this.scrollPos = 0;
         this.scrollEnd = null;
         this.touchStart = null;
@@ -30,7 +29,11 @@ class PushIn {
         this.speedDelta = 100;
         this.transitionLength = 200;
         this.layerDepth = 1000;
+        this.lastAnimationFrameId = -1;
+        this.cleanupFns = [];
         this.debug = (_a = options === null || options === void 0 ? void 0 : options.debug) !== null && _a !== void 0 ? _a : false;
+        this.layerOptions = (_b = options === null || options === void 0 ? void 0 : options.layers) !== null && _b !== void 0 ? _b : [];
+        this.sceneOptions = (_c = options === null || options === void 0 ? void 0 : options.scene) !== null && _c !== void 0 ? _c : { breakpoints: [], inpoints: [] };
     }
     /**
      * Initialize the object to start everything up.
@@ -55,6 +58,15 @@ class PushIn {
         }
     }
     /**
+     * Does all necessary cleanups by removing event listeners.
+     */
+    destroy() {
+        cancelAnimationFrame(this.lastAnimationFrameId);
+        while (this.cleanupFns.length) {
+            this.cleanupFns.pop()();
+        }
+    }
+    /**
      * Get the "scene" element from the DOM.
      * If it doesn't exist, make one.
      */
@@ -69,18 +81,22 @@ class PushIn {
             this.scene.innerHTML = this.container.innerHTML;
             this.container.innerHTML = '';
             this.container.appendChild(this.scene);
+            // We register the cleanup function only for the manually created scene.
+            this.cleanupFns.push(() => this.container.removeChild(this.scene));
         }
     }
     /**
      * Set breakpoints for responsive design settings.
      */
     setBreakpoints() {
-        this.breakpoints = [768, 1440, 1920];
+        if (this.sceneOptions.breakpoints.length === 0) {
+            this.sceneOptions.breakpoints = [768, 1440, 1920];
+        }
         if (this.scene.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-            this.breakpoints = this.scene.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE].split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
+            this.sceneOptions.breakpoints = this.scene.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE].split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
         }
         // Always include break point 0 for anything under first breakpoint
-        this.breakpoints.unshift(0);
+        this.sceneOptions.breakpoints.unshift(0);
     }
     /**
      * Find all layers on the page and store them with their parameters
@@ -90,16 +106,17 @@ class PushIn {
         for (let index = 0; index < layers.length; index++) {
             const element = layers[index];
             const inpoints = this.getInpoints(element, index);
-            const outpoints = this.getOutpoints(element, inpoints[0]);
+            const outpoints = this.getOutpoints(element, inpoints[0], index);
+            const speed = this.getSpeed(element, index);
             const layer = {
                 element,
                 index,
                 originalScale: this.getElementScaleX(element),
-                ref: { inpoints, outpoints },
+                ref: { inpoints, outpoints, speed },
                 params: {
                     inpoint: this.getInpoint(inpoints),
                     outpoint: this.getOutpoint(outpoints),
-                    speed: this.getSpeed(element),
+                    speed,
                 },
             };
             this.layers.push(layer);
@@ -110,14 +127,21 @@ class PushIn {
      * Get all inpoints for the layer.
      */
     getInpoints(element, index) {
+        var _a, _b;
         const { top } = this.scene.getBoundingClientRect();
         let inpoints = [top];
         if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
             inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE].split(',').map(inpoint => parseInt(inpoint.trim(), 10));
         }
+        else if ((_a = this.layerOptions[index]) === null || _a === void 0 ? void 0 : _a.inpoints) {
+            inpoints = this.layerOptions[index].inpoints;
+        }
         else if (index === 0 && this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
             // Custom inpoint
             inpoints = this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE].split(',').map(inpoint => parseInt(inpoint.trim(), 10));
+        }
+        else if (index === 0 && ((_b = this.sceneOptions) === null || _b === void 0 ? void 0 : _b.inpoints.length) > 0) {
+            inpoints = this.sceneOptions.inpoints;
         }
         else if (index > 0) {
             // Set default for middle layers if none provided
@@ -129,18 +153,23 @@ class PushIn {
     /**
      * Get all outpoints for the layer.
      */
-    getOutpoints(element, inpoint) {
+    getOutpoints(element, inpoint, index) {
+        var _a;
         let outpoints = [inpoint + this.layerDepth];
         if (element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]) {
             const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE].split(',');
             outpoints = values.map(value => parseInt(value.trim(), 10));
+        }
+        else if ((_a = this.layerOptions[index]) === null || _a === void 0 ? void 0 : _a.outpoints) {
+            outpoints = this.layerOptions[index].outpoints;
         }
         return outpoints;
     }
     /**
      * Get the push-in speed for the layer.
      */
-    getSpeed(element) {
+    getSpeed(element, index) {
+        var _a;
         let speed = null;
         if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
             speed = parseInt(element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE], 10);
@@ -148,16 +177,21 @@ class PushIn {
                 speed = DEFAULT_SPEED;
             }
         }
+        else if ((_a = this.layerOptions[index]) === null || _a === void 0 ? void 0 : _a.speed) {
+            speed = this.layerOptions[index].speed;
+        }
         return speed || DEFAULT_SPEED;
     }
     /**
      * Get the array index of the current window breakpoint.
      */
     getBreakpointIndex() {
-        const searchIndex = this.breakpoints
+        const searchIndex = this.sceneOptions.breakpoints
             .reverse()
             .findIndex(bp => bp <= window.innerWidth);
-        return searchIndex === -1 ? 0 : this.breakpoints.length - 1 - searchIndex;
+        return searchIndex === -1
+            ? 0
+            : this.sceneOptions.breakpoints.length - 1 - searchIndex;
     }
     /**
      * Set the z-index of each layer so they overlap correctly.
@@ -169,32 +203,42 @@ class PushIn {
      * Bind event listeners to watch for page load and user interaction.
      */
     bindEvents() {
-        window.addEventListener('scroll', () => {
+        const onScroll = () => {
             this.scrollPos = window.pageYOffset;
             this.dolly();
-        });
-        window.addEventListener('touchstart', event => {
+        };
+        window.addEventListener('scroll', onScroll);
+        this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+        const onTouchstart = (event) => {
             this.touchStart = event.changedTouches[0].screenY;
-        });
-        window.addEventListener('touchmove', event => {
+        };
+        window.addEventListener('touchstart', onTouchstart);
+        this.cleanupFns.push(() => window.removeEventListener('touchstart', onTouchstart));
+        const onTouchmove = (event) => {
             event.preventDefault();
             const touchMove = event.changedTouches[0].screenY;
             this.scrollPos = Math.max(this.scrollEnd + this.touchStart - touchMove, 0);
             this.scrollPos = Math.min(this.scrollPos, this.pageHeight - window.innerHeight);
             this.dolly();
-        });
-        window.addEventListener('touchend', () => {
+        };
+        window.addEventListener('touchmove', onTouchmove);
+        this.cleanupFns.push(() => window.removeEventListener('touchmove', onTouchmove));
+        const onTouchend = () => {
             this.scrollEnd = this.scrollPos;
-        });
+        };
+        window.addEventListener('touchend', onTouchend);
+        this.cleanupFns.push(() => window.removeEventListener('touchend', onTouchend));
         let resizeTimeout;
-        window.addEventListener('resize', () => {
+        const onResize = () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = window.setTimeout(() => {
                 this.resetLayerParams();
                 this.setScrollLength();
                 this.toggleLayers();
             }, 300);
-        });
+        };
+        window.addEventListener('resize', onResize);
+        this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
     }
     /**
      * Reset all the layer parameters.
@@ -207,7 +251,7 @@ class PushIn {
             layer.params = {
                 inpoint: this.getInpoint(layer.ref.inpoints),
                 outpoint: this.getOutpoint(layer.ref.outpoints),
-                speed: this.getSpeed(layer.element),
+                speed: layer.ref.speed,
             };
         });
     }
@@ -232,7 +276,8 @@ class PushIn {
      * Animation effect, mimicking a camera dolly on the webpage.
      */
     dolly() {
-        requestAnimationFrame(() => {
+        cancelAnimationFrame(this.lastAnimationFrameId);
+        this.lastAnimationFrameId = requestAnimationFrame(() => {
             this.toggleLayers();
         });
     }
@@ -359,25 +404,17 @@ class PushIn {
 /**
  * Helper function: Set up and start push-in effect on all elements
  * matching the provided selector.
- *
- * @param options - Optional (legacy) - specify a unique selector for the container of the effect
  */
 window.pushInStart = (options) => {
-    let selector = '.pushin';
-    let pushInOptions;
-    if (options) {
-        // Backward compatibility <3.3.0 - first parameter was selector, not options
-        if (typeof options === 'string') {
-            selector = options;
-        }
-        else {
-            pushInOptions = options;
-        }
-    }
-    const elements = document.querySelectorAll(selector);
+    const pushInOptions = options !== null && options !== void 0 ? options : {};
+    const elements = document.querySelectorAll('.pushin');
+    const instances = [];
     for (const element of elements) {
-        new PushIn(element, pushInOptions).start();
+        const instance = new PushIn(element, pushInOptions);
+        instance.start();
+        instances.push(instance);
     }
+    return instances;
 };
 
 export { PushIn };
