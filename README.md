@@ -50,7 +50,7 @@ If you're not using npm, you can use the CDN instead. These two files will inclu
 <link rel="stylesheet" href="https://unpkg.com/pushin/dist/pushin.min.css" />
 <script
   type="text/javascript"
-  src="https://unpkg.com/pushin/dist/pushin.min.js"
+  src="https://unpkg.com/pushin/dist/umd/pushin.min.js"
 ></script>
 ```
 
