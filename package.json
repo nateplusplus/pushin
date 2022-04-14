@@ -21,9 +21,7 @@
     "node": ">= 16.0.0"
   },
   "scripts": {
-    "husky": "husky",
     "lint-staged": "lint-staged",
-    "clean-publish": "clean-publish",
     "lint": "eslint --cache src/*.ts",
     "build": "rollup -c",
     "docs": "webpack --mode=production",
@@ -31,9 +29,7 @@
     "mocha": "cross-env TS_NODE_PROJECT=\"tsconfig.spec.json\" mocha -r ts-node/register test/*.spec.ts",
     "test": "npm run mocha -- --watch",
     "coverage": "nyc --reporter=html --reporter=text npm run mocha && open coverage/index.html -a 'Google Chrome'",
-    "test:once": "npm run mocha",
-    "publish": "clean-publish -- --fields scripts engines prettier lint-staged devDependencies",
-    "postinstall": "husky install"
+    "test:once": "npm run mocha"
   },
   "repository": {
     "type": "git",
