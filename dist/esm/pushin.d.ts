@@ -10,7 +10,7 @@ export declare class PushIn {
     private scene;
     private layerOptions;
     private sceneOptions;
-    private scrollPos;
+    private scrollY;
     private scrollEnd;
     private touchStart;
     private pageHeight;

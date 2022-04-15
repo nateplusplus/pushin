@@ -35,28 +35,28 @@ describe('getScaleValue', function () {
   });
 
   it('should return original scale if scroll position and inpoint are the same', function () {
-    this.pushIn.scrollPos = 10;
+    this.pushIn.scrollY = 10;
     const result = this.pushIn.getScaleValue(this.layerMock);
 
     result.should.equal(2);
   });
 
-  it('should reduce scale if scrollPos is less than inpoint', function () {
-    this.pushIn.scrollPos = 6;
+  it('should reduce scale if scrollY is less than inpoint', function () {
+    this.pushIn.scrollY = 6;
     const result = this.pushIn.getScaleValue(this.layerMock);
 
     result.should.be.lessThan(2);
   });
 
-  it('should increase scale if scrollPos is greater than inpoint', function () {
-    this.pushIn.scrollPos = 20;
+  it('should increase scale if scrollY is greater than inpoint', function () {
+    this.pushIn.scrollY = 20;
     const result = this.pushIn.getScaleValue(this.layerMock);
 
     result.should.greaterThan(2);
   });
 
   it('should not return a negative number', function () {
-    this.pushIn.scrollPos = 1;
+    this.pushIn.scrollY = 1;
     const result = this.pushIn.getScaleValue(this.layerMock2);
 
     result.should.equal(0);
