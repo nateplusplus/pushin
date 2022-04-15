@@ -47,6 +47,9 @@ License: MIT */
         start() {
             if (this.container) {
                 this.scrollY = this.getScrollY();
+                if (this.debug) {
+                    this.showDebugger();
+                }
                 this.addScene();
                 this.setBreakpoints();
                 this.getLayers();
@@ -60,9 +63,6 @@ License: MIT */
             else {
                 // eslint-disable-next-line no-console
                 console.error('No container element provided to pushIn.js. Effect will not be applied.');
-            }
-            if (this.debug) {
-                this.showDebugger();
             }
         }
         /**
@@ -257,6 +257,16 @@ License: MIT */
             };
             window.addEventListener('resize', onResize);
             this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
+            if (this.pushinDebug) {
+                window.addEventListener('scroll', () => {
+                    var _a;
+                    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+                    const content = (_a = this.pushinDebug) === null || _a === void 0 ? void 0 : _a.querySelector('.pushin-debug__content');
+                    if (content) {
+                        content.textContent = `Scroll position: ${Math.round(scrollY)}px`;
+                    }
+                });
+            }
         }
         /**
          * Reset all the layer parameters.
@@ -403,24 +413,18 @@ License: MIT */
          * Can be used to determine best "pushin-from" and "pushin-to" values.
          */
         showDebugger() {
-            const scrollCounter = document.createElement('div');
-            scrollCounter.classList.add('pushin-debug');
+            this.pushinDebug = document.createElement('div');
+            this.pushinDebug.classList.add('pushin-debug');
             const scrollTitle = document.createElement('p');
             scrollTitle.innerText = 'Pushin.js Debugger';
             scrollTitle.classList.add('pushin-debug__title');
-            let scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+            const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
             const debuggerContent = document.createElement('div');
             debuggerContent.classList.add('pushin-debug__content');
             debuggerContent.innerText = `Scroll position: ${scrollY}px`;
-            scrollCounter.appendChild(scrollTitle);
-            scrollCounter.appendChild(debuggerContent);
-            document.body.appendChild(scrollCounter);
-            if (typeof window !== 'undefined') {
-                window.addEventListener('scroll', () => {
-                    scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-                    debuggerContent.innerText = `Scroll position: ${Math.round(scrollY)}px`;
-                });
-            }
+            this.pushinDebug.appendChild(scrollTitle);
+            this.pushinDebug.appendChild(debuggerContent);
+            document.body.appendChild(this.pushinDebug);
         }
     }
 

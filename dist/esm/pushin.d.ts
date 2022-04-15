@@ -8,6 +8,7 @@ import { PushInOptions } from './types';
 export declare class PushIn {
     private container;
     private scene;
+    private pushinDebug?;
     private layerOptions;
     private sceneOptions;
     private scrollY;
@@ -73,7 +74,7 @@ export declare class PushIn {
     /**
      * Bind event listeners to watch for page load and user interaction.
      */
-    private bindEvents;
+    bindEvents(): void;
     /**
      * Reset all the layer parameters.
      *
