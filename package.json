@@ -21,6 +21,7 @@
     "node": ">= 16.0.0"
   },
   "scripts": {
+    "husky": "husky",
     "lint-staged": "lint-staged",
     "lint": "eslint --cache src/*.ts",
     "build": "rollup -c",
@@ -31,12 +32,16 @@
     "coverage": "nyc --reporter=html --reporter=text npm run mocha && open coverage/index.html -a 'Google Chrome'",
     "test:once": "npm run mocha",
     "prepack": "clean-package",
-    "postpack": "clean-package restore"
+    "postpack": "clean-package restore",
+    "postinstall": "husky install"
   },
   "clean-package": {
     "remove": [
       "scripts",
-      "devDependencies"
+      "devDependencies",
+      "clean-package",
+      "prettier",
+      "lint-staged"
     ]
   },
   "repository": {
@@ -81,6 +86,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^7.0.4",
     "jsdom": "^19.0.0",
     "lint-staged": "^12.3.7",
     "mini-css-extract-plugin": "^2.5.2",
