@@ -1,4 +1,4 @@
-/* Pushin.js - v4.0.0
+/* Pushin.js - v4.0.1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
@@ -21,7 +21,7 @@ class PushIn {
     constructor(container, options) {
         var _a, _b, _c;
         this.container = container;
-        this.scrollPos = 0;
+        this.scrollY = 0;
         this.scrollEnd = null;
         this.touchStart = null;
         this.pageHeight = null;
@@ -40,12 +40,14 @@ class PushIn {
      */
     start() {
         if (this.container) {
+            this.scrollY = this.getScrollY();
             this.addScene();
-            this.scrollPos = window.pageYOffset;
             this.setBreakpoints();
             this.getLayers();
             this.setScrollLength();
-            this.bindEvents();
+            if (typeof window !== 'undefined') {
+                this.bindEvents();
+            }
             // Set layer initial state
             this.toggleLayers();
         }
@@ -65,6 +67,15 @@ class PushIn {
         while (this.cleanupFns.length) {
             this.cleanupFns.pop()();
         }
+    }
+    /**
+     * If there is a window object,
+     * get the current scroll position.
+     *
+     * Otherwise default to 0.
+     */
+    getScrollY() {
+        return typeof window !== 'undefined' ? window.scrollY : 0;
     }
     /**
      * Get the "scene" element from the DOM.
@@ -186,9 +197,10 @@ class PushIn {
      * Get the array index of the current window breakpoint.
      */
     getBreakpointIndex() {
+        const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
         const searchIndex = this.sceneOptions.breakpoints
             .reverse()
-            .findIndex(bp => bp <= window.innerWidth);
+            .findIndex(bp => bp <= windowWidth);
         return searchIndex === -1
             ? 0
             : this.sceneOptions.breakpoints.length - 1 - searchIndex;
@@ -204,7 +216,7 @@ class PushIn {
      */
     bindEvents() {
         const onScroll = () => {
-            this.scrollPos = window.pageYOffset;
+            this.scrollY = this.getScrollY();
             this.dolly();
         };
         window.addEventListener('scroll', onScroll);
@@ -217,14 +229,14 @@ class PushIn {
         const onTouchmove = (event) => {
             event.preventDefault();
             const touchMove = event.changedTouches[0].screenY;
-            this.scrollPos = Math.max(this.scrollEnd + this.touchStart - touchMove, 0);
-            this.scrollPos = Math.min(this.scrollPos, this.pageHeight - window.innerHeight);
+            this.scrollY = Math.max(this.scrollEnd + this.touchStart - touchMove, 0);
+            this.scrollY = Math.min(this.scrollY, this.pageHeight - window.innerHeight);
             this.dolly();
         };
         window.addEventListener('touchmove', onTouchmove);
         this.cleanupFns.push(() => window.removeEventListener('touchmove', onTouchmove));
         const onTouchend = () => {
-            this.scrollEnd = this.scrollPos;
+            this.scrollEnd = this.scrollY;
         };
         window.addEventListener('touchend', onTouchend);
         this.cleanupFns.push(() => window.removeEventListener('touchend', onTouchend));
@@ -293,7 +305,7 @@ class PushIn {
     isActive(layer) {
         const { inpoint } = layer.params;
         const { outpoint } = layer.params;
-        return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
+        return this.scrollY >= inpoint && this.scrollY <= outpoint;
     }
     /**
      * Get the current inpoint for a layer,
@@ -313,7 +325,7 @@ class PushIn {
      * Get the scaleX value for the layer.
      */
     getScaleValue(layer) {
-        const distance = this.scrollPos - layer.params.inpoint;
+        const distance = this.scrollY - layer.params.inpoint;
         const speed = Math.min(layer.params.speed, 100) / 100;
         const delta = (distance * speed) / 100;
         return Math.max(layer.originalScale + delta, 0);
@@ -341,21 +353,22 @@ class PushIn {
         const isLast = layer.index + 1 === this.layers.length;
         const { inpoint } = layer.params;
         const { outpoint } = layer.params;
-        if (isFirst && this.scrollPos < inpoint) {
+        if (isFirst && this.scrollY < inpoint) {
             opacity = 1;
         }
-        else if (isLast && this.scrollPos > outpoint) {
+        else if (isLast && this.scrollY > outpoint) {
             opacity = 1;
         }
         else if (this.isActive(layer)) {
             this.setScale(layer.element, this.getScaleValue(layer));
-            let inpointDistance = Math.max(Math.min(this.scrollPos - inpoint, this.transitionLength), 0) /
+            let inpointDistance = Math.max(Math.min(this.scrollY - inpoint, this.transitionLength), 0) /
                 this.transitionLength;
             // Set opacity to 1 if its the first layer and it is active (no fading in here)
             if (isFirst) {
                 inpointDistance = 1;
             }
-            let outpointDistance = Math.max(Math.min(outpoint - this.scrollPos, this.transitionLength), 0) / this.transitionLength;
+            let outpointDistance = Math.max(Math.min(outpoint - this.scrollY, this.transitionLength), 0) /
+                this.transitionLength;
             // Set opacity to 1 if its the last layer and it is active (no fading out)
             if (isLast) {
                 outpointDistance = 1;
@@ -389,15 +402,19 @@ class PushIn {
         const scrollTitle = document.createElement('p');
         scrollTitle.innerText = 'Pushin.js Debugger';
         scrollTitle.classList.add('pushin-debug__title');
+        let scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
         const debuggerContent = document.createElement('div');
         debuggerContent.classList.add('pushin-debug__content');
-        debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
+        debuggerContent.innerText = `Scroll position: ${scrollY}px`;
         scrollCounter.appendChild(scrollTitle);
         scrollCounter.appendChild(debuggerContent);
         document.body.appendChild(scrollCounter);
-        window.addEventListener('scroll', () => {
-            debuggerContent.innerText = `Scroll position: ${Math.round(window.pageYOffset)}px`;
-        });
+        if (typeof window !== 'undefined') {
+            window.addEventListener('scroll', () => {
+                scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+                debuggerContent.innerText = `Scroll position: ${Math.round(scrollY)}px`;
+            });
+        }
     }
 }
 
@@ -405,7 +422,7 @@ class PushIn {
  * Helper function: Set up and start push-in effect on all elements
  * matching the provided selector.
  */
-window.pushInStart = (options) => {
+const pushInStart = (options) => {
     const pushInOptions = options !== null && options !== void 0 ? options : {};
     const elements = document.querySelectorAll('.pushin');
     const instances = [];
@@ -416,6 +433,9 @@ window.pushInStart = (options) => {
     }
     return instances;
 };
+if (typeof window !== 'undefined') {
+    window.pushInStart = pushInStart;
+}
 
 export { PushIn };
 //# sourceMappingURL=pushin.js.map

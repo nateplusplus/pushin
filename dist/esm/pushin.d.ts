@@ -31,6 +31,13 @@ export declare class PushIn {
      */
     destroy(): void;
     /**
+     * If there is a window object,
+     * get the current scroll position.
+     *
+     * Otherwise default to 0.
+     */
+    private getScrollY;
+    /**
      * Get the "scene" element from the DOM.
      * If it doesn't exist, make one.
      */
