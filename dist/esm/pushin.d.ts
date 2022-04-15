@@ -8,9 +8,10 @@ import { PushInOptions } from './types';
 export declare class PushIn {
     private container;
     private scene;
+    private pushinDebug?;
     private layerOptions;
     private sceneOptions;
-    private scrollPos;
+    private scrollY;
     private scrollEnd;
     private touchStart;
     private pageHeight;
@@ -30,6 +31,13 @@ export declare class PushIn {
      * Does all necessary cleanups by removing event listeners.
      */
     destroy(): void;
+    /**
+     * If there is a window object,
+     * get the current scroll position.
+     *
+     * Otherwise default to 0.
+     */
+    private getScrollY;
     /**
      * Get the "scene" element from the DOM.
      * If it doesn't exist, make one.
@@ -66,7 +74,7 @@ export declare class PushIn {
     /**
      * Bind event listeners to watch for page load and user interaction.
      */
-    private bindEvents;
+    bindEvents(): void;
     /**
      * Reset all the layer parameters.
      *

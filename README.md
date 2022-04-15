@@ -77,7 +77,7 @@ Each div with the class `pushin-layer` can hold the content that you want to gro
 
 ### 3. Initialize the effect
 
-Once you have your HTML set up, there're two ways to initialize the effect:
+Once you have your HTML set up, there are two ways to initialize the effect:
 
 - call `new PushIn().start()`:
 
@@ -150,6 +150,21 @@ The "scene" is the container element for all layers. There are some scene config
 By default, all layers will push in at once. You can configure each layer to enter and exit the frame at specific times by using the following data parameters:
 
 **Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available layer configurations.**
+
+## SSR
+
+This effect is heavily reliant on window events, which will not be available in a server-side rendered environment. You will need to bind the window events once the DOM has loaded on the client side. To do this, run the `bindEvents()` method.
+
+```js
+// Start up the effect server-side
+const pushIn = new PushIn();
+pushIn.start();
+
+//...
+
+// Bind events client-side
+pushin.bindEvents();
+```
 
 ## Contributing
 

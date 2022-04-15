@@ -25,35 +25,35 @@ describe('isActive', function () {
   });
 
   it('should be true if screen top is greater than inpoint and less than outpoint', function () {
-    this.pushIn.scrollPos = 15;
+    this.pushIn.scrollY = 15;
     const result = this.pushIn.isActive(this.layer);
 
     result.should.be.true;
   });
 
   it('should be true if screen top is equal to inpoint', function () {
-    this.pushIn.scrollPos = 10;
+    this.pushIn.scrollY = 10;
     const result = this.pushIn.isActive(this.layer);
 
     result.should.be.true;
   });
 
   it('should be true if screen top is equal to outpoint', function () {
-    this.pushIn.scrollPos = 20;
+    this.pushIn.scrollY = 20;
     const result = this.pushIn.isActive(this.layer);
 
     result.should.be.true;
   });
 
   it('should be false if screen top is less than inpoint', function () {
-    this.pushIn.scrollPos = 5;
+    this.pushIn.scrollY = 5;
     var result = this.pushIn.isActive(this.layer);
 
     result.should.be.false;
   });
 
   it('should be false if screen top is greater than outpoint', function () {
-    this.pushIn.scrollPos = 25;
+    this.pushIn.scrollY = 25;
     const result = this.pushIn.isActive(this.layer);
 
     result.should.be.false;
