@@ -29,7 +29,15 @@
     "mocha": "cross-env TS_NODE_PROJECT=\"tsconfig.spec.json\" mocha -r ts-node/register test/*.spec.ts",
     "test": "npm run mocha -- --watch",
     "coverage": "nyc --reporter=html --reporter=text npm run mocha && open coverage/index.html -a 'Google Chrome'",
-    "test:once": "npm run mocha"
+    "test:once": "npm run mocha",
+    "prepack": "clean-package",
+    "postpack": "clean-package restore"
+  },
+  "clean-package": {
+    "remove": [
+      "scripts",
+      "devDependencies"
+    ]
   },
   "repository": {
     "type": "git",
@@ -63,6 +71,7 @@
     "chai": "^4.3.4",
     "chai-spies": "^1.0.0",
     "clean-css": "^5.3.0",
+    "clean-package": "^2.1.1",
     "clean-publish": "^4.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
