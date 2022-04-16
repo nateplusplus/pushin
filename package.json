@@ -21,6 +21,7 @@
     "node": ">= 16.0.0"
   },
   "scripts": {
+    "husky": "husky",
     "lint-staged": "lint-staged",
     "lint": "eslint --cache src/*.ts",
     "build": "rollup -c",
@@ -29,7 +30,8 @@
     "mocha": "cross-env TS_NODE_PROJECT=\"tsconfig.spec.json\" mocha -r ts-node/register test/*.spec.ts",
     "test": "npm run mocha -- --watch",
     "coverage": "nyc --reporter=html --reporter=text npm run mocha && open coverage/index.html -a 'Google Chrome'",
-    "test:once": "npm run mocha"
+    "test:once": "npm run mocha",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -63,7 +65,6 @@
     "chai": "^4.3.4",
     "chai-spies": "^1.0.0",
     "clean-css": "^5.3.0",
-    "clean-publish": "^4.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "eslint": "^8.10.0",
@@ -72,6 +73,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^7.0.4",
     "jsdom": "^19.0.0",
     "lint-staged": "^12.3.7",
     "mini-css-extract-plugin": "^2.5.2",
