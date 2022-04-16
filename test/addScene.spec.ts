@@ -1,48 +1,46 @@
-require('chai').should();
-
-let jsdom = require('jsdom');
-let JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('addScene', function () {
-  this.beforeEach(function () {
-    this.textContent = 'FooBar';
-    var dom = new JSDOM(`
+describe('addScene', () => {
+  let textContent: string;
+  let pushIn: PushIn;
+
+  beforeEach(() => {
+    textContent = 'FooBar';
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
-                    <div class="pushin-scene">${this.textContent}</div>
+                    <div class="pushin-scene">${textContent}</div>
                 </div>
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    this.pushIn = new PushIn(container);
+    pushIn = new PushIn(container);
   });
 
-  it('Should assign existing .pushin-scene element to the scene property', function () {
-    this.pushIn.addScene();
-    const result = this.pushIn.scene.textContent;
-    result.should.equal(this.textContent);
+  afterEach(() => pushIn.destroy());
+
+  it('Should assign existing .pushin-scene element to the scene property', () => {
+    pushIn['addScene']();
+    const result = pushIn['scene'].textContent;
+    expect(result).toEqual(textContent);
   });
 
-  it("Should create new .pushin-scene element if it doesn't yet exist", function () {
+  it("Should create new .pushin-scene element if it doesn't yet exist", () => {
     document.querySelector('.pushin-scene').remove();
-    this.pushIn.addScene();
-    const result = this.pushIn.scene.classList.contains('pushin-scene');
-    result.should.be.true;
+    pushIn['addScene']();
+    const result = pushIn['scene'].classList.contains('pushin-scene');
+    expect(result).toEqual(true);
   });
 
-  it('Should move any inner HTML into the new scene element as children', function () {
+  it('Should move any inner HTML into the new scene element as children', () => {
     const innerHTML = '<span>FooBar</span>';
     document.querySelector('.pushin-scene').remove();
     document.querySelector('.pushin').innerHTML = innerHTML;
-    this.pushIn.addScene();
-    const result = this.pushIn.scene.innerHTML;
-    result.should.equal(innerHTML);
+    pushIn['addScene']();
+    const result = pushIn['scene'].innerHTML;
+    expect(result).toEqual(innerHTML);
   });
 });

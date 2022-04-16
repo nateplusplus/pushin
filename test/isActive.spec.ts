@@ -1,61 +1,56 @@
-require('chai').should();
-
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
+import { PushInLayer } from '../src/types';
 
-describe('isActive', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`<!DOCTYPE html></html>`);
+describe('isActive', () => {
+  let pushIn: PushIn;
 
-    global.window = dom.window;
-    global.document = window.document;
+  const layer = {
+    params: {
+      inpoint: 10,
+      outpoint: 20,
+    },
+  } as PushInLayer;
 
-    this.layer = {
-      params: {
-        inpoint: 10,
-        outpoint: 20,
-      },
-    };
-
-    this.pushIn = new PushIn(null);
-    this.pushIn.getInpoint = layer => layer.params.inpoint;
-    this.pushIn.getOutpoint = layer => layer.params.outpoint;
+  beforeEach(() => {
+    setupJSDOM(`<!DOCTYPE html></html>`);
+    pushIn = new PushIn(null);
   });
 
-  it('should be true if screen top is greater than inpoint and less than outpoint', function () {
-    this.pushIn.scrollPos = 15;
-    const result = this.pushIn.isActive(this.layer);
+  afterEach(() => pushIn.destroy());
 
-    result.should.be.true;
+  it('should be true if screen top is greater than inpoint and less than outpoint', () => {
+    pushIn['scrollPos'] = 15;
+    const result = pushIn['isActive'](layer);
+
+    expect(result).toEqual(true);
   });
 
-  it('should be true if screen top is equal to inpoint', function () {
-    this.pushIn.scrollPos = 10;
-    const result = this.pushIn.isActive(this.layer);
+  it('should be true if screen top is equal to inpoint', () => {
+    pushIn['scrollPos'] = 10;
+    const result = pushIn['isActive'](layer);
 
-    result.should.be.true;
+    expect(result).toEqual(true);
   });
 
-  it('should be true if screen top is equal to outpoint', function () {
-    this.pushIn.scrollPos = 20;
-    const result = this.pushIn.isActive(this.layer);
+  it('should be true if screen top is equal to outpoint', () => {
+    pushIn['scrollPos'] = 20;
+    const result = pushIn['isActive'](layer);
 
-    result.should.be.true;
+    expect(result).toEqual(true);
   });
 
-  it('should be false if screen top is less than inpoint', function () {
-    this.pushIn.scrollPos = 5;
-    var result = this.pushIn.isActive(this.layer);
+  it('should be false if screen top is less than inpoint', () => {
+    pushIn['scrollPos'] = 5;
+    const result = pushIn['isActive'](layer);
 
-    result.should.be.false;
+    expect(result).toEqual(false);
   });
 
-  it('should be false if screen top is greater than outpoint', function () {
-    this.pushIn.scrollPos = 25;
-    const result = this.pushIn.isActive(this.layer);
+  it('should be false if screen top is greater than outpoint', () => {
+    pushIn['scrollPos'] = 25;
+    const result = pushIn['isActive'](layer);
 
-    result.should.be.false;
+    expect(result).toEqual(false);
   });
 });

@@ -1,14 +1,11 @@
-require('chai').should();
-
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
-import { PushInLayer } from '../src/types';
 
-describe('setLayerStyle', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+describe('setLayerStyle', () => {
+  let pushIn: PushIn;
+
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin-layer demo-layer-1">
@@ -23,8 +20,6 @@ describe('setLayerStyle', function () {
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
     const layers = [
       {
         element: document.querySelector<HTMLElement>('.demo-layer-1'),
@@ -58,93 +53,95 @@ describe('setLayerStyle', function () {
       },
     ];
 
-    this.pushIn = new PushIn(null);
-    this.pushIn.getInpoint = layer => layer.params.inpoint;
-    this.pushIn.getOutpoint = layer => layer.params.outpoint;
-    this.pushIn.isActive = () => true;
-    this.pushIn.layers = layers;
-    this.pushIn.transitionLength = 200;
+    pushIn = new PushIn(null);
+    Object.assign(pushIn, {
+      isActive: () => true,
+      layers,
+      transitionLength: 200,
+    });
   });
 
-  it('should set opacity to 1 if its the first layer and the scroll position is before its inpoint', function () {
-    this.pushIn.scrollPos = 10;
-    let element = document.querySelector<HTMLElement>('.demo-layer-1');
-    this.pushIn.setLayerStyle(this.pushIn.layers[0]);
+  afterEach(() => pushIn.destroy());
+
+  it('should set opacity to 1 if its the first layer and the scroll position is before its inpoint', () => {
+    pushIn['scrollPos'] = 10;
+    const element = document.querySelector<HTMLElement>('.demo-layer-1');
+    pushIn['setLayerStyle'](pushIn['layers'][0]);
     const result = element.style.opacity;
 
-    result.should.equal('1');
+    expect(result).toEqual('1');
   });
 
-  it('should set opacity to 1 if its the first layer and it is active', function () {
-    this.pushIn.scrollPos = 205;
-    let element = document.querySelector<HTMLElement>('.demo-layer-1');
-    this.pushIn.setLayerStyle(this.pushIn.layers[0]);
+  it('should set opacity to 1 if its the first layer and it is active', () => {
+    pushIn['scrollPos'] = 205;
+    const element = document.querySelector<HTMLElement>('.demo-layer-1');
+    pushIn['setLayerStyle'](pushIn['layers'][0]);
     const result = element.style.opacity;
 
-    result.should.equal('1');
+    expect(result).toEqual('1');
   });
 
-  it('should set opacity to 1 if its the last layer and the scroll position is after its outpoint', function () {
-    this.pushIn.scrollPos = 1300;
-    let element = document.querySelector<HTMLElement>('.demo-layer-3');
-    this.pushIn.setLayerStyle(this.pushIn.layers[2]);
-
-    const result = element.style.opacity;
-
-    result.should.equal('1');
-  });
-
-  it('should set opacity to 1 if its the last layer and it is active', function () {
-    this.pushIn.scrollPos = 1195;
-    let element = document.querySelector<HTMLElement>('.demo-layer-3');
-    this.pushIn.setLayerStyle(this.pushIn.layers[2]);
+  it('should set opacity to 1 if its the last layer and the scroll position is after its outpoint', () => {
+    pushIn['scrollPos'] = 1300;
+    const element = document.querySelector<HTMLElement>('.demo-layer-3');
+    pushIn['setLayerStyle'](pushIn['layers'][2]);
 
     const result = element.style.opacity;
 
-    result.should.equal('1');
+    expect(result).toEqual('1');
   });
 
-  it('should set opacity to 0 if its a middle layer and scroll position is exactly equal to its inpoint', function () {
-    this.pushIn.scrollPos = 500;
-    let element = document.querySelector<HTMLElement>('.demo-layer-2');
-
-    this.pushIn.setLayerStyle(this.pushIn.layers[1]);
+  it('should set opacity to 1 if its the last layer and it is active', () => {
+    pushIn['scrollPos'] = 1195;
+    const element = document.querySelector<HTMLElement>('.demo-layer-3');
+    pushIn['setLayerStyle'](pushIn['layers'][2]);
 
     const result = element.style.opacity;
 
-    result.should.equal('0');
+    expect(result).toEqual('1');
   });
 
-  it('should set opacity to 0.5 if its a middle layer and scroll position is 100px from its inpoint', function () {
-    this.pushIn.scrollPos = 600;
-    let element = document.querySelector<HTMLElement>('.demo-layer-2');
+  it('should set opacity to 0 if its a middle layer and scroll position is exactly equal to its inpoint', () => {
+    pushIn['scrollPos'] = 500;
+    const element = document.querySelector<HTMLElement>('.demo-layer-2');
 
-    this.pushIn.setLayerStyle(this.pushIn.layers[1]);
+    pushIn['setLayerStyle'](pushIn['layers'][1]);
 
     const result = element.style.opacity;
 
-    result.should.equal('0.5');
+    expect(result).toEqual('0');
   });
 
-  it('should set opacity to 0 if its a middle layer and scroll position is exactly equal to its outpoint', function () {
-    this.pushIn.scrollPos = 800;
-    let element = document.querySelector<HTMLElement>('.demo-layer-2');
+  it('should set opacity to 0.5 if its a middle layer and scroll position is 100px from its inpoint', () => {
+    pushIn['scrollPos'] = 600;
+    const element = document.querySelector<HTMLElement>('.demo-layer-2');
 
-    this.pushIn.setLayerStyle(this.pushIn.layers[1]);
+    pushIn['setLayerStyle'](pushIn['layers'][1]);
 
     const result = element.style.opacity;
 
-    result.should.equal('0');
+    expect(result).toEqual('0.5');
   });
 
-  it('should set opacity to 0.5 if its a middle layer and scroll position is 100px from its outpoint', function () {
-    this.pushIn.scrollPos = 700;
-    let element = document.querySelector<HTMLElement>('.demo-layer-2');
+  it('should set opacity to 0 if its a middle layer and scroll position is exactly equal to its outpoint', () => {
+    pushIn['scrollPos'] = 800;
+    const element = document.querySelector<HTMLElement>('.demo-layer-2');
 
-    this.pushIn.setLayerStyle(this.pushIn.layers[1]);
+    pushIn['setLayerStyle'](pushIn['layers'][1]);
 
     const result = element.style.opacity;
 
-    result.should.equal('0.5');
+    expect(result).toEqual('0');
+  });
+
+  it('should set opacity to 0.5 if its a middle layer and scroll position is 100px from its outpoint', () => {
+    pushIn['scrollPos'] = 700;
+    const element = document.querySelector<HTMLElement>('.demo-layer-2');
+
+    pushIn['setLayerStyle'](pushIn['layers'][1]);
+
+    const result = element.style.opacity;
+
+    expect(result).toEqual('0.5');
   });
 });

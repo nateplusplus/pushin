@@ -1,13 +1,12 @@
-require('chai').should();
-
-let jsdom = require('jsdom');
-let JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
+import { DEFAULT_SPEED } from '../src/constants';
 
-describe('getSpeed', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+describe('getSpeed', () => {
+  let pushIn: PushIn;
+
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
@@ -20,28 +19,27 @@ describe('getSpeed', function () {
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    this.pushIn = new PushIn(container);
+    pushIn = new PushIn(container);
   });
 
-  it('Should return 8 by default', function () {
-    const elem = document.querySelector('#layer-0');
-    const result = this.pushIn.getSpeed(elem);
-    result.should.equal(8);
+  afterEach(() => pushIn.destroy());
+
+  it('Should return 8 by default', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-0');
+    const result = pushIn['getSpeed'](elem);
+    expect(result).toEqual(DEFAULT_SPEED);
   });
 
-  it('Should return integer value from data-pushin-speed attribute', function () {
-    const elem = document.querySelector('#layer-1');
-    const result = this.pushIn.getSpeed(elem);
-    result.should.equal(50);
+  it('Should return integer value from data-pushin-speed attribute', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-1');
+    const result = pushIn['getSpeed'](elem);
+    expect(result).toEqual(50);
   });
 
-  it('Should return default if NaN', function () {
-    const elem = document.querySelector('#layer-2');
-    const result = this.pushIn.getSpeed(elem);
-    result.should.equal(8);
+  it('Should return default if NaN', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-2');
+    const result = pushIn['getSpeed'](elem);
+    expect(result).toEqual(DEFAULT_SPEED);
   });
 });

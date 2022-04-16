@@ -6,6 +6,7 @@ lt.log
 .nyc_output
 coverage
 .eslintcache
+.cache
 
 #docs
 /docs/index.html
