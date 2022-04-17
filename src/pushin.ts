@@ -218,7 +218,7 @@ export class PushIn {
   /**
    * Get the push-in speed for the layer.
    */
-  private getSpeed(element: HTMLElement, index: number): number {
+  private getSpeed(element: HTMLElement, index?: number): number {
     let speed: number | null = null;
 
     if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
@@ -226,7 +226,7 @@ export class PushIn {
       if (Number.isNaN(speed)) {
         speed = DEFAULT_SPEED;
       }
-    } else if (this.layerOptions[index]?.speed) {
+    } else if (typeof index === 'number' && this.layerOptions[index]?.speed) {
       speed = this.layerOptions[index].speed;
     }
 

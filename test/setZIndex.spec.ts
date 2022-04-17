@@ -1,13 +1,11 @@
-require('chai').should();
-
-let jsdom = require('jsdom');
-let JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('setZIndex', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+describe('setZIndex', () => {
+  let pushIn: PushIn;
+
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
@@ -20,15 +18,14 @@ describe('setZIndex', function () {
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    this.pushIn = new PushIn(container);
+    pushIn = new PushIn(container);
   });
 
-  it('Should return the difference between the total number of layers and the current layer index', function () {
-    const mockLayer = {
+  afterEach(() => pushIn.destroy());
+
+  it('Should return the difference between the total number of layers and the current layer index', () => {
+    const mockLayer: any = {
       element: {
         style: {
           zIndex: null,
@@ -37,8 +34,8 @@ describe('setZIndex', function () {
       index: 1,
     };
 
-    this.pushIn.setZIndex(mockLayer, 10);
+    pushIn['setZIndex'](mockLayer, 10);
     const result = mockLayer.element.style.zIndex;
-    result.should.equal('9');
+    expect(result).toEqual('9');
   });
 });
