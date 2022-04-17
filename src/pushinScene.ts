@@ -13,7 +13,11 @@ export class PushInScene {
   private container: HTMLElement;
   private readonly cleanupFns: VoidFunction[] = [];
 
-  constructor(private parent: HTMLElement, private options?: SceneOptions, private layerOptions?: LayerOptions ) {
+  constructor(
+    private parent: HTMLElement,
+    private options?: SceneOptions,
+    private layerOptions?: LayerOptions
+  ) {
     const container = this.parent.querySelector<HTMLElement>('.pushin-scene');
 
     if (container) {
