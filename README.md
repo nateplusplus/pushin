@@ -168,15 +168,8 @@ pushin.bindEvents();
 
 ## Contributing
 
-I appreciate and welcome any contributions to this project. Please submit an issue if you find a bug or need help.
+We've setup separate documentation for contributors: [CONTRIBUTING.md](CONTRIBUTING.md)
 
-### Development Setup
+## Development Setup
 
-1. Clone this repo
-2. Run `npm ci` to install all dependencies
-3. Run `npm run docs` to set up test pages
-4. Run `npm start` to start up development environment
-
-The `npm start` command will compile all code and begin running a node server at [localhost:8080](). The page will automatically refresh whenever you make a change to the source code.
-
-Once your code is ready to be pushed, run `npm run build` to bundle your assets into the `/dist` folder.
+We've setup separate documentation for developers: [DEVELOPERS.md](DEVELOPERS.md)
