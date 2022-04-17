@@ -1,4 +1,4 @@
-/* Pushin.js - v4.0.1
+/* Pushin.js - v4.0.2
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
@@ -188,7 +188,7 @@ class PushIn {
                 speed = DEFAULT_SPEED;
             }
         }
-        else if ((_a = this.layerOptions[index]) === null || _a === void 0 ? void 0 : _a.speed) {
+        else if (typeof index === 'number' && ((_a = this.layerOptions[index]) === null || _a === void 0 ? void 0 : _a.speed)) {
             speed = this.layerOptions[index].speed;
         }
         return speed || DEFAULT_SPEED;
