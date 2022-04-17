@@ -15,3 +15,5 @@ You can get set up with the following steps:
 The `npm start` command will compile all code and begin running a node server at [localhost:8080](). The page will automatically refresh whenever you make a change to the source code.
 
 NOTE: We enforce our code styles with ESLint and Prettier before committing. This means that you will need to fix any errors before committing your code.
+
+Unit tests can be run using jest. During development, run `npm run test:watch` to continuously test code on each save.
