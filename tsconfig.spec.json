@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": false,
     "module": "CommonJS",
-    "types": ["node", "mocha", "chai", "chai-spies"]
+    "types": ["node", "jest"]
   },
   "include": ["test/*.spec.ts"]
 }

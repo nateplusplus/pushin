@@ -1,51 +1,36 @@
-require('chai').should();
-
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('getElementScaleX', function () {
-  before(function () {
-    this.layerMock = {
-      originalScale: 2,
-      params: {
-        inpoint: 10,
-        speed: 2,
-      },
-    };
-  });
+describe('getElementScaleX', () => {
+  let pushIn: PushIn;
 
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="foo">Hello World!</div>
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
+    pushIn = new PushIn(null);
   });
 
-  it('Should return default element scale if never altered', function () {
-    var instance = new PushIn(null);
+  afterEach(() => pushIn.destroy());
 
-    var element = document.querySelector<HTMLElement>('.foo');
-    var result = instance['getElementScaleX'](element);
+  it('Should return default element scale if never altered', () => {
+    const element = document.querySelector<HTMLElement>('.foo');
+    const result = pushIn['getElementScaleX'](element);
 
-    result.should.equal(1);
+    expect(result).toEqual(1);
   });
 
-  it('Should return element scale if it was previously set', function () {
-    var instance = new PushIn(null);
-
-    var element = document.querySelector<HTMLElement>('.foo');
+  it('Should return element scale if it was previously set', () => {
+    const element = document.querySelector<HTMLElement>('.foo');
 
     element.style.transform = 'scale(5)';
 
-    var result = instance['getElementScaleX'](element);
+    const result = pushIn['getElementScaleX'](element);
 
-    result.should.equal(5);
+    expect(result).toEqual(5);
   });
 });

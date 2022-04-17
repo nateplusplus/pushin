@@ -1,23 +1,11 @@
-require('chai').should();
-
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('getInpoints', function () {
-  before(function () {
-    this.layerMock = {
-      originalScale: 2,
-      params: {
-        inpoint: 10,
-        speed: 2,
-      },
-    };
-  });
+describe('getInpoints', () => {
+  let pushIn: PushIn;
 
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
@@ -31,17 +19,14 @@ describe('getInpoints', function () {
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-
-    this.pushIn = new PushIn(null);
-    this.pushIn.scene = document.querySelector('.pushin-scene');
-    this.pushIn.scene.getBoundingClientRect = () => {
-      return { top: 10 };
+    pushIn = new PushIn(null);
+    pushIn['scene'] = document.querySelector('.pushin-scene');
+    pushIn['scene'].getBoundingClientRect = () => {
+      return { top: 10 } as unknown as DOMRect;
     };
-    this.pushIn.speedDelta = 100;
+    pushIn['speedDelta'] = 100;
 
-    this.pushIn.layers = [
+    (pushIn as any).layers = [
       null,
       null,
       {
@@ -52,36 +37,38 @@ describe('getInpoints', function () {
     ];
   });
 
-  it('Should return scene[pushinFrom] value, if available for first layer', function () {
+  afterEach(() => pushIn.destroy());
+
+  it('Should return scene[pushinFrom] value, if available for first layer', () => {
     // const scene = document.querySelector( '.pushin-scene' );
-    this.pushIn.scene.setAttribute('data-pushin-from', '30');
+    pushIn['scene'].setAttribute('data-pushin-from', '30');
 
-    const elem = document.querySelector('#layer-0');
-    const result = this.pushIn.getInpoints(elem, 0);
-    result.should.deep.equal([30]);
+    const elem = document.querySelector<HTMLElement>('#layer-0');
+    const result = pushIn['getInpoints'](elem, 0);
+    expect(result).toEqual([30]);
   });
 
-  it('Should return scene top value as the default for first layer', function () {
-    const elem = document.querySelector('#layer-0');
-    const result = this.pushIn.getInpoints(elem, 0);
-    result.should.deep.equal([10]);
+  it('Should return scene top value as the default for first layer', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-0');
+    const result = pushIn['getInpoints'](elem, 0);
+    expect(result).toEqual([10]);
   });
 
-  it('Should return value provided by data attribute', function () {
-    const elem = document.querySelector('#layer-1');
-    const result = this.pushIn.getInpoints(elem, 1);
-    result.should.deep.equal([300]);
+  it('Should return value provided by data attribute', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-1');
+    const result = pushIn['getInpoints'](elem, 1);
+    expect(result).toEqual([300]);
   });
 
-  it('Should return array of values provided by data attribute', function () {
-    const elem = document.querySelector('#layer-2');
-    const result = this.pushIn.getInpoints(elem, 2);
-    result.should.deep.equal([300, 500]);
+  it('Should return array of values provided by data attribute', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-2');
+    const result = pushIn['getInpoints'](elem, 2);
+    expect(result).toEqual([300, 500]);
   });
 
-  it('Should return generated value based on previous layer outpoint', function () {
-    const elem = document.querySelector('#layer-3');
-    const result = this.pushIn.getInpoints(elem, 3);
-    result.should.deep.equal([900]);
+  it('Should return generated value based on previous layer outpoint', () => {
+    const elem = document.querySelector<HTMLElement>('#layer-3');
+    const result = pushIn['getInpoints'](elem, 3);
+    expect(result).toEqual([900]);
   });
 });

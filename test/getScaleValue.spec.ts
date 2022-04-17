@@ -1,64 +1,57 @@
-require('chai').should();
-
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
+import { PushInLayer } from '../src/types';
 
-describe('getScaleValue', function () {
-  before(function () {
-    this.layerMock = {
-      originalScale: 2,
-      params: {
-        inpoint: 10,
-        speed: 2,
-      },
-    };
+describe('getScaleValue', () => {
+  let pushIn: PushIn;
+  const layerMock = {
+    originalScale: 2,
+    params: {
+      inpoint: 10,
+      speed: 2,
+    },
+  } as PushInLayer;
 
-    // very fast layer, set up to fail quickly
-    this.layerMock2 = {
-      originalScale: 1,
-      params: {
-        inpoint: 150,
-        speed: 100,
-      },
-    };
+  const layerMock2 = {
+    originalScale: 1,
+    params: {
+      inpoint: 150,
+      speed: 100,
+    },
+  } as PushInLayer;
+
+  beforeEach(() => {
+    setupJSDOM(`<!DOCTYPE html></html>`);
+    pushIn = new PushIn(null);
   });
 
-  this.beforeEach(function () {
-    var dom = new JSDOM(`<!DOCTYPE html></html>`);
-    global.window = dom.window;
-    global.document = window.document;
+  afterEach(() => pushIn.destroy());
 
-    this.pushIn = new PushIn(null);
-    this.pushIn.getInpoint = layer => layer.params.inpoint;
+  it('should return original scale if scroll position and inpoint are the same', () => {
+    pushIn['scrollY'] = 10;
+    const result = pushIn['getScaleValue'](layerMock);
+
+    expect(result).toEqual(2);
   });
 
-  it('should return original scale if scroll position and inpoint are the same', function () {
-    this.pushIn.scrollY = 10;
-    const result = this.pushIn.getScaleValue(this.layerMock);
+  it('should reduce scale if scrollY is less than inpoint', () => {
+    pushIn['scrollY'] = 6;
+    const result = pushIn['getScaleValue'](layerMock);
 
-    result.should.equal(2);
+    expect(result).toEqual(1.9992);
   });
 
-  it('should reduce scale if scrollY is less than inpoint', function () {
-    this.pushIn.scrollY = 6;
-    const result = this.pushIn.getScaleValue(this.layerMock);
+  it('should increase scale if scrollY is greater than inpoint', () => {
+    pushIn['scrollY'] = 20;
+    const result = pushIn['getScaleValue'](layerMock);
 
-    result.should.be.lessThan(2);
+    expect(result).toEqual(2.002);
   });
 
-  it('should increase scale if scrollY is greater than inpoint', function () {
-    this.pushIn.scrollY = 20;
-    const result = this.pushIn.getScaleValue(this.layerMock);
+  it('should not return a negative number', () => {
+    pushIn['scrollY'] = 1;
+    const result = pushIn['getScaleValue'](layerMock2);
 
-    result.should.greaterThan(2);
-  });
-
-  it('should not return a negative number', function () {
-    this.pushIn.scrollY = 1;
-    const result = this.pushIn.getScaleValue(this.layerMock2);
-
-    result.should.equal(0);
+    expect(result).toEqual(0);
   });
 });

@@ -1,55 +1,51 @@
-require('chai').should();
-
-let jsdom = require('jsdom');
-let JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('setScrollLength', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+describe('setScrollLength', () => {
+  let pushIn: PushIn;
+
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin" style="height:500px;"></div>
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-    global.getComputedStyle = window.getComputedStyle;
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    this.pushIn = new PushIn(container);
+    pushIn = new PushIn(container);
 
-    this.pushIn.layers = [1, 2, 3];
-    this.pushIn.speedDelta = 100;
-    this.pushIn.layerDepth = 100;
-    this.pushIn.transitionLength = 100;
+    (pushIn as any).layers = [1, 2, 3];
+    pushIn['speedDelta'] = 100;
+    pushIn['layerDepth'] = 100;
+    pushIn['transitionLength'] = 100;
   });
 
-  it('Should set the container height to its original value if it is higher than calculated value', function () {
-    this.pushIn.setScrollLength();
-    const result = this.pushIn.container.style.height;
-    result.should.equal('500px');
+  afterEach(() => pushIn.destroy());
+
+  it('Should set the container height to its original value if it is higher than calculated value', () => {
+    pushIn['setScrollLength']();
+    const result = pushIn['container'].style.height;
+    expect(result).toEqual('500px');
   });
 
-  it('Should calculate container height based on layerDepth and transitionLength properties', function () {
-    this.pushIn.speedDelta = 0;
-    this.pushIn.layerDepth = 200;
-    this.pushIn.transitionLength = 200;
+  it('Should calculate container height based on layerDepth and transitionLength properties', () => {
+    pushIn['speedDelta'] = 0;
+    pushIn['layerDepth'] = 200;
+    pushIn['transitionLength'] = 200;
 
-    this.pushIn.setScrollLength();
-    const result = this.pushIn.container.style.height;
-    result.should.equal('1200px');
+    pushIn['setScrollLength']();
+    const result = pushIn['container'].style.height;
+    expect(result).toEqual('1200px');
   });
 
-  it('Should reduce container height to account for overlapping transition length', function () {
-    this.pushIn.speedDelta = 100;
-    this.pushIn.layerDepth = 200;
-    this.pushIn.transitionLength = 200;
+  it('Should reduce container height to account for overlapping transition length', () => {
+    pushIn['speedDelta'] = 100;
+    pushIn['layerDepth'] = 200;
+    pushIn['transitionLength'] = 200;
 
-    this.pushIn.setScrollLength();
-    const result = this.pushIn.container.style.height;
-    result.should.equal('1000px');
+    pushIn['setScrollLength']();
+    const result = pushIn['container'].style.height;
+    expect(result).toEqual('1000px');
   });
 });
