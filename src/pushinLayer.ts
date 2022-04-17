@@ -4,6 +4,7 @@ import {
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_SPEED_DATA_ATTRIBUTE,
 } from './constants';
+import { PushInScene } from './pushinScene';
 
 import { LayerOptions, LayerRef, LayerParams } from './types';
 
@@ -15,7 +16,7 @@ export class PushInLayer {
   constructor(
     private element: HTMLElement,
     private index: number,
-    private scene: HTMLElement,
+    private scene: PushInScene,
     private options: LayerOptions | null
   ) {
     const inpoints = this.getInpoints(this.element, this.index);
@@ -36,25 +37,18 @@ export class PushInLayer {
    * Get all inpoints for the layer.
    */
   private getInpoints(element: HTMLElement, index: number): number[] {
-    const { top } = this.scene.getBoundingClientRect();
-
-    let inpoints = [top];
+    let inpoints = [this.scene.getTop()];
     if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(',').map(
         inpoint => parseInt(inpoint.trim(), 10)
       );
     } else if (this.options?.inpoints) {
       inpoints = this.options.inpoints;
-    } else if (index === 0 && this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
-      // Custom inpoint
-      inpoints = this.scene.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(
-        ','
-      ).map(inpoint => parseInt(inpoint.trim(), 10));
-    } else if (index === 0 && this.sceneOptions?.inpoints.length > 0) {
-      inpoints = this.sceneOptions.inpoints;
+    } else if (index === 0) {
+      inpoints = this.scene.getInpoints();
     } else if (index > 0) {
       // Set default for middle layers if none provided
-      const { outpoint } = this.layers[index - 1].params;
+      const { outpoint } = this.scene.layers[index - 1].params;
       inpoints = [outpoint - this.speedDelta];
     }
 
@@ -110,8 +104,8 @@ export class PushInLayer {
   /**
    * Set the z-index of each layer so they overlap correctly.
    */
-  setZIndex(layer: PushInLayer, total: number): void {
-    layer.element.style.zIndex = (total - layer.index).toString();
+  setZIndex(total: number): void {
+    this.element.style.zIndex = (total - this.index).toString();
   }
 
   /**
@@ -220,23 +214,25 @@ export class PushInLayer {
    * This will control the scale and opacity of the layer
    * as the user scrolls.
    */
-  private setLayerStyle(layer: PushInLayer): void {
+  setLayerStyle(): void {
     let opacity = 0;
-    const isFirst = layer.index === 0;
-    const isLast = layer.index + 1 === this.layers.length;
-    const { inpoint } = layer.params;
-    const { outpoint } = layer.params;
+    const isFirst = this.index === 0;
+    const isLast = this.index + 1 === this.scene.layers.length;
+    const { inpoint } = this.params;
+    const { outpoint } = this.params;
 
     if (isFirst && this.scrollPos < inpoint) {
       opacity = 1;
     } else if (isLast && this.scrollPos > outpoint) {
       opacity = 1;
-    } else if (this.isActive(layer)) {
-      this.setScale(layer.element, this.getScaleValue(layer));
+    } else if (this.isActive(this)) {
+      this.setScale(this.element, this.getScaleValue(this));
 
       let inpointDistance =
-        Math.max(Math.min(this.scrollPos - inpoint, this.transitionLength), 0) /
-        this.transitionLength;
+        Math.max(
+          Math.min(this.scrollPos - inpoint, this.scene.transitionLength),
+          0
+        ) / this.scene.transitionLength;
 
       // Set opacity to 1 if its the first layer and it is active (no fading in here)
       if (isFirst) {
@@ -257,59 +253,6 @@ export class PushInLayer {
       opacity = Math.min(inpointDistance, outpointDistance);
     }
 
-    layer.element.style.opacity = opacity.toString();
-  }
-
-  /**
-   * Set the default container height based on a few factors:
-   * 1. Number of layers present
-   * 2. The transition length between layers
-   * 3. The length of scrolling time during each layer
-   *
-   * If this calculation is smaller than the container's current height,
-   * the current height will be used instead.
-   */
-  private setScrollLength(): void {
-    const containerHeight = getComputedStyle(this.container).height.replace(
-      'px',
-      ''
-    );
-
-    const transitions = (this.layers.length - 1) * this.speedDelta;
-    const scrollLength =
-      this.layers.length * (this.layerDepth + this.transitionLength);
-
-    this.container.style.height = `${Math.max(
-      parseFloat(containerHeight),
-      scrollLength - transitions
-    )}px`;
-  }
-
-  /**
-   * Show a debugging tool appended to the frontend of the page.
-   * Can be used to determine best "pushin-from" and "pushin-to" values.
-   */
-  private showDebugger(): void {
-    const scrollCounter = document.createElement('div');
-    scrollCounter.classList.add('pushin-debug');
-
-    const scrollTitle = document.createElement('p');
-    scrollTitle.innerText = 'Pushin.js Debugger';
-    scrollTitle.classList.add('pushin-debug__title');
-
-    const debuggerContent = document.createElement('div');
-    debuggerContent.classList.add('pushin-debug__content');
-    debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
-
-    scrollCounter.appendChild(scrollTitle);
-    scrollCounter.appendChild(debuggerContent);
-
-    document.body.appendChild(scrollCounter);
-
-    window.addEventListener('scroll', () => {
-      debuggerContent.innerText = `Scroll position: ${Math.round(
-        window.pageYOffset
-      )}px`;
-    });
+    this.element.style.opacity = opacity.toString();
   }
 }
