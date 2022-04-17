@@ -30,8 +30,8 @@
     "docs": "webpack --mode=production",
     "start": "webpack serve --mode=development",
     "test:watch": "jest --watch",
-    "coverage": "cross-env CI=true nyc --reporter=html --reporter=text npm run test:once && open coverage/index.html -a 'Google Chrome'",
-    "test:once": "jest --run-in-band",
+    "coverage": "jest --coverage",
+    "test": "jest --run-in-band",
     "prepack": "clean-package",
     "postpack": "clean-package restore",
     "postinstall": "husky install"
@@ -87,7 +87,6 @@
     "jsdom": "^19.0.0",
     "lint-staged": "^12.3.7",
     "mini-css-extract-plugin": "^2.5.2",
-    "nyc": "^15.1.0",
     "prettier": "^2.6.1",
     "pug": "^3.0.2",
     "pug-loader": "^2.4.0",
