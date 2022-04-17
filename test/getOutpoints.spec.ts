@@ -1,23 +1,11 @@
-require('chai').should();
-
-var jsdom = require('jsdom');
-var JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('getInpoints', function () {
-  before(function () {
-    this.layerMock = {
-      originalScale: 2,
-      params: {
-        inpoint: 10,
-        speed: 2,
-      },
-    };
-  });
+describe('getInpoints', () => {
+  let pushIn: PushIn;
 
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
@@ -31,55 +19,52 @@ describe('getInpoints', function () {
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
+    pushIn = new PushIn(null);
   });
 
-  it('Should return inpoint + layerDepth by default for first layer', function () {
-    var instance = new PushIn(null);
-    instance['layerDepth'] = 300;
+  afterEach(() => pushIn.destroy());
+
+  it('Should return inpoint + layerDepth by default for first layer', () => {
+    pushIn['layerDepth'] = 300;
 
     const inpoint = 100;
 
     const elem = document.querySelector<HTMLElement>('#layer-0');
-    const result = instance['getOutpoints'](elem, inpoint, 0);
+    const result = pushIn['getOutpoints'](elem, inpoint, 0);
 
-    result.should.deep.equal([400]);
+    expect(result).toEqual([400]);
   });
 
-  it('Should return data-attribute value if set', function () {
-    var instance = new PushIn(null);
-    instance['layerDepth'] = 300;
+  it('Should return data-attribute value if set', () => {
+    pushIn['layerDepth'] = 300;
 
     const inpoint = 100;
 
     const elem = document.querySelector<HTMLElement>('#layer-1');
-    const result = instance['getOutpoints'](elem, inpoint, 1);
+    const result = pushIn['getOutpoints'](elem, inpoint, 1);
 
-    result.should.deep.equal([300]);
+    expect(result).toEqual([300]);
   });
 
-  it('Should return array of data from data-attribute if set', function () {
-    var instance = new PushIn(null);
-    instance['layerDepth'] = 300;
+  it('Should return array of data from data-attribute if set', () => {
+    pushIn['layerDepth'] = 300;
 
     const inpoint = 100;
 
     const elem = document.querySelector<HTMLElement>('#layer-2');
-    const result = instance['getOutpoints'](elem, inpoint, 2);
+    const result = pushIn['getOutpoints'](elem, inpoint, 2);
 
-    result.should.deep.equal([300, 500]);
+    expect(result).toEqual([300, 500]);
   });
 
-  it('Should generate value based on previous inpoint', function () {
-    var instance = new PushIn(null);
-    instance['layerDepth'] = 300;
+  it('Should generate value based on previous inpoint', () => {
+    pushIn['layerDepth'] = 300;
 
     const inpoint = 500;
 
     const elem = document.querySelector<HTMLElement>('#layer-3');
-    const result = instance['getOutpoints'](elem, inpoint, 3);
+    const result = pushIn['getOutpoints'](elem, inpoint, 3);
 
-    result.should.deep.equal([800]);
+    expect(result).toEqual([800]);
   });
 });

@@ -11,7 +11,7 @@ declare global {
  * Helper function: Set up and start push-in effect on all elements
  * matching the provided selector.
  */
-window.pushInStart = (options?: PushInOptions): PushIn[] => {
+const pushInStart = (options?: PushInOptions): PushIn[] => {
   const pushInOptions = options ?? {};
 
   const elements = document.querySelectorAll<HTMLElement>('.pushin');
@@ -25,3 +25,7 @@ window.pushInStart = (options?: PushInOptions): PushIn[] => {
 
   return instances;
 };
+
+if (typeof window !== 'undefined') {
+  window.pushInStart = pushInStart;
+}

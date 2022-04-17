@@ -1,38 +1,35 @@
-require('chai').should();
-
-let jsdom = require('jsdom');
-let JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('getBreakpointIndex', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+describe('getBreakpointIndex', () => {
+  let pushIn: PushIn;
+
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
-                    <div class="pushin-scene">${this.textContent}</div>
+                    <div class="pushin-scene">Text</div>
                 </div>
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    this.pushIn = new PushIn(container);
-    this.pushIn.sceneOptions.breakpoints = [0, 768, 1440, 1920];
+    pushIn = new PushIn(container);
+    pushIn['sceneOptions'].breakpoints = [0, 768, 1440, 1920];
   });
 
-  it('Should return 0 by default', function () {
-    this.pushIn.sceneOptions.breakpoints = [];
-    const result = this.pushIn.getBreakpointIndex();
-    result.should.equal(0);
+  afterEach(() => pushIn.destroy());
+
+  it('Should return 0 by default', () => {
+    pushIn['sceneOptions'].breakpoints = [];
+    const result = pushIn['getBreakpointIndex']();
+    expect(result).toEqual(0);
   });
 
-  it('Should return the index of the nearest breakpoint that is less than current window width', function () {
+  it('Should return the index of the nearest breakpoint that is less than current window width', () => {
     window.innerWidth = 800;
-    const result = this.pushIn.getBreakpointIndex();
-    result.should.equal(1);
+    const result = pushIn['getBreakpointIndex']();
+    expect(result).toEqual(1);
   });
 });

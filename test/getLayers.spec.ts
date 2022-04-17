@@ -1,13 +1,12 @@
-require('chai').should();
-
-let jsdom = require('jsdom');
-let JSDOM = jsdom.JSDOM;
-
+import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
 
-describe('getLayers', function () {
-  this.beforeEach(function () {
-    var dom = new JSDOM(`
+describe('getLayers', () => {
+  let pushIn: PushIn;
+  let layers: HTMLElement[];
+
+  beforeEach(() => {
+    setupJSDOM(`
         <!DOCTYPE html>
             <body>
                 <div class="pushin">
@@ -21,78 +20,77 @@ describe('getLayers', function () {
             </body>
         </html>`);
 
-    global.window = dom.window;
-    global.document = window.document;
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    this.pushIn = new PushIn(container);
-    const scene = document.querySelector('.pushin-scene');
-    this.pushIn.scene = scene;
+    pushIn = new PushIn(container);
+    const scene = document.querySelector<HTMLElement>('.pushin-scene');
+    pushIn['scene'] = scene;
 
-    this.layers = [...document.querySelectorAll('.pushin-layer')];
+    layers = [...document.querySelectorAll<HTMLElement>('.pushin-layer')];
 
     // Mock some methods
-    this.pushIn.getInpoints = () => [1, 2];
-    this.pushIn.getInpoint = () => 1;
-    this.pushIn.getOutpoints = () => [3, 4];
-    this.pushIn.getOutpoint = () => 3;
-    this.pushIn.getElementScaleX = () => 123;
-    this.pushIn.getSpeed = () => 5;
-    this.pushIn.setZIndex = () => {};
+    Object.assign(pushIn, {
+      getInpoints: () => [1, 2],
+      getInpoint: () => 1,
+      getOutpoints: () => [3, 4],
+      getOutpoint: () => 3,
+      getElementScaleX: () => 123,
+      getSpeed: () => 5,
+      setZIndex: () => {},
+    });
   });
 
-  it('Should set the layers property to contain all .pushin-layer elements', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers.length;
-    const expected = this.layers.length;
-    result.should.equal(expected);
+  afterEach(() => pushIn.destroy());
+
+  it('Should set the layers property to contain all .pushin-layer elements', () => {
+    pushIn['getLayers']();
+    expect(pushIn['layers'].length).toEqual(layers.length);
   });
 
-  it('Should include the element for each layer', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].element.id;
-    result.should.equal('layer-0');
+  it('Should include the element for each layer', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][0].element.id;
+    expect(result).toEqual('layer-0');
   });
 
-  it('Should include the index of each layer', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].index;
-    result.should.equal(0);
+  it('Should include the index of each layer', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][0].index;
+    expect(result).toEqual(0);
   });
 
-  it('Should include the original scale of each layer', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[1].originalScale;
-    result.should.equal(123);
+  it('Should include the original scale of each layer', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][1].originalScale;
+    expect(result).toEqual(123);
   });
 
-  it('Should include reference inpoints array', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[2].ref.inpoints;
-    result.should.deep.equal([1, 2]);
+  it('Should include reference inpoints array', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][2].ref.inpoints;
+    expect(result).toEqual([1, 2]);
   });
 
-  it('Should include reference outpoints array', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].ref.outpoints;
-    result.should.deep.equal([3, 4]);
+  it('Should include reference outpoints array', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][0].ref.outpoints;
+    expect(result).toEqual([3, 4]);
   });
 
-  it('Should include the inpoint param', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].params.inpoint;
-    result.should.equal(1);
+  it('Should include the inpoint param', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][0].params.inpoint;
+    expect(result).toEqual(1);
   });
 
-  it('Should include the outpoint param', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].params.outpoint;
-    result.should.equal(3);
+  it('Should include the outpoint param', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][0].params.outpoint;
+    expect(result).toEqual(3);
   });
 
-  it('Should include the speed param', function () {
-    this.pushIn.getLayers();
-    const result = this.pushIn.layers[0].params.speed;
-    result.should.equal(5);
+  it('Should include the speed param', () => {
+    pushIn['getLayers']();
+    const result = pushIn['layers'][0].params.speed;
+    expect(result).toEqual(5);
   });
 });

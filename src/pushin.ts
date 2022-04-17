@@ -20,10 +20,11 @@ import {
  */
 export class PushIn {
   private scene!: HTMLElement;
+  private pushinDebug?: HTMLElement;
   private layerOptions: LayerOptions[];
   private sceneOptions: SceneOptions;
 
-  private scrollPos = 0;
+  private scrollY = 0;
   private scrollEnd: number | null = null;
   private touchStart: number | null = null;
   private pageHeight: number | null = null;
@@ -49,14 +50,20 @@ export class PushIn {
    */
   start(): void {
     if (this.container) {
+      this.scrollY = this.getScrollY();
+
+      if (this.debug) {
+        this.showDebugger();
+      }
+
       this.addScene();
-
-      this.scrollPos = window.pageYOffset;
-
       this.setBreakpoints();
       this.getLayers();
       this.setScrollLength();
-      this.bindEvents();
+
+      if (typeof window !== 'undefined') {
+        this.bindEvents();
+      }
 
       // Set layer initial state
       this.toggleLayers();
@@ -65,10 +72,6 @@ export class PushIn {
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
-    }
-
-    if (this.debug) {
-      this.showDebugger();
     }
   }
 
@@ -81,6 +84,16 @@ export class PushIn {
     while (this.cleanupFns.length) {
       this.cleanupFns.pop()!();
     }
+  }
+
+  /**
+   * If there is a window object,
+   * get the current scroll position.
+   *
+   * Otherwise default to 0.
+   */
+  private getScrollY(): number {
+    return typeof window !== 'undefined' ? window.scrollY : 0;
   }
 
   /**
@@ -205,7 +218,7 @@ export class PushIn {
   /**
    * Get the push-in speed for the layer.
    */
-  private getSpeed(element: HTMLElement, index: number): number {
+  private getSpeed(element: HTMLElement, index?: number): number {
     let speed: number | null = null;
 
     if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
@@ -213,7 +226,7 @@ export class PushIn {
       if (Number.isNaN(speed)) {
         speed = DEFAULT_SPEED;
       }
-    } else if (this.layerOptions[index]?.speed) {
+    } else if (typeof index === 'number' && this.layerOptions[index]?.speed) {
       speed = this.layerOptions[index].speed;
     }
 
@@ -224,9 +237,10 @@ export class PushIn {
    * Get the array index of the current window breakpoint.
    */
   private getBreakpointIndex(): number {
+    const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
     const searchIndex = this.sceneOptions.breakpoints
       .reverse()
-      .findIndex(bp => bp <= window.innerWidth);
+      .findIndex(bp => bp <= windowWidth);
     return searchIndex === -1
       ? 0
       : this.sceneOptions.breakpoints.length - 1 - searchIndex;
@@ -242,9 +256,9 @@ export class PushIn {
   /**
    * Bind event listeners to watch for page load and user interaction.
    */
-  private bindEvents(): void {
+  bindEvents(): void {
     const onScroll = () => {
-      this.scrollPos = window.pageYOffset;
+      this.scrollY = this.getScrollY();
       this.dolly();
     };
     window.addEventListener('scroll', onScroll);
@@ -262,12 +276,12 @@ export class PushIn {
       event.preventDefault();
 
       const touchMove = event.changedTouches[0].screenY;
-      this.scrollPos = Math.max(
+      this.scrollY = Math.max(
         this.scrollEnd! + this.touchStart! - touchMove,
         0
       );
-      this.scrollPos = Math.min(
-        this.scrollPos,
+      this.scrollY = Math.min(
+        this.scrollY,
         this.pageHeight! - window.innerHeight
       );
 
@@ -279,7 +293,7 @@ export class PushIn {
     );
 
     const onTouchend = () => {
-      this.scrollEnd = this.scrollPos;
+      this.scrollEnd = this.scrollY;
     };
     window.addEventListener('touchend', onTouchend);
     this.cleanupFns.push(() =>
@@ -298,6 +312,18 @@ export class PushIn {
     };
     window.addEventListener('resize', onResize);
     this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
+
+    if (this.pushinDebug) {
+      window.addEventListener('scroll', () => {
+        const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+        const content = this.pushinDebug?.querySelector(
+          '.pushin-debug__content'
+        );
+        if (content) {
+          content!.textContent = `Scroll position: ${Math.round(scrollY)}px`;
+        }
+      });
+    }
   }
 
   /**
@@ -360,7 +386,7 @@ export class PushIn {
   private isActive(layer: PushInLayer): boolean {
     const { inpoint } = layer.params;
     const { outpoint } = layer.params;
-    return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
+    return this.scrollY >= inpoint && this.scrollY <= outpoint;
   }
 
   /**
@@ -383,7 +409,7 @@ export class PushIn {
    * Get the scaleX value for the layer.
    */
   private getScaleValue(layer: PushInLayer): number {
-    const distance = this.scrollPos - layer.params.inpoint;
+    const distance = this.scrollY - layer.params.inpoint;
     const speed = Math.min(layer.params.speed, 100) / 100;
     const delta = (distance * speed) / 100;
 
@@ -415,15 +441,15 @@ export class PushIn {
     const { inpoint } = layer.params;
     const { outpoint } = layer.params;
 
-    if (isFirst && this.scrollPos < inpoint) {
+    if (isFirst && this.scrollY < inpoint) {
       opacity = 1;
-    } else if (isLast && this.scrollPos > outpoint) {
+    } else if (isLast && this.scrollY > outpoint) {
       opacity = 1;
     } else if (this.isActive(layer)) {
       this.setScale(layer.element, this.getScaleValue(layer));
 
       let inpointDistance =
-        Math.max(Math.min(this.scrollPos - inpoint, this.transitionLength), 0) /
+        Math.max(Math.min(this.scrollY - inpoint, this.transitionLength), 0) /
         this.transitionLength;
 
       // Set opacity to 1 if its the first layer and it is active (no fading in here)
@@ -432,10 +458,8 @@ export class PushIn {
       }
 
       let outpointDistance =
-        Math.max(
-          Math.min(outpoint - this.scrollPos, this.transitionLength),
-          0
-        ) / this.transitionLength;
+        Math.max(Math.min(outpoint - this.scrollY, this.transitionLength), 0) /
+        this.transitionLength;
 
       // Set opacity to 1 if its the last layer and it is active (no fading out)
       if (isLast) {
@@ -478,26 +502,22 @@ export class PushIn {
    * Can be used to determine best "pushin-from" and "pushin-to" values.
    */
   private showDebugger(): void {
-    const scrollCounter = document.createElement('div');
-    scrollCounter.classList.add('pushin-debug');
+    this.pushinDebug = document.createElement('div');
+    this.pushinDebug.classList.add('pushin-debug');
 
     const scrollTitle = document.createElement('p');
     scrollTitle.innerText = 'Pushin.js Debugger';
     scrollTitle.classList.add('pushin-debug__title');
 
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
     const debuggerContent = document.createElement('div');
     debuggerContent.classList.add('pushin-debug__content');
-    debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
+    debuggerContent.innerText = `Scroll position: ${scrollY}px`;
 
-    scrollCounter.appendChild(scrollTitle);
-    scrollCounter.appendChild(debuggerContent);
+    this.pushinDebug.appendChild(scrollTitle);
+    this.pushinDebug.appendChild(debuggerContent);
 
-    document.body.appendChild(scrollCounter);
-
-    window.addEventListener('scroll', () => {
-      debuggerContent.innerText = `Scroll position: ${Math.round(
-        window.pageYOffset
-      )}px`;
-    });
+    document.body.appendChild(this.pushinDebug);
   }
 }
