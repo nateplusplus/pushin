@@ -8,13 +8,16 @@ import CleanCSS from 'clean-css';
 const banner = require('./build/banner');
 
 function createConfig(format) {
+  const isESM = format === 'esm';
+  const extension = isESM ? '.mjs' : '.js';
+
   return {
     input: 'src/index.ts',
     output: {
       format,
       sourcemap: true,
-      file: `dist/${format}/pushin.js`,
-      name: format === 'umd' ? 'pushin' : undefined,
+      file: `dist/${format}/pushin${extension}`,
+      name: isESM ? undefined : 'pushin',
       banner: `/* ${banner} */`,
     },
     plugins: [
@@ -23,14 +26,13 @@ function createConfig(format) {
       }),
       typescript({
         tsconfig: './tsconfig.json',
-        compilerOptions:
-          format === 'esm'
-            ? {
-                sourceMap: true,
-                declaration: true,
-                declarationDir: '.',
-              }
-            : {},
+        compilerOptions: isESM
+          ? {
+              sourceMap: true,
+              declaration: true,
+              declarationDir: '.',
+            }
+          : {},
       }),
     ],
   };

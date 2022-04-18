@@ -39,6 +39,8 @@ export class PushIn {
   private lastAnimationFrameId = -1;
   private readonly cleanupFns: VoidFunction[] = [];
 
+  private supportsTouch = false;
+
   constructor(private container: HTMLElement, options?: PushInOptions) {
     this.debug = options?.debug ?? false;
     this.layerOptions = options?.layers ?? [];
@@ -49,8 +51,13 @@ export class PushIn {
    * Initialize the object to start everything up.
    */
   start(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     if (this.container) {
-      this.scrollY = this.getScrollY();
+      this.scrollY = window.scrollY;
+      this.supportsTouch = 'ontouchstart' in window;
 
       if (this.debug) {
         this.showDebugger();
@@ -60,10 +67,7 @@ export class PushIn {
       this.setBreakpoints();
       this.getLayers();
       this.setScrollLength();
-
-      if (typeof window !== 'undefined') {
-        this.bindEvents();
-      }
+      this.bindEvents();
 
       // Set layer initial state
       this.toggleLayers();
@@ -79,21 +83,13 @@ export class PushIn {
    * Does all necessary cleanups by removing event listeners.
    */
   destroy(): void {
-    cancelAnimationFrame(this.lastAnimationFrameId);
+    if (typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(this.lastAnimationFrameId);
+    }
 
     while (this.cleanupFns.length) {
       this.cleanupFns.pop()!();
     }
-  }
-
-  /**
-   * If there is a window object,
-   * get the current scroll position.
-   *
-   * Otherwise default to 0.
-   */
-  private getScrollY(): number {
-    return typeof window !== 'undefined' ? window.scrollY : 0;
   }
 
   /**
@@ -237,7 +233,7 @@ export class PushIn {
    * Get the array index of the current window breakpoint.
    */
   private getBreakpointIndex(): number {
-    const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
+    const windowWidth = window.innerWidth;
     const searchIndex = this.sceneOptions.breakpoints
       .reverse()
       .findIndex(bp => bp <= windowWidth);
@@ -256,49 +252,51 @@ export class PushIn {
   /**
    * Bind event listeners to watch for page load and user interaction.
    */
-  bindEvents(): void {
+  private bindEvents(): void {
     const onScroll = () => {
-      this.scrollY = this.getScrollY();
+      this.scrollY = window.scrollY;
       this.dolly();
     };
     window.addEventListener('scroll', onScroll);
     this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
 
-    const onTouchstart = (event: TouchEvent) => {
-      this.touchStart = event.changedTouches[0].screenY;
-    };
-    window.addEventListener('touchstart', onTouchstart);
-    this.cleanupFns.push(() =>
-      window.removeEventListener('touchstart', onTouchstart)
-    );
-
-    const onTouchmove = (event: TouchEvent) => {
-      event.preventDefault();
-
-      const touchMove = event.changedTouches[0].screenY;
-      this.scrollY = Math.max(
-        this.scrollEnd! + this.touchStart! - touchMove,
-        0
-      );
-      this.scrollY = Math.min(
-        this.scrollY,
-        this.pageHeight! - window.innerHeight
+    if (this.supportsTouch) {
+      const onTouchstart = (event: TouchEvent) => {
+        this.touchStart = event.changedTouches[0].screenY;
+      };
+      window.addEventListener('touchstart', onTouchstart);
+      this.cleanupFns.push(() =>
+        window.removeEventListener('touchstart', onTouchstart)
       );
 
-      this.dolly();
-    };
-    window.addEventListener('touchmove', onTouchmove);
-    this.cleanupFns.push(() =>
-      window.removeEventListener('touchmove', onTouchmove)
-    );
+      const onTouchmove = (event: TouchEvent) => {
+        event.preventDefault();
 
-    const onTouchend = () => {
-      this.scrollEnd = this.scrollY;
-    };
-    window.addEventListener('touchend', onTouchend);
-    this.cleanupFns.push(() =>
-      window.removeEventListener('touchend', onTouchend)
-    );
+        const touchMove = event.changedTouches[0].screenY;
+        this.scrollY = Math.max(
+          this.scrollEnd! + this.touchStart! - touchMove,
+          0
+        );
+        this.scrollY = Math.min(
+          this.scrollY,
+          this.pageHeight! - window.innerHeight
+        );
+
+        this.dolly();
+      };
+      window.addEventListener('touchmove', onTouchmove);
+      this.cleanupFns.push(() =>
+        window.removeEventListener('touchmove', onTouchmove)
+      );
+
+      const onTouchend = () => {
+        this.scrollEnd = this.scrollY;
+      };
+      window.addEventListener('touchend', onTouchend);
+      this.cleanupFns.push(() =>
+        window.removeEventListener('touchend', onTouchend)
+      );
+    }
 
     let resizeTimeout: number;
     const onResize = () => {
@@ -315,7 +313,7 @@ export class PushIn {
 
     if (this.pushinDebug) {
       window.addEventListener('scroll', () => {
-        const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+        const { scrollY } = window;
         const content = this.pushinDebug?.querySelector(
           '.pushin-debug__content'
         );
@@ -509,7 +507,7 @@ export class PushIn {
     scrollTitle.innerText = 'Pushin.js Debugger';
     scrollTitle.classList.add('pushin-debug__title');
 
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    const { scrollY } = window;
 
     const debuggerContent = document.createElement('div');
     debuggerContent.classList.add('pushin-debug__content');

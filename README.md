@@ -151,21 +151,6 @@ By default, all layers will push in at once. You can configure each layer to ent
 
 **Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available layer configurations.**
 
-## SSR
-
-This effect is heavily reliant on window events, which will not be available in a server-side rendered environment. You will need to bind the window events once the DOM has loaded on the client side. To do this, run the `bindEvents()` method.
-
-```js
-// Start up the effect server-side
-const pushIn = new PushIn();
-pushIn.start();
-
-//...
-
-// Bind events client-side
-pushin.bindEvents();
-```
-
 ## Contributing
 
 We've setup separate documentation for contributors: [CONTRIBUTING.md](CONTRIBUTING.md)
