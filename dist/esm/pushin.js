@@ -1,4 +1,4 @@
-/* Pushin.js - v4.0.2
+/* Pushin.js - v4.0.3
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
@@ -221,25 +221,6 @@ class PushIn {
         };
         window.addEventListener('scroll', onScroll);
         this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-        const onTouchstart = (event) => {
-            this.touchStart = event.changedTouches[0].screenY;
-        };
-        window.addEventListener('touchstart', onTouchstart);
-        this.cleanupFns.push(() => window.removeEventListener('touchstart', onTouchstart));
-        const onTouchmove = (event) => {
-            event.preventDefault();
-            const touchMove = event.changedTouches[0].screenY;
-            this.scrollY = Math.max(this.scrollEnd + this.touchStart - touchMove, 0);
-            this.scrollY = Math.min(this.scrollY, this.pageHeight - window.innerHeight);
-            this.dolly();
-        };
-        window.addEventListener('touchmove', onTouchmove);
-        this.cleanupFns.push(() => window.removeEventListener('touchmove', onTouchmove));
-        const onTouchend = () => {
-            this.scrollEnd = this.scrollY;
-        };
-        window.addEventListener('touchend', onTouchend);
-        this.cleanupFns.push(() => window.removeEventListener('touchend', onTouchend));
         let resizeTimeout;
         const onResize = () => {
             clearTimeout(resizeTimeout);
