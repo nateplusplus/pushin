@@ -15,10 +15,11 @@ import {
  */
 export class PushIn {
   private scene!: PushInScene;
+  private pushinDebug?: HTMLElement;
   private layerOptions: LayerOptions[];
   private sceneOptions: SceneOptions;
 
-  private scrollPos = 0;
+  private scrollY = 0;
   private scrollEnd: number | null = null;
   private touchStart: number | null = null;
   private pageHeight: number | null = null;
@@ -50,10 +51,17 @@ export class PushIn {
         this.layerOptions
       );
 
-      this.scrollPos = window.pageYOffset;
+      this.scrollY = this.getScrollY();
+
+      if (this.debug) {
+        this.showDebugger();
+      }
 
       this.setScrollLength();
-      this.bindEvents();
+
+      if (typeof window !== 'undefined') {
+        this.bindEvents();
+      }
 
       // Set layer initial state
       this.toggleLayers();
@@ -77,51 +85,25 @@ export class PushIn {
   }
 
   /**
+   * If there is a window object,
+   * get the current scroll position.
+   *
+   * Otherwise default to 0.
+   */
+  private getScrollY(): number {
+    return typeof window !== 'undefined' ? window.scrollY : 0;
+  }
+
+  /**
    * Bind event listeners to watch for page load and user interaction.
    */
-  private bindEvents(): void {
+  bindEvents(): void {
     const onScroll = () => {
-      this.scrollPos = window.pageYOffset;
+      this.scrollY = this.getScrollY();
       this.dolly();
     };
     window.addEventListener('scroll', onScroll);
     this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
-
-    const onTouchstart = (event: TouchEvent) => {
-      this.touchStart = event.changedTouches[0].screenY;
-    };
-    window.addEventListener('touchstart', onTouchstart);
-    this.cleanupFns.push(() =>
-      window.removeEventListener('touchstart', onTouchstart)
-    );
-
-    const onTouchmove = (event: TouchEvent) => {
-      event.preventDefault();
-
-      const touchMove = event.changedTouches[0].screenY;
-      this.scrollPos = Math.max(
-        this.scrollEnd! + this.touchStart! - touchMove,
-        0
-      );
-      this.scrollPos = Math.min(
-        this.scrollPos,
-        this.pageHeight! - window.innerHeight
-      );
-
-      this.dolly();
-    };
-    window.addEventListener('touchmove', onTouchmove);
-    this.cleanupFns.push(() =>
-      window.removeEventListener('touchmove', onTouchmove)
-    );
-
-    const onTouchend = () => {
-      this.scrollEnd = this.scrollPos;
-    };
-    window.addEventListener('touchend', onTouchend);
-    this.cleanupFns.push(() =>
-      window.removeEventListener('touchend', onTouchend)
-    );
 
     let resizeTimeout: number;
     const onResize = () => {
@@ -135,6 +117,18 @@ export class PushIn {
     };
     window.addEventListener('resize', onResize);
     this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
+
+    if (this.pushinDebug) {
+      window.addEventListener('scroll', () => {
+        const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+        const content = this.pushinDebug?.querySelector(
+          '.pushin-debug__content'
+        );
+        if (content) {
+          content!.textContent = `Scroll position: ${Math.round(scrollY)}px`;
+        }
+      });
+    }
   }
 
   /**
@@ -186,26 +180,22 @@ export class PushIn {
    * Can be used to determine best "pushin-from" and "pushin-to" values.
    */
   private showDebugger(): void {
-    const scrollCounter = document.createElement('div');
-    scrollCounter.classList.add('pushin-debug');
+    this.pushinDebug = document.createElement('div');
+    this.pushinDebug.classList.add('pushin-debug');
 
     const scrollTitle = document.createElement('p');
     scrollTitle.innerText = 'Pushin.js Debugger';
     scrollTitle.classList.add('pushin-debug__title');
 
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
     const debuggerContent = document.createElement('div');
     debuggerContent.classList.add('pushin-debug__content');
-    debuggerContent.innerText = `Scroll position: ${window.pageYOffset}px`;
+    debuggerContent.innerText = `Scroll position: ${scrollY}px`;
 
-    scrollCounter.appendChild(scrollTitle);
-    scrollCounter.appendChild(debuggerContent);
+    this.pushinDebug.appendChild(scrollTitle);
+    this.pushinDebug.appendChild(debuggerContent);
 
-    document.body.appendChild(scrollCounter);
-
-    window.addEventListener('scroll', () => {
-      debuggerContent.innerText = `Scroll position: ${Math.round(
-        window.pageYOffset
-      )}px`;
-    });
+    document.body.appendChild(this.pushinDebug);
   }
 }

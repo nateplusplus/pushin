@@ -93,9 +93,10 @@ export class PushInLayer {
    * Get the array index of the current window breakpoint.
    */
   private getBreakpointIndex(): number {
+    const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
     const searchIndex = this.sceneOptions.breakpoints
       .reverse()
-      .findIndex(bp => bp <= window.innerWidth);
+      .findIndex(bp => bp <= windowWidth);
     return searchIndex === -1
       ? 0
       : this.sceneOptions.breakpoints.length - 1 - searchIndex;
@@ -166,7 +167,7 @@ export class PushInLayer {
   private isActive(layer: PushInLayer): boolean {
     const { inpoint } = layer.params;
     const { outpoint } = layer.params;
-    return this.scrollPos >= inpoint && this.scrollPos <= outpoint;
+    return this.scrollY >= inpoint && this.scrollY <= outpoint;
   }
 
   /**
@@ -189,7 +190,7 @@ export class PushInLayer {
    * Get the scaleX value for the layer.
    */
   private getScaleValue(layer: PushInLayer): number {
-    const distance = this.scrollPos - layer.params.inpoint;
+    const distance = this.scrollY - layer.params.inpoint;
     const speed = Math.min(layer.params.speed, 100) / 100;
     const delta = (distance * speed) / 100;
 
@@ -221,16 +222,16 @@ export class PushInLayer {
     const { inpoint } = this.params;
     const { outpoint } = this.params;
 
-    if (isFirst && this.scrollPos < inpoint) {
+    if (isFirst && this.scrollY < inpoint) {
       opacity = 1;
-    } else if (isLast && this.scrollPos > outpoint) {
+    } else if (isLast && this.scrollY > outpoint) {
       opacity = 1;
     } else if (this.isActive(this)) {
       this.setScale(this.element, this.getScaleValue(this));
 
       let inpointDistance =
         Math.max(
-          Math.min(this.scrollPos - inpoint, this.scene.transitionLength),
+          Math.min(this.scrollY - inpoint, this.scene.transitionLength),
           0
         ) / this.scene.transitionLength;
 
@@ -240,10 +241,8 @@ export class PushInLayer {
       }
 
       let outpointDistance =
-        Math.max(
-          Math.min(outpoint - this.scrollPos, this.transitionLength),
-          0
-        ) / this.transitionLength;
+        Math.max(Math.min(outpoint - this.scrollY, this.transitionLength), 0) /
+        this.transitionLength;
 
       // Set opacity to 1 if its the last layer and it is active (no fading out)
       if (isLast) {
