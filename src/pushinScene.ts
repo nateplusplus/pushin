@@ -1,13 +1,11 @@
 import {
-  DEFAULT_SPEED,
-  PUSH_IN_TO_DATA_ATTRIBUTE,
   PUSH_IN_FROM_DATA_ATTRIBUTE,
-  PUSH_IN_SPEED_DATA_ATTRIBUTE,
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
 } from './constants';
 import { PushInLayer } from './pushinLayer';
+import { PushIn } from './pushin';
 
-import { SceneOptions, LayerOptions } from './types';
+import { LayerOptions } from './types';
 
 export class PushInScene {
   private container: HTMLElement;
@@ -17,12 +15,9 @@ export class PushInScene {
   public transitionLength: number;
   public layerDepth: number;
 
-  constructor(
-    private parent: HTMLElement,
-    private options?: SceneOptions,
-    private layerOptions?: LayerOptions[]
-  ) {
-    const container = this.parent.querySelector<HTMLElement>('.pushin-scene');
+  constructor(public pushin: PushIn) {
+    const container =
+      this.pushin.container.querySelector<HTMLElement>('.pushin-scene');
 
     if (container) {
       this.container = container;
@@ -30,17 +25,17 @@ export class PushInScene {
       this.container = document.createElement('div');
       this.container.classList.add('pushin-scene');
 
-      this.container.innerHTML = this.parent.innerHTML;
-      this.parent.innerHTML = '';
-      this.parent.appendChild(this.container);
+      this.container.innerHTML = this.pushin.container.innerHTML;
+      this.pushin.container.innerHTML = '';
+      this.pushin.container.appendChild(this.container);
       this.cleanupFns.push(() => {
-        this.parent.innerHTML = this.container.innerHTML;
+        this.pushin.container.innerHTML = this.container.innerHTML;
       });
     }
 
-    this.speedDelta = options?.speedDelta || 100;
-    this.layerDepth = options?.layerDepth || 1000;
-    this.transitionLength = options?.transitionLength || 200;
+    this.speedDelta = pushin.sceneOptions?.speedDelta || 100;
+    this.layerDepth = pushin.sceneOptions?.layerDepth || 1000;
+    this.transitionLength = pushin.sceneOptions?.transitionLength || 200;
 
     this.layers = [];
 
@@ -52,18 +47,18 @@ export class PushInScene {
    * Set breakpoints for responsive design settings.
    */
   private setBreakpoints(): void {
-    if (this.options?.breakpoints.length === 0) {
-      this.options.breakpoints = [768, 1440, 1920];
+    if (this.pushin.sceneOptions?.breakpoints.length === 0) {
+      this.pushin.sceneOptions.breakpoints = [768, 1440, 1920];
     }
 
     if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-      this.options!.breakpoints = this.container.dataset[
+      this.pushin.sceneOptions!.breakpoints = this.container.dataset[
         PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE
       ]!.split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
     }
 
     // Always include break point 0 for anything under first breakpoint
-    this.options!.breakpoints.unshift(0);
+    this.pushin.sceneOptions!.breakpoints.unshift(0);
   }
 
   /**
@@ -77,8 +72,11 @@ export class PushInScene {
     for (let index = 0; index < layers.length; index++) {
       const element = <HTMLElement>layers[index];
       let options = <LayerOptions>{};
-      if (this.layerOptions && this.layerOptions.length > index) {
-        options = this!.layerOptions[index];
+      if (
+        this.pushin.sceneOptions?.layers &&
+        this.pushin.sceneOptions.layers.length > index
+      ) {
+        options = this!.pushin.sceneOptions.layers[index];
       }
 
       const layer = new PushInLayer(element, index, this, options);
@@ -91,13 +89,13 @@ export class PushInScene {
   /**
    * Get the array index of the current window breakpoint.
    */
-  private getBreakpointIndex(): number {
-    const searchIndex = this.options!.breakpoints.reverse().findIndex(
-      bp => bp <= window.innerWidth
-    );
+  getBreakpointIndex(): number {
+    const searchIndex = this.pushin
+      .sceneOptions!.breakpoints.reverse()
+      .findIndex(bp => bp <= window.innerWidth);
     return searchIndex === -1
       ? 0
-      : this.options!.breakpoints.length - 1 - searchIndex;
+      : this.pushin.sceneOptions!.breakpoints.length - 1 - searchIndex;
   }
 
   getTop() {
@@ -112,8 +110,8 @@ export class PushInScene {
         this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
       );
       inpoints.push(parseInt(pushInFrom, 10));
-    } else if (this.options && this.options?.inpoints?.length > 0) {
-      inpoints = this.options.inpoints;
+    } else if (this.pushin.sceneOptions?.inpoints?.length > 0) {
+      inpoints = this.pushin.sceneOptions.inpoints;
     }
 
     return inpoints;

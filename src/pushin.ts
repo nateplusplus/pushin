@@ -1,11 +1,7 @@
 import { PushInScene } from './pushinScene';
+import { PushInLayer } from './pushinLayer';
 
-import {
-  PushInLayer,
-  PushInOptions,
-  LayerOptions,
-  SceneOptions,
-} from './types';
+import { PushInOptions, SceneOptions } from './types';
 
 /**
  * PushIn object
@@ -16,13 +12,9 @@ import {
 export class PushIn {
   private scene!: PushInScene;
   private pushinDebug?: HTMLElement;
-  private layerOptions: LayerOptions[];
-  private sceneOptions: SceneOptions;
+  public sceneOptions: SceneOptions;
 
-  private scrollY = 0;
-  private scrollEnd: number | null = null;
-  private touchStart: number | null = null;
-  private pageHeight: number | null = null;
+  public scrollY = 0;
 
   private readonly layers: PushInLayer[] = [];
   private readonly debug: boolean;
@@ -30,32 +22,30 @@ export class PushIn {
   private lastAnimationFrameId = -1;
   private readonly cleanupFns: VoidFunction[] = [];
 
-  constructor(private container: HTMLElement, options?: PushInOptions) {
+  constructor(public container: HTMLElement, options?: PushInOptions) {
     this.debug = options?.debug ?? false;
-    this.layerOptions = options?.layers ?? [];
-    this.sceneOptions = options?.scene ?? { breakpoints: [], inpoints: [] };
+
+    this.sceneOptions = { breakpoints: [], inpoints: [] };
+    if (options?.scene) {
+      Object.assign(this.sceneOptions, options.scene);
+    }
+    if (options?.layers) {
+      Object.assign(this.sceneOptions, options.layers);
+    }
   }
 
   /**
    * Initialize the object to start everything up.
    */
   start(): void {
+    this.scrollY = this.getScrollY();
+
     if (this.debug) {
       this.showDebugger();
     }
 
     if (this.container) {
-      this.scene = new PushInScene(
-        this.container,
-        this.sceneOptions,
-        this.layerOptions
-      );
-
-      this.scrollY = this.getScrollY();
-
-      if (this.debug) {
-        this.showDebugger();
-      }
+      this.scene = new PushInScene(this);
 
       this.setScrollLength();
 
@@ -101,6 +91,17 @@ export class PushIn {
     const onScroll = () => {
       this.scrollY = this.getScrollY();
       this.dolly();
+
+      if (this.pushinDebug) {
+        const content = this.pushinDebug?.querySelector(
+          '.pushin-debug__content'
+        );
+        if (content) {
+          content!.textContent = `Scroll position: ${Math.round(
+            this.scrollY
+          )}px`;
+        }
+      }
     };
     window.addEventListener('scroll', onScroll);
     this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
@@ -110,25 +111,13 @@ export class PushIn {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = window.setTimeout(() => {
-        this.resetLayerParams();
+        this.layers.forEach(layer => layer.resetLayerParams());
         this.setScrollLength();
         this.toggleLayers();
       }, 300);
     };
     window.addEventListener('resize', onResize);
     this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
-
-    if (this.pushinDebug) {
-      window.addEventListener('scroll', () => {
-        const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-        const content = this.pushinDebug?.querySelector(
-          '.pushin-debug__content'
-        );
-        if (content) {
-          content!.textContent = `Scroll position: ${Math.round(scrollY)}px`;
-        }
-      });
-    }
   }
 
   /**
@@ -187,11 +176,9 @@ export class PushIn {
     scrollTitle.innerText = 'Pushin.js Debugger';
     scrollTitle.classList.add('pushin-debug__title');
 
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-
     const debuggerContent = document.createElement('div');
     debuggerContent.classList.add('pushin-debug__content');
-    debuggerContent.innerText = `Scroll position: ${scrollY}px`;
+    debuggerContent.innerText = `Scroll position: ${this.scrollY}px`;
 
     this.pushinDebug.appendChild(scrollTitle);
     this.pushinDebug.appendChild(debuggerContent);

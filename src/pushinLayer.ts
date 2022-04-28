@@ -21,7 +21,7 @@ export class PushInLayer {
   ) {
     const inpoints = this.getInpoints(this.element, this.index);
     const outpoints = this.getOutpoints(this.element, inpoints[0]);
-    const speed = this.getSpeed(this.element, this.index);
+    const speed = this.getSpeed(this.element);
 
     this.originalScale = this.getElementScaleX(element);
     this.ref = { inpoints, outpoints, speed };
@@ -49,7 +49,7 @@ export class PushInLayer {
     } else if (index > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.scene.layers[index - 1].params;
-      inpoints = [outpoint - this.speedDelta];
+      inpoints = [outpoint - this.scene.speedDelta];
     }
 
     return inpoints;
@@ -59,7 +59,7 @@ export class PushInLayer {
    * Get all outpoints for the layer.
    */
   private getOutpoints(element: HTMLElement, inpoint: number): number[] {
-    let outpoints = [inpoint + this.layerDepth];
+    let outpoints = [inpoint + this.scene.layerDepth];
 
     if (element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]) {
       const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]!.split(',');
@@ -74,7 +74,7 @@ export class PushInLayer {
   /**
    * Get the push-in speed for the layer.
    */
-  private getSpeed(element: HTMLElement, index: number): number {
+  private getSpeed(element: HTMLElement): number {
     let speed: number | null = null;
 
     if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
@@ -90,19 +90,6 @@ export class PushInLayer {
   }
 
   /**
-   * Get the array index of the current window breakpoint.
-   */
-  private getBreakpointIndex(): number {
-    const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
-    const searchIndex = this.sceneOptions.breakpoints
-      .reverse()
-      .findIndex(bp => bp <= windowWidth);
-    return searchIndex === -1
-      ? 0
-      : this.sceneOptions.breakpoints.length - 1 - searchIndex;
-  }
-
-  /**
    * Set the z-index of each layer so they overlap correctly.
    */
   setZIndex(total: number): void {
@@ -115,7 +102,7 @@ export class PushInLayer {
    * This is used if the window is resized
    * and things need to be recalculated.
    */
-  private resetLayerParams(): void {
+  resetLayerParams(): void {
     this.params = {
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
@@ -144,30 +131,15 @@ export class PushInLayer {
   }
 
   /**
-   * Animation effect, mimicking a camera dolly on the webpage.
-   */
-  private dolly(): void {
-    cancelAnimationFrame(this.lastAnimationFrameId);
-
-    this.lastAnimationFrameId = requestAnimationFrame(() => {
-      this.toggleLayers();
-    });
-  }
-
-  /**
-   * Show or hide layers and set their scale, depending on if active.
-   */
-  private toggleLayers(): void {
-    this.layers.forEach(layer => this.setLayerStyle(layer));
-  }
-
-  /**
    * Whether or not a layer should currently be zooming.
    */
   private isActive(layer: PushInLayer): boolean {
     const { inpoint } = layer.params;
     const { outpoint } = layer.params;
-    return this.scrollY >= inpoint && this.scrollY <= outpoint;
+    return (
+      this.scene.pushin.scrollY >= inpoint &&
+      this.scene.pushin.scrollY <= outpoint
+    );
   }
 
   /**
@@ -175,7 +147,7 @@ export class PushInLayer {
    * depending on window breakpoint.
    */
   private getInpoint(inpoints: number[]): number {
-    return inpoints[this.getBreakpointIndex()] || inpoints[0];
+    return inpoints[this.scene.getBreakpointIndex()] || inpoints[0];
   }
 
   /**
@@ -183,14 +155,14 @@ export class PushInLayer {
    * depending on window breakpoint.
    */
   private getOutpoint(outpoints: number[]): number {
-    return outpoints[this.getBreakpointIndex()] || outpoints[0];
+    return outpoints[this.scene.getBreakpointIndex()] || outpoints[0];
   }
 
   /**
    * Get the scaleX value for the layer.
    */
   private getScaleValue(layer: PushInLayer): number {
-    const distance = this.scrollY - layer.params.inpoint;
+    const distance = this.scene.pushin.scrollY - layer.params.inpoint;
     const speed = Math.min(layer.params.speed, 100) / 100;
     const delta = (distance * speed) / 100;
 
@@ -222,16 +194,19 @@ export class PushInLayer {
     const { inpoint } = this.params;
     const { outpoint } = this.params;
 
-    if (isFirst && this.scrollY < inpoint) {
+    if (isFirst && this.scene.pushin.scrollY < inpoint) {
       opacity = 1;
-    } else if (isLast && this.scrollY > outpoint) {
+    } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
     } else if (this.isActive(this)) {
       this.setScale(this.element, this.getScaleValue(this));
 
       let inpointDistance =
         Math.max(
-          Math.min(this.scrollY - inpoint, this.scene.transitionLength),
+          Math.min(
+            this.scene.pushin.scrollY - inpoint,
+            this.scene.transitionLength
+          ),
           0
         ) / this.scene.transitionLength;
 
@@ -241,8 +216,13 @@ export class PushInLayer {
       }
 
       let outpointDistance =
-        Math.max(Math.min(outpoint - this.scrollY, this.transitionLength), 0) /
-        this.transitionLength;
+        Math.max(
+          Math.min(
+            outpoint - this.scene.pushin.scrollY,
+            this.scene.transitionLength
+          ),
+          0
+        ) / this.scene.transitionLength;
 
       // Set opacity to 1 if its the last layer and it is active (no fading out)
       if (isLast) {

@@ -10,6 +10,7 @@ export interface SceneOptions {
   transitionLength?: number;
   breakpoints: number[];
   inpoints: number[];
+  layers?: LayerOptions[];
 }
 
 export interface PushInOptions {
