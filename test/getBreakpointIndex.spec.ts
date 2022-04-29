@@ -11,20 +11,17 @@ describe('getBreakpointIndex', () => {
                 </div>
             </body>
         </html>`);
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    PushInScene.options.breakpoints = [0, 768, 1440, 1920];
   });
 
   it('Should return 0 by default', () => {
-    PushInScene.options.breakpoints = [];
-    const result = PushInScene.prototype.getBreakpointIndex();
+    const result = PushInScene.prototype.getBreakpointIndex([]);
     expect(result).toEqual(0);
   });
 
   it('Should return the index of the nearest breakpoint that is less than current window width', () => {
     window.innerWidth = 800;
-    const result = PushInScene.prototype.getBreakpointIndex();
+    const result = PushInScene.prototype.getBreakpointIndex([0, 768, 1440, 1920]);
     expect(result).toEqual(1);
   });
 });

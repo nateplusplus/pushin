@@ -1,18 +1,18 @@
 import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { PushInLayer } from '../src/pushinLayer';
 
 describe('getElementScaleX', () => {
-  let pushIn: PushIn;
+  let pushInLayer: PushInLayer;
 
   beforeEach(() => {
     setupJSDOM(`
-        <!DOCTYPE html>
-            <body>
-                <div class="foo">Hello World!</div>
-            </body>
-        </html>`);
+      <!DOCTYPE html>
+          <body>
+              <div class="foo">Hello World!</div>
+          </body>
+      </html>`);
 
-    pushIn = new PushIn(null);
+    pushInLayer = new PushInLayer(null);
   });
 
   afterEach(() => pushIn.destroy());

@@ -147,7 +147,8 @@ export class PushInLayer {
    * depending on window breakpoint.
    */
   private getInpoint(inpoints: number[]): number {
-    return inpoints[this.scene.getBreakpointIndex()] || inpoints[0];
+    const { breakpoints } = this.scene.options;
+    return inpoints[this.scene.getBreakpointIndex(breakpoints)] || inpoints[0];
   }
 
   /**
@@ -155,7 +156,10 @@ export class PushInLayer {
    * depending on window breakpoint.
    */
   private getOutpoint(outpoints: number[]): number {
-    return outpoints[this.scene.getBreakpointIndex()] || outpoints[0];
+    const { breakpoints } = this.scene.options;
+    return (
+      outpoints[this.scene.getBreakpointIndex(breakpoints)] || outpoints[0]
+    );
   }
 
   /**

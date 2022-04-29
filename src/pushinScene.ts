@@ -5,7 +5,7 @@ import {
 import { PushInLayer } from './pushinLayer';
 import { PushIn } from './pushin';
 
-import { LayerOptions } from './types';
+import { LayerOptions, SceneOptions } from './types';
 
 export class PushInScene {
   private container: HTMLElement;
@@ -14,6 +14,7 @@ export class PushInScene {
   public speedDelta: number;
   public transitionLength: number;
   public layerDepth: number;
+  public options: SceneOptions;
 
   constructor(public pushin: PushIn) {
     const container =
@@ -33,9 +34,11 @@ export class PushInScene {
       });
     }
 
-    this.speedDelta = pushin.sceneOptions?.speedDelta || 100;
-    this.layerDepth = pushin.sceneOptions?.layerDepth || 1000;
-    this.transitionLength = pushin.sceneOptions?.transitionLength || 200;
+    this.options = pushin.sceneOptions;
+
+    this.speedDelta = this.options?.speedDelta || 100;
+    this.layerDepth = this.options?.layerDepth || 1000;
+    this.transitionLength = this.options?.transitionLength || 200;
 
     this.layers = [];
 
@@ -47,18 +50,18 @@ export class PushInScene {
    * Set breakpoints for responsive design settings.
    */
   private setBreakpoints(): void {
-    if (this.pushin.sceneOptions?.breakpoints.length === 0) {
-      this.pushin.sceneOptions.breakpoints = [768, 1440, 1920];
+    if (this.options?.breakpoints.length === 0) {
+      this.options.breakpoints = [768, 1440, 1920];
     }
 
     if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-      this.pushin.sceneOptions!.breakpoints = this.container.dataset[
+      this.options!.breakpoints = this.container.dataset[
         PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE
       ]!.split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
     }
 
     // Always include break point 0 for anything under first breakpoint
-    this.pushin.sceneOptions!.breakpoints.unshift(0);
+    this.options!.breakpoints.unshift(0);
   }
 
   /**
@@ -72,11 +75,8 @@ export class PushInScene {
     for (let index = 0; index < layers.length; index++) {
       const element = <HTMLElement>layers[index];
       let options = <LayerOptions>{};
-      if (
-        this.pushin.sceneOptions?.layers &&
-        this.pushin.sceneOptions.layers.length > index
-      ) {
-        options = this!.pushin.sceneOptions.layers[index];
+      if (this.options?.layers && this.options.layers.length > index) {
+        options = this!.options.layers[index];
       }
 
       const layer = new PushInLayer(element, index, this, options);
@@ -89,13 +89,11 @@ export class PushInScene {
   /**
    * Get the array index of the current window breakpoint.
    */
-  getBreakpointIndex(): number {
-    const searchIndex = this.pushin
-      .sceneOptions!.breakpoints.reverse()
+  getBreakpointIndex(breakpoints: number[]): number {
+    const searchIndex = breakpoints
+      .reverse()
       .findIndex(bp => bp <= window.innerWidth);
-    return searchIndex === -1
-      ? 0
-      : this.pushin.sceneOptions!.breakpoints.length - 1 - searchIndex;
+    return searchIndex === -1 ? 0 : breakpoints.length - 1 - searchIndex;
   }
 
   getTop() {
@@ -110,8 +108,8 @@ export class PushInScene {
         this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
       );
       inpoints.push(parseInt(pushInFrom, 10));
-    } else if (this.pushin.sceneOptions?.inpoints?.length > 0) {
-      inpoints = this.pushin.sceneOptions.inpoints;
+    } else if (this.options?.inpoints?.length > 0) {
+      inpoints = this.options.inpoints;
     }
 
     return inpoints;
