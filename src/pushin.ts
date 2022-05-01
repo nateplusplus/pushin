@@ -1,5 +1,5 @@
-import { PushInScene } from './pushinScene';
-import { PushInLayer } from './pushinLayer';
+import { PushInScene } from './pushInScene';
+import { PushInLayer } from './pushInLayer';
 
 import { PushInOptions, SceneOptions } from './types';
 

@@ -1,8 +1,10 @@
 import { setupJSDOM } from './setup';
-import { PushInLayer } from '../src/pushinLayer';
+import { PushInLayer } from '../src/pushInLayer';
 
 describe('getElementScaleX', () => {
-  let pushInLayer: PushInLayer;
+  let element: HTMLElement;
+  let mockPushInLayer: PushInLayer;
+  jest.mock('../src/pushInLayer', () => jest.fn());
 
   beforeEach(() => {
     setupJSDOM(`
@@ -12,25 +14,21 @@ describe('getElementScaleX', () => {
           </body>
       </html>`);
 
-    pushInLayer = new PushInLayer(null);
+    element = document.querySelector<HTMLElement>('.foo');
+    mockPushInLayer = Object.create(PushInLayer.prototype);
+    mockPushInLayer['element'] = element;
   });
 
-  afterEach(() => pushIn.destroy());
+  // afterEach(() => pushInLayer.destroy());
 
   it('Should return default element scale if never altered', () => {
-    const element = document.querySelector<HTMLElement>('.foo');
-    const result = pushIn['getElementScaleX'](element);
-
+    const result = mockPushInLayer['getElementScaleX'](element);
     expect(result).toEqual(1);
   });
 
   it('Should return element scale if it was previously set', () => {
-    const element = document.querySelector<HTMLElement>('.foo');
-
     element.style.transform = 'scale(5)';
-
-    const result = pushIn['getElementScaleX'](element);
-
+    const result = mockPushInLayer['getElementScaleX'](element);
     expect(result).toEqual(5);
   });
 });

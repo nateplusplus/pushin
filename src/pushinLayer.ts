@@ -4,7 +4,7 @@ import {
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_SPEED_DATA_ATTRIBUTE,
 } from './constants';
-import { PushInScene } from './pushinScene';
+import { PushInScene } from './pushInScene';
 
 import { LayerOptions, LayerRef, LayerParams } from './types';
 

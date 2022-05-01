@@ -2,7 +2,7 @@ import {
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
 } from './constants';
-import { PushInLayer } from './pushinLayer';
+import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
 import { LayerOptions, SceneOptions } from './types';
