@@ -1,11 +1,14 @@
 import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { PushInScene } from '../src/pushInScene';
+import { PushInLayer } from '../src/pushInLayer';
+jest.mock('../src/pushInLayer');
 
 describe('getLayers', () => {
-  let pushIn: PushIn;
+  let mockPushInScene: PushInScene;
   let layers: HTMLElement[];
 
   beforeEach(() => {
+    (PushInLayer as jest.Mock<PushInLayer>).mockClear();
     setupJSDOM(`
         <!DOCTYPE html>
             <body>
@@ -20,77 +23,20 @@ describe('getLayers', () => {
             </body>
         </html>`);
 
-    const container = document.querySelector<HTMLElement>('.pushin');
-    pushIn = new PushIn(container);
-    const scene = document.querySelector<HTMLElement>('.pushin-scene');
-    pushIn['scene'] = scene;
+    mockPushInScene = Object.create(PushInScene.prototype);
+    mockPushInScene['container'] = document.querySelector<HTMLElement>('.pushin-scene');
+    mockPushInScene['layers'] = [];
 
-    layers = [...document.querySelectorAll<HTMLElement>('.pushin-layer')];
-
-    // Mock some methods
-    Object.assign(pushIn, {
-      getInpoints: () => [1, 2],
-      getInpoint: () => 1,
-      getOutpoints: () => [3, 4],
-      getOutpoint: () => 3,
-      getElementScaleX: () => 123,
-      getSpeed: () => 5,
-      setZIndex: () => {},
-    });
+    layers = [ ...document.querySelectorAll<HTMLElement>('.pushin-layer')];
   });
-
-  afterEach(() => pushIn.destroy());
 
   it('Should set the layers property to contain all .pushin-layer elements', () => {
-    pushIn['getLayers']();
-    expect(pushIn['layers'].length).toEqual(layers.length);
+    mockPushInScene['getLayers']();
+    expect(mockPushInScene['layers'].length).toEqual(layers.length);
   });
 
-  it('Should include the element for each layer', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][0].element.id;
-    expect(result).toEqual('layer-0');
-  });
-
-  it('Should include the index of each layer', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][0].index;
-    expect(result).toEqual(0);
-  });
-
-  it('Should include the original scale of each layer', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][1].originalScale;
-    expect(result).toEqual(123);
-  });
-
-  it('Should include reference inpoints array', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][2].ref.inpoints;
-    expect(result).toEqual([1, 2]);
-  });
-
-  it('Should include reference outpoints array', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][0].ref.outpoints;
-    expect(result).toEqual([3, 4]);
-  });
-
-  it('Should include the inpoint param', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][0].params.inpoint;
-    expect(result).toEqual(1);
-  });
-
-  it('Should include the outpoint param', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][0].params.outpoint;
-    expect(result).toEqual(3);
-  });
-
-  it('Should include the speed param', () => {
-    pushIn['getLayers']();
-    const result = pushIn['layers'][0].params.speed;
-    expect(result).toEqual(5);
+  it('Should create pushInLayer with correct arguments', () => {
+    mockPushInScene['getLayers']();
+    expect(PushInLayer).toHaveBeenCalledWith(layers[1], 1, mockPushInScene, {});
   });
 });
