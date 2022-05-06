@@ -133,9 +133,9 @@ export class PushInLayer {
   /**
    * Whether or not a layer should currently be zooming.
    */
-  private isActive(layer: PushInLayer): boolean {
-    const { inpoint } = layer.params;
-    const { outpoint } = layer.params;
+  private isActive(): boolean {
+    const { inpoint } = this.params;
+    const { outpoint } = this.params;
     return (
       this.scene.pushin.scrollY >= inpoint &&
       this.scene.pushin.scrollY <= outpoint
@@ -202,7 +202,7 @@ export class PushInLayer {
       opacity = 1;
     } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
-    } else if (this.isActive(this)) {
+    } else if (this.isActive()) {
       this.setScale(this.element, this.getScaleValue(this));
 
       let inpointDistance =

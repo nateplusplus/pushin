@@ -1,55 +1,60 @@
 import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
-import { PushInLayer } from '../src/types';
+import { PushInLayer } from '../src/pushInLayer';
+import { PushInScene } from '../src/pushInScene';
+import { LayerParams } from '../src/types';
 
 describe('isActive', () => {
-  let pushIn: PushIn;
-
-  const layer = {
-    params: {
-      inpoint: 10,
-      outpoint: 20,
-    },
-  } as PushInLayer;
+  let mockPushInLayer: PushInLayer;
 
   beforeEach(() => {
     setupJSDOM(`<!DOCTYPE html></html>`);
-    pushIn = new PushIn(null);
+    mockPushInLayer = Object.create(PushInLayer.prototype);
+
+    Object.assign(
+      mockPushInLayer,
+      {
+        'params': <LayerParams>{
+          inpoint: 10,
+          outpoint: 20
+        },
+        'scene': Object.create(PushInScene.prototype),
+      });
+
+    mockPushInLayer['scene']['pushin'] = Object.create(PushIn.prototype);
   });
 
-  afterEach(() => pushIn.destroy());
-
   it('should be true if screen top is greater than inpoint and less than outpoint', () => {
-    pushIn['scrollY'] = 15;
-    const result = pushIn['isActive'](layer);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 15;
+    const result = mockPushInLayer['isActive']();
 
     expect(result).toEqual(true);
   });
 
   it('should be true if screen top is equal to inpoint', () => {
-    pushIn['scrollY'] = 10;
-    const result = pushIn['isActive'](layer);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 10;
+    const result = mockPushInLayer['isActive']();
 
     expect(result).toEqual(true);
   });
 
   it('should be true if screen top is equal to outpoint', () => {
-    pushIn['scrollY'] = 20;
-    const result = pushIn['isActive'](layer);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 20;
+    const result = mockPushInLayer['isActive']();
 
     expect(result).toEqual(true);
   });
 
   it('should be false if screen top is less than inpoint', () => {
-    pushIn['scrollY'] = 5;
-    const result = pushIn['isActive'](layer);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 5;
+    const result = mockPushInLayer['isActive']();
 
     expect(result).toEqual(false);
   });
 
   it('should be false if screen top is greater than outpoint', () => {
-    pushIn['scrollY'] = 25;
-    const result = pushIn['isActive'](layer);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 25;
+    const result = mockPushInLayer['isActive']();
 
     expect(result).toEqual(false);
   });

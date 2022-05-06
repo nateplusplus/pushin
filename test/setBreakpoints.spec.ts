@@ -1,8 +1,10 @@
 import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { PushInScene } from '../src/pushInScene';
+import { SceneOptions } from '../src/types';
+import { PUSH_IN_DEFAULT_BREAKPOINTS } from '../src/constants';
 
 describe('setBreakpoints', () => {
-  let pushIn: PushIn;
+  let mockPushInScene: PushInScene;
 
   beforeEach(() => {
     setupJSDOM(`
@@ -14,25 +16,25 @@ describe('setBreakpoints', () => {
             </body>
         </html>`);
 
-    const container = document.querySelector<HTMLElement>('.pushin');
-    pushIn = new PushIn(container);
-    const scene = document.querySelector<HTMLElement>('.pushin-scene');
-    pushIn['scene'] = scene;
+    mockPushInScene = Object.create(PushInScene.prototype);
+    mockPushInScene['container'] = document.querySelector('.pushin-scene');
+    mockPushInScene['options'] = <SceneOptions>{
+      breakpoints: [],
+    };
   });
 
-  afterEach(() => pushIn.destroy());
-
   it('Should set the default breakpoints', () => {
-    pushIn['setBreakpoints']();
-    const result = pushIn['sceneOptions'].breakpoints;
-    const expected = [0, 768, 1440, 1920];
+    mockPushInScene['setBreakpoints']();
+    const result = mockPushInScene['options'].breakpoints;
+    console.log(PUSH_IN_DEFAULT_BREAKPOINTS);
+    const expected = [0, ...PUSH_IN_DEFAULT_BREAKPOINTS];
     expect(result).toEqual(expected);
   });
 
   it('Should set the breakpoints provided by data-attributes', () => {
-    pushIn['scene'].setAttribute('data-pushin-breakpoints', '1,2,3');
-    pushIn['setBreakpoints']();
-    const result = pushIn['sceneOptions'].breakpoints;
+    mockPushInScene['container'].setAttribute('data-pushin-breakpoints', '1,2,3');
+    mockPushInScene['setBreakpoints']();
+    const result = mockPushInScene['options'].breakpoints;
     const expected = [0, 1, 2, 3];
     expect(result).toEqual(expected);
   });

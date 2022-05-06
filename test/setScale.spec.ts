@@ -1,5 +1,5 @@
 import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { PushInLayer } from '../src/pushInLayer';
 
 describe('setScale', () => {
   beforeEach(() => {
@@ -12,18 +12,10 @@ describe('setScale', () => {
   });
 
   it('should set element scale value', () => {
-    const instance = new PushIn(null);
-
+    const mockPushInLayer = Object.create(PushInLayer.prototype);
     const element = document.querySelector<HTMLElement>('.foo');
-
-    instance['setScale'](element, 10);
-
+    mockPushInLayer['setScale'](element, 10);
     const result = element.style.transform;
-
-    try {
-      expect(result).toEqual('scale(10)');
-    } finally {
-      instance.destroy();
-    }
+    expect(result).toEqual('scale(10)');
   });
 });

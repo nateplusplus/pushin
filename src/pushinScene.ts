@@ -1,6 +1,7 @@
 import {
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
+  PUSH_IN_DEFAULT_BREAKPOINTS,
 } from './constants';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
@@ -51,7 +52,7 @@ export class PushInScene {
    */
   private setBreakpoints(): void {
     if (this.options?.breakpoints.length === 0) {
-      this.options.breakpoints = [768, 1440, 1920];
+      this.options.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
     }
 
     if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
