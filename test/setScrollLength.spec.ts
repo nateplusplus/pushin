@@ -1,8 +1,11 @@
 import { setupJSDOM } from './setup';
 import { PushIn } from '../src/pushin';
+import { PushInLayer } from '../src/pushInLayer';
+import { PushInScene } from '../src/pushInScene';
 
 describe('setScrollLength', () => {
-  let pushIn: PushIn;
+  let mockPushIn: PushIn;
+  let container: HTMLElement;
 
   beforeEach(() => {
     setupJSDOM(`
@@ -12,40 +15,56 @@ describe('setScrollLength', () => {
             </body>
         </html>`);
 
-    const container = document.querySelector<HTMLElement>('.pushin');
-    pushIn = new PushIn(container);
+    container = document.querySelector<HTMLElement>('.pushin');
 
-    (pushIn as any).layers = [1, 2, 3];
-    pushIn['speedDelta'] = 100;
-    pushIn['layerDepth'] = 100;
-    pushIn['transitionLength'] = 100;
+    const mockScene = Object.create(PushInScene.prototype);
+    Object.assign(
+      mockScene,
+      {
+        speedDelta: 100,
+        layerDepth: 100,
+        transitionLength: 100,
+      }
+    );
+
+    mockPushIn = Object.create(PushIn.prototype);
+    Object.assign(
+      mockPushIn,
+      {
+        container,
+        layers: [
+          Object.create(PushInLayer.prototype),
+          Object.create(PushInLayer.prototype),
+          Object.create(PushInLayer.prototype),
+        ],
+        scene: mockScene
+      }
+    );
   });
 
-  afterEach(() => pushIn.destroy());
-
   it('Should set the container height to its original value if it is higher than calculated value', () => {
-    pushIn['setScrollLength']();
-    const result = pushIn['container'].style.height;
+    mockPushIn['setScrollLength']();
+    const result = container.style.height;
     expect(result).toEqual('500px');
   });
 
   it('Should calculate container height based on layerDepth and transitionLength properties', () => {
-    pushIn['speedDelta'] = 0;
-    pushIn['layerDepth'] = 200;
-    pushIn['transitionLength'] = 200;
+    mockPushIn['scene']['speedDelta'] = 0;
+    mockPushIn['scene']['layerDepth'] = 200;
+    mockPushIn['scene']['transitionLength'] = 200;
 
-    pushIn['setScrollLength']();
-    const result = pushIn['container'].style.height;
+    mockPushIn['setScrollLength']();
+    const result = container.style.height;
     expect(result).toEqual('1200px');
   });
 
   it('Should reduce container height to account for overlapping transition length', () => {
-    pushIn['speedDelta'] = 100;
-    pushIn['layerDepth'] = 200;
-    pushIn['transitionLength'] = 200;
+    mockPushIn['scene']['speedDelta'] = 100;
+    mockPushIn['scene']['layerDepth'] = 200;
+    mockPushIn['scene']['transitionLength'] = 200;
 
-    pushIn['setScrollLength']();
-    const result = pushIn['container'].style.height;
+    mockPushIn['setScrollLength']();
+    const result = container.style.height;
     expect(result).toEqual('1000px');
   });
 });

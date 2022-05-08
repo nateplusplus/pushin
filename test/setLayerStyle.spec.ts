@@ -1,90 +1,97 @@
 import { setupJSDOM } from './setup';
+import { PushInLayer } from '../src/pushInLayer';
 import { PushIn } from '../src/pushin';
+import { PushInScene } from '../src/pushInScene';
+import { LayerParams } from '../src/types';
 
 describe('setLayerStyle', () => {
-  let pushIn: PushIn;
+  let mockPushInLayer: PushInLayer;
+  let element: HTMLElement;
 
   beforeEach(() => {
     setupJSDOM(`
         <!DOCTYPE html>
             <body>
-                <div class="pushin-layer demo-layer-1">
+                <div class="pushin-layer">
                     Lorem Ipsum
-                </div>
-                <div class="pushin-layer demo-layer-2">
-                    Dolor sit amet
-                </div>
-                <div class="pushin-layer demo-layer-3">
-                    Hello World
                 </div>
             </body>
         </html>`);
 
-    const layers = [
+    element = document.querySelector<HTMLElement>('.pushin-layer');
+
+    const mockScene = Object.create(PushInScene.prototype);
+    Object.assign(
+      mockScene,
       {
-        element: document.querySelector<HTMLElement>('.demo-layer-1'),
+        transitionLength: 200,
+      }
+    );
+
+    mockPushInLayer = Object.create(PushInLayer.prototype);
+    Object.assign(
+      mockPushInLayer,
+      {
+        element: document.querySelector<HTMLElement>('.pushin-layer'),
         index: 0,
-        originalScale: 1,
-        params: {
+        'params': <LayerParams>{
           inpoint: 200,
           outpoint: 500,
-          speed: 8,
         },
-      },
-      {
-        element: document.querySelector<HTMLElement>('.demo-layer-2'),
-        index: 1,
-        originalScale: 1,
-        params: {
-          inpoint: 500,
-          outpoint: 800,
-          speed: 8,
-        },
-      },
-      {
-        element: document.querySelector<HTMLElement>('.demo-layer-3'),
-        index: 2,
-        originalScale: 1,
-        params: {
-          inpoint: 800,
-          outpoint: 1200,
-          speed: 8,
-        },
-      },
-    ];
+        'scene': mockScene,
+      });
 
-    pushIn = new PushIn(null);
-    Object.assign(pushIn, {
-      isActive: () => true,
-      layers,
-      transitionLength: 200,
-    });
+    const mockPushIn = Object.create(PushIn.prototype);
+    Object.assign(
+      mockPushIn,
+      {
+        scrollY: 0,
+      }
+    );
+
+    Object.assign(
+      mockPushInLayer['scene'],
+      {
+        pushin: mockPushIn,
+        layers: [
+          Object.create(PushInLayer.prototype),
+          Object.create(PushInLayer.prototype),
+          Object.create(PushInLayer.prototype)
+        ],
+      }
+    );
+
+    // stub methods
+    Object.assign(
+      mockPushInLayer,
+      {
+        isActive: () => true,
+        setScale: () => null,
+        getScaleValue: () => null,
+      }
+    );
   });
 
-  afterEach(() => pushIn.destroy());
-
   it('should set opacity to 1 if its the first layer and the scroll position is before its inpoint', () => {
-    pushIn['scrollY'] = 10;
-    const element = document.querySelector<HTMLElement>('.demo-layer-1');
-    pushIn['setLayerStyle'](pushIn['layers'][0]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 10;
+    mockPushInLayer['setLayerStyle']();
     const result = element.style.opacity;
 
     expect(result).toEqual('1');
   });
 
   it('should set opacity to 1 if its the first layer and it is active', () => {
-    pushIn['scrollY'] = 205;
-    const element = document.querySelector<HTMLElement>('.demo-layer-1');
-    pushIn['setLayerStyle'](pushIn['layers'][0]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 205;
+    mockPushInLayer['setLayerStyle']();
     const result = element.style.opacity;
 
     expect(result).toEqual('1');
   });
 
   it('should set opacity to 1 if its the last layer and the scroll position is after its outpoint', () => {
-    pushIn['scrollY'] = 1300;
-    const element = document.querySelector<HTMLElement>('.demo-layer-3');
-    pushIn['setLayerStyle'](pushIn['layers'][2]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 600;
+    mockPushInLayer['index'] = 2;
+    mockPushInLayer['setLayerStyle']();
 
     const result = element.style.opacity;
 
@@ -92,9 +99,9 @@ describe('setLayerStyle', () => {
   });
 
   it('should set opacity to 1 if its the last layer and it is active', () => {
-    pushIn['scrollY'] = 1195;
-    const element = document.querySelector<HTMLElement>('.demo-layer-3');
-    pushIn['setLayerStyle'](pushIn['layers'][2]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 450;
+    mockPushInLayer['index'] = 2;
+    mockPushInLayer['setLayerStyle']();
 
     const result = element.style.opacity;
 
@@ -102,10 +109,9 @@ describe('setLayerStyle', () => {
   });
 
   it('should set opacity to 0 if its a middle layer and scroll position is exactly equal to its inpoint', () => {
-    pushIn['scrollY'] = 500;
-    const element = document.querySelector<HTMLElement>('.demo-layer-2');
-
-    pushIn['setLayerStyle'](pushIn['layers'][1]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 200;
+    mockPushInLayer['index'] = 1;
+    mockPushInLayer['setLayerStyle']();
 
     const result = element.style.opacity;
 
@@ -113,10 +119,9 @@ describe('setLayerStyle', () => {
   });
 
   it('should set opacity to 0.5 if its a middle layer and scroll position is 100px from its inpoint', () => {
-    pushIn['scrollY'] = 600;
-    const element = document.querySelector<HTMLElement>('.demo-layer-2');
-
-    pushIn['setLayerStyle'](pushIn['layers'][1]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 300;
+    mockPushInLayer['index'] = 1;
+    mockPushInLayer['setLayerStyle']();
 
     const result = element.style.opacity;
 
@@ -124,10 +129,9 @@ describe('setLayerStyle', () => {
   });
 
   it('should set opacity to 0 if its a middle layer and scroll position is exactly equal to its outpoint', () => {
-    pushIn['scrollY'] = 800;
-    const element = document.querySelector<HTMLElement>('.demo-layer-2');
-
-    pushIn['setLayerStyle'](pushIn['layers'][1]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 500;
+    mockPushInLayer['index'] = 1;
+    mockPushInLayer['setLayerStyle']();
 
     const result = element.style.opacity;
 
@@ -135,10 +139,9 @@ describe('setLayerStyle', () => {
   });
 
   it('should set opacity to 0.5 if its a middle layer and scroll position is 100px from its outpoint', () => {
-    pushIn['scrollY'] = 700;
-    const element = document.querySelector<HTMLElement>('.demo-layer-2');
-
-    pushIn['setLayerStyle'](pushIn['layers'][1]);
+    mockPushInLayer['scene']['pushin']['scrollY'] = 400;
+    mockPushInLayer['index'] = 1;
+    mockPushInLayer['setLayerStyle']();
 
     const result = element.style.opacity;
 
