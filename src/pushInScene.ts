@@ -10,7 +10,6 @@ import { LayerOptions, SceneOptions } from './types';
 
 export class PushInScene {
   private container: HTMLElement;
-  private readonly cleanupFns: VoidFunction[] = [];
   public layers: PushInLayer[];
   public speedDelta: number;
   public transitionLength: number;
@@ -30,7 +29,7 @@ export class PushInScene {
       this.container.innerHTML = this.pushin.container.innerHTML;
       this.pushin.container.innerHTML = '';
       this.pushin.container.appendChild(this.container);
-      this.cleanupFns.push(() => {
+      this.pushin.cleanupFns.push(() => {
         this.pushin.container.innerHTML = this.container.innerHTML;
       });
     }

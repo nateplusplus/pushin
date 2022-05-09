@@ -20,7 +20,7 @@ export class PushIn {
   private readonly debug: boolean;
 
   private lastAnimationFrameId = -1;
-  private readonly cleanupFns: VoidFunction[] = [];
+  public cleanupFns: VoidFunction[] = [];
 
   constructor(public container: HTMLElement, options?: PushInOptions) {
     this.debug = options?.debug ?? false;
