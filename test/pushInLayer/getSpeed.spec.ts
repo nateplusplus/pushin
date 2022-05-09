@@ -1,6 +1,6 @@
-import { setupJSDOM } from './setup';
-import { PushInLayer } from '../src/pushInLayer';
-import { DEFAULT_SPEED } from '../src/constants';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
+import { DEFAULT_SPEED } from '../../src/constants';
 
 describe('getSpeed', () => {
   let mockPushInLayer: PushInLayer;

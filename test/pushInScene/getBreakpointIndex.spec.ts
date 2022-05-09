@@ -1,5 +1,5 @@
-import { setupJSDOM } from './setup';
-import { PushInScene } from '../src/pushinScene';
+import { setupJSDOM } from '../setup';
+import { PushInScene } from '../../src/pushInScene';
 
 describe('getBreakpointIndex', () => {
   beforeEach(() => {

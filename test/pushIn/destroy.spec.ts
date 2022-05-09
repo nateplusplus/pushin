@@ -1,5 +1,5 @@
-import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { setupJSDOM } from '../setup';
+import { PushIn } from '../../src/pushin';
 
 describe('destroy', () => {
   let textContent: string;

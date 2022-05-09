@@ -1,10 +1,10 @@
-import { setupJSDOM } from './setup';
-import { PushInLayer } from '../src/pushInLayer';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
 
 describe('getElementScaleX', () => {
   let element: HTMLElement;
   let mockPushInLayer: PushInLayer;
-  jest.mock('../src/pushInLayer', () => jest.fn());
+  jest.mock('../../src/pushInLayer', () => jest.fn());
 
   beforeEach(() => {
     setupJSDOM(`
@@ -18,8 +18,6 @@ describe('getElementScaleX', () => {
     mockPushInLayer = Object.create(PushInLayer.prototype);
     mockPushInLayer['element'] = element;
   });
-
-  // afterEach(() => pushInLayer.destroy());
 
   it('Should return default element scale if never altered', () => {
     const result = mockPushInLayer['getElementScaleX'](element);

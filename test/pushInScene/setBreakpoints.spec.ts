@@ -1,7 +1,7 @@
-import { setupJSDOM } from './setup';
-import { PushInScene } from '../src/pushInScene';
-import { SceneOptions } from '../src/types';
-import { PUSH_IN_DEFAULT_BREAKPOINTS } from '../src/constants';
+import { setupJSDOM } from '../setup';
+import { PushInScene } from '../../src/pushInScene';
+import { SceneOptions } from '../../src/types';
+import { PUSH_IN_DEFAULT_BREAKPOINTS } from '../../src/constants';
 
 describe('setBreakpoints', () => {
   let mockPushInScene: PushInScene;

@@ -102,7 +102,7 @@ export class PushInScene {
   }
 
   getInpoints(): number[] {
-    let inpoints = <number[]>[];
+    let inpoints = <number[]>[this.getTop()];
 
     if (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       const pushInFrom = <string>(

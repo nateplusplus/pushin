@@ -1,7 +1,7 @@
-import { setupJSDOM } from './setup';
-import { PushInScene } from '../src/pushInScene';
-import { PushInLayer } from '../src/pushInLayer';
-jest.mock('../src/pushInLayer');
+import { setupJSDOM } from '../setup';
+import { PushInScene } from '../../src/pushInScene';
+import { PushInLayer } from '../../src/pushInLayer';
+jest.mock('../../src/pushInLayer');
 
 describe('getLayers', () => {
   let mockPushInScene: PushInScene;

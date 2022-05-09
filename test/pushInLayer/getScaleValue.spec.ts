@@ -1,8 +1,8 @@
-import { setupJSDOM } from './setup';
-import { PushInLayer } from '../src/pushInLayer';
-import { PushInScene } from '../src/pushInScene';
-import { PushIn } from '../src/pushin';
-import { LayerParams } from '../src/types';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
+import { PushInScene } from '../../src/pushInScene';
+import { PushIn } from '../../src/pushin';
+import { LayerParams } from '../../src/types';
 
 describe('getScaleValue', () => {
   let layerMock: PushInLayer;

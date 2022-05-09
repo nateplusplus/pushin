@@ -1,5 +1,5 @@
-import { setupJSDOM } from './setup';
-import { PushInLayer } from '../src/pushInLayer';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
 
 describe('setScale', () => {
   beforeEach(() => {

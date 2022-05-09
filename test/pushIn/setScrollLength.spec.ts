@@ -1,7 +1,7 @@
-import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
-import { PushInLayer } from '../src/pushInLayer';
-import { PushInScene } from '../src/pushInScene';
+import { setupJSDOM } from '../setup';
+import { PushIn } from '../../src/pushin';
+import { PushInLayer } from '../../src/pushInLayer';
+import { PushInScene } from '../../src/pushInScene';
 
 describe('setScrollLength', () => {
   let mockPushIn: PushIn;
@@ -24,6 +24,11 @@ describe('setScrollLength', () => {
         speedDelta: 100,
         layerDepth: 100,
         transitionLength: 100,
+        layers: [
+          Object.create(PushInLayer.prototype),
+          Object.create(PushInLayer.prototype),
+          Object.create(PushInLayer.prototype),
+        ]
       }
     );
 
@@ -32,11 +37,6 @@ describe('setScrollLength', () => {
       mockPushIn,
       {
         container,
-        layers: [
-          Object.create(PushInLayer.prototype),
-          Object.create(PushInLayer.prototype),
-          Object.create(PushInLayer.prototype),
-        ],
         scene: mockScene
       }
     );

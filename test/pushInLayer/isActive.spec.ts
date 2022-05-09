@@ -1,8 +1,8 @@
-import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
-import { PushInLayer } from '../src/pushInLayer';
-import { PushInScene } from '../src/pushInScene';
-import { LayerParams } from '../src/types';
+import { setupJSDOM } from '../setup';
+import { PushIn } from '../../src/pushin';
+import { PushInLayer } from '../../src/pushInLayer';
+import { PushInScene } from '../../src/pushInScene';
+import { LayerParams } from '../../src/types';
 
 describe('isActive', () => {
   let mockPushInLayer: PushInLayer;

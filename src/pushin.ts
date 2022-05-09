@@ -111,7 +111,7 @@ export class PushIn {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = window.setTimeout(() => {
-        this.layers.forEach(layer => layer.resetLayerParams());
+        this.scene.layers.forEach(layer => layer.resetLayerParams());
         this.setScrollLength();
         this.toggleLayers();
       }, 300);
@@ -135,7 +135,7 @@ export class PushIn {
    * Show or hide layers and set their scale, depending on if active.
    */
   private toggleLayers(): void {
-    this.layers.forEach(layer => layer.setLayerStyle());
+    this.scene.layers.forEach(layer => layer.setLayerStyle());
   }
 
   /**
@@ -153,9 +153,9 @@ export class PushIn {
       ''
     );
 
-    const transitions = (this.layers.length - 1) * this.scene.speedDelta;
+    const transitions = (this.scene.layers.length - 1) * this.scene.speedDelta;
     const scrollLength =
-      this.layers.length *
+      this.scene.layers.length *
       (this.scene.layerDepth + this.scene.transitionLength);
 
     this.container.style.height = `${Math.max(

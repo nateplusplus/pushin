@@ -1,6 +1,6 @@
-import { setupJSDOM } from './setup';
-import { PushInLayer } from '../src/pushInLayer';
-import { PushInScene } from '../src/pushInScene';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
+import { PushInScene } from '../../src/pushInScene';
 
 describe('getInpoints', () => {
   let mockPushInLayer: PushInLayer;
