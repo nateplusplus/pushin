@@ -1,8 +1,10 @@
-import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
+import { PushInScene } from '../../src/pushInScene';
 
 describe('getInpoints', () => {
-  let pushIn: PushIn;
+  let mockPushInLayer: PushInLayer;
+  let mockPushInScene: PushInScene;
 
   beforeEach(() => {
     setupJSDOM(`
@@ -19,56 +21,46 @@ describe('getInpoints', () => {
             </body>
         </html>`);
 
-    pushIn = new PushIn(null);
-    pushIn['scene'] = document.querySelector('.pushin-scene');
-    pushIn['scene'].getBoundingClientRect = () => {
-      return { top: 10 } as unknown as DOMRect;
+    const mockLayer1 = Object.create(PushInLayer.prototype);
+    mockLayer1['params'] = {
+      outpoint: 1000,
     };
-    pushIn['speedDelta'] = 100;
 
-    (pushIn as any).layers = [
+    mockPushInScene = Object.create(PushInScene.prototype);
+    mockPushInScene['getTop'] = () => 0;
+    mockPushInScene['getInpoints'] = () => [10];
+    mockPushInScene['layers'] = [
       null,
       null,
-      {
-        params: {
-          outpoint: 1000,
-        },
-      },
+      mockLayer1
     ];
-  });
+    mockPushInScene['speedDelta'] = 100;
 
-  afterEach(() => pushIn.destroy());
-
-  it('Should return scene[pushinFrom] value, if available for first layer', () => {
-    // const scene = document.querySelector( '.pushin-scene' );
-    pushIn['scene'].setAttribute('data-pushin-from', '30');
-
-    const elem = document.querySelector<HTMLElement>('#layer-0');
-    const result = pushIn['getInpoints'](elem, 0);
-    expect(result).toEqual([30]);
+    mockPushInLayer = Object.create(PushInLayer.prototype);
+    mockPushInLayer['scene'] = mockPushInScene;
   });
 
   it('Should return scene top value as the default for first layer', () => {
     const elem = document.querySelector<HTMLElement>('#layer-0');
-    const result = pushIn['getInpoints'](elem, 0);
+    const result = mockPushInLayer['getInpoints'](elem, 0);
     expect(result).toEqual([10]);
   });
 
   it('Should return value provided by data attribute', () => {
     const elem = document.querySelector<HTMLElement>('#layer-1');
-    const result = pushIn['getInpoints'](elem, 1);
+    const result = mockPushInLayer['getInpoints'](elem, 1);
     expect(result).toEqual([300]);
   });
 
   it('Should return array of values provided by data attribute', () => {
     const elem = document.querySelector<HTMLElement>('#layer-2');
-    const result = pushIn['getInpoints'](elem, 2);
+    const result = mockPushInLayer['getInpoints'](elem, 2);
     expect(result).toEqual([300, 500]);
   });
 
   it('Should return generated value based on previous layer outpoint', () => {
     const elem = document.querySelector<HTMLElement>('#layer-3');
-    const result = pushIn['getInpoints'](elem, 3);
+    const result = mockPushInLayer['getInpoints'](elem, 3);
     expect(result).toEqual([900]);
   });
 });

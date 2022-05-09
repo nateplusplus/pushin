@@ -54,7 +54,7 @@ const config: Config.InitialOptions = {
   /**
    * The glob patterns Jest uses to detect test files.
    */
-  testMatch: ['<rootDir>/test/*.spec.ts'],
+  testMatch: ['<rootDir>/test/**/*.spec.ts'],
 
   /**
    * Indicates whether each individual test should be reported during the run.

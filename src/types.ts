@@ -5,8 +5,12 @@ export interface LayerOptions {
 }
 
 export interface SceneOptions {
+  speedDelta?: number;
+  layerDepth?: number;
+  transitionLength?: number;
   breakpoints: number[];
   inpoints: number[];
+  layers?: LayerOptions[];
 }
 
 export interface PushInOptions {
@@ -19,14 +23,16 @@ export interface PushInLayer {
   element: HTMLElement;
   index: number;
   originalScale: number;
-  ref: {
-    inpoints: number[];
-    outpoints: number[];
-    speed: number;
-  };
-  params: {
-    inpoint: number;
-    outpoint: number;
-    speed: number;
-  };
+}
+
+export interface LayerRef {
+  inpoints: number[];
+  outpoints: number[];
+  speed: number;
+}
+
+export interface LayerParams {
+  inpoint: number;
+  outpoint: number;
+  speed: number;
 }
