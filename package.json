@@ -30,7 +30,7 @@
     "docs": "webpack --mode=production",
     "start": "webpack serve --mode=development",
     "test:watch": "jest --watch",
-    "coverage": "jest --coverage",
+    "coverage": "jest --coverage && open coverage/lcov-report/index.html -a 'Google Chrome'",
     "test": "jest --run-in-band",
     "prepack": "clean-package",
     "postpack": "clean-package restore",

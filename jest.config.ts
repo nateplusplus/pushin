@@ -42,7 +42,10 @@ const config: Config.InitialOptions = {
    * coverage information will be collected for it even if no tests exist for this file and
    * it's never required in the test suite.
    */
-  collectCoverageFrom: ['test/*.spec.ts'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/index.ts|src/constants.ts|src/helpers.ts',
+  ],
 
   /**
    * A list of reporter names that Jest uses when writing coverage reports.
