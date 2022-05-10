@@ -1,4 +1,4 @@
-import { PushInOptions } from './types';
+import { PushInOptions, SceneOptions } from './types';
 /**
  * PushIn object
  *
@@ -6,16 +6,15 @@ import { PushInOptions } from './types';
  * bind events to begin interacting with dom.
  */
 export declare class PushIn {
-    private container;
+    container: HTMLElement;
     private scene;
     private pushinDebug?;
-    private layerOptions;
-    public sceneOptions;
-    public scrollY;
+    sceneOptions: SceneOptions;
+    scrollY: number;
     private readonly layers;
     private readonly debug;
     private lastAnimationFrameId;
-    public cleanupFns;
+    cleanupFns: VoidFunction[];
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
