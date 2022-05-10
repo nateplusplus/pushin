@@ -1,8 +1,8 @@
-import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { setupJSDOM } from '../setup';
+import { PushInLayer } from '../../src/pushInLayer';
 
 describe('setZIndex', () => {
-  let pushIn: PushIn;
+  let mockPushInLayer: PushInLayer;
 
   beforeEach(() => {
     setupJSDOM(`
@@ -18,24 +18,14 @@ describe('setZIndex', () => {
             </body>
         </html>`);
 
-    const container = document.querySelector<HTMLElement>('.pushin');
-    pushIn = new PushIn(container);
+    mockPushInLayer = Object.create(PushInLayer.prototype);
+    mockPushInLayer['element'] = document.querySelector('#layer-1');
+    mockPushInLayer['index'] = 1;
   });
 
-  afterEach(() => pushIn.destroy());
-
   it('Should return the difference between the total number of layers and the current layer index', () => {
-    const mockLayer: any = {
-      element: {
-        style: {
-          zIndex: null,
-        },
-      },
-      index: 1,
-    };
-
-    pushIn['setZIndex'](mockLayer, 10);
-    const result = mockLayer.element.style.zIndex;
-    expect(result).toEqual('9');
+    mockPushInLayer['setZIndex'](3);
+    const result = mockPushInLayer['element'].style.zIndex;
+    expect(result).toEqual('2');
   });
 });

@@ -10,3 +10,5 @@ export const PUSH_IN_SPEED_DATA_ATTRIBUTE = 'pushinSpeed';
 
 export const PUSH_IN_TO_DATA_ATTRIBUTE = 'pushinTo';
 export const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
+
+export const PUSH_IN_DEFAULT_BREAKPOINTS = [768, 1440, 1920];

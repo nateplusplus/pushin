@@ -1,9 +1,7 @@
-import { setupJSDOM } from './setup';
-import { PushIn } from '../src/pushin';
+import { setupJSDOM } from '../setup';
+import { PushInScene } from '../../src/pushInScene';
 
 describe('getBreakpointIndex', () => {
-  let pushIn: PushIn;
-
   beforeEach(() => {
     setupJSDOM(`
         <!DOCTYPE html>
@@ -13,23 +11,17 @@ describe('getBreakpointIndex', () => {
                 </div>
             </body>
         </html>`);
-
     const container = document.querySelector<HTMLElement>('.pushin');
-    pushIn = new PushIn(container);
-    pushIn['sceneOptions'].breakpoints = [0, 768, 1440, 1920];
   });
 
-  afterEach(() => pushIn.destroy());
-
   it('Should return 0 by default', () => {
-    pushIn['sceneOptions'].breakpoints = [];
-    const result = pushIn['getBreakpointIndex']();
+    const result = PushInScene.prototype.getBreakpointIndex([]);
     expect(result).toEqual(0);
   });
 
   it('Should return the index of the nearest breakpoint that is less than current window width', () => {
     window.innerWidth = 800;
-    const result = pushIn['getBreakpointIndex']();
+    const result = PushInScene.prototype.getBreakpointIndex([0, 768, 1440, 1920]);
     expect(result).toEqual(1);
   });
 });
