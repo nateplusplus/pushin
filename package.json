@@ -8,6 +8,7 @@
   "typings": "dist/esm/index.d.ts",
   "unpkg": "dist/umd/pushin.min.js",
   "exports": {
+    ".": "./dist/umd/pushin.js",
     "./pushin.css": {
       "style": "./dist/pushin.css"
     }
