@@ -7,10 +7,11 @@
   "main": "dist/umd/pushin.js",
   "typings": "dist/esm/index.d.ts",
   "unpkg": "dist/umd/pushin.min.js",
+  "jsdelivr": "dist/umd/pushin.min.js",
   "exports": {
-    ".": "./dist/esm/pushin.js",
-    "./pushin.css": {
-      "style": "./dist/pushin.css"
+    ".": {
+      "import": "./dist/esm/pushin.js",
+      "require": "./dist/umd/pushin.js"
     }
   },
   "files": [
