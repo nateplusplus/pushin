@@ -8,12 +8,6 @@
   "typings": "dist/esm/index.d.ts",
   "unpkg": "dist/umd/pushin.min.js",
   "jsdelivr": "dist/umd/pushin.min.js",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/pushin.js",
-      "require": "./dist/umd/pushin.js"
-    }
-  },
   "files": [
     "dist",
     "LICENSE",
