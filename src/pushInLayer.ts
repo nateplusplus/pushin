@@ -3,6 +3,7 @@ import {
   PUSH_IN_TO_DATA_ATTRIBUTE,
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_SPEED_DATA_ATTRIBUTE,
+  PUSH_IN_INTERACTIVE_DATA_ATTRIBUTE,
 } from './constants';
 import { PushInScene } from './pushInScene';
 
@@ -22,14 +23,16 @@ export class PushInLayer {
     const inpoints = this.getInpoints(this.element, this.index);
     const outpoints = this.getOutpoints(this.element, inpoints[0]);
     const speed = this.getSpeed(this.element);
+    const interactive = this.getInteractive(this.element);
 
     this.originalScale = this.getElementScaleX(element);
-    this.ref = { inpoints, outpoints, speed };
+    this.ref = { inpoints, outpoints, speed, interactive };
 
     this.params = {
       inpoint: this.getInpoint(inpoints),
       outpoint: this.getOutpoint(outpoints),
       speed,
+      interactive,
     };
   }
 
@@ -90,6 +93,22 @@ export class PushInLayer {
   }
 
   /**
+   * Get the interaction status for the layer.
+   */
+  private getInteractive(element: HTMLElement): boolean {
+    let interactive = false;
+
+    if (element.dataset[PUSH_IN_INTERACTIVE_DATA_ATTRIBUTE]) {
+      interactive =
+        element.dataset[PUSH_IN_INTERACTIVE_DATA_ATTRIBUTE] === 'true';
+    } else if (this.options?.interactive) {
+      interactive = this.options.interactive;
+    }
+
+    return interactive;
+  }
+
+  /**
    * Set the z-index of each layer so they overlap correctly.
    */
   setZIndex(total: number): void {
@@ -107,6 +126,7 @@ export class PushInLayer {
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
       speed: this.ref.speed,
+      interactive: this.ref.interactive,
     };
   }
 
@@ -195,8 +215,7 @@ export class PushInLayer {
     let opacity = 0;
     const isFirst = this.index === 0;
     const isLast = this.index + 1 === this.scene.layers.length;
-    const { inpoint } = this.params;
-    const { outpoint } = this.params;
+    const { inpoint, outpoint, interactive } = this.params;
 
     if (isFirst && this.scene.pushin.scrollY < inpoint) {
       opacity = 1;
@@ -235,6 +254,9 @@ export class PushInLayer {
 
       opacity = Math.min(inpointDistance, outpointDistance);
     }
+
+    this.element.style.pointerEvents =
+      interactive && opacity > 0 ? 'auto' : 'none';
 
     this.element.style.opacity = opacity.toString();
   }

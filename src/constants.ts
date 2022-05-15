@@ -8,6 +8,10 @@ export const PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE = 'pushinBreakpoints';
 // `<div data-pushin-speed="6"></div>`.
 export const PUSH_IN_SPEED_DATA_ATTRIBUTE = 'pushinSpeed';
 
+// The data attribute which may be defined on the elemenet in the following way:
+// `<div data-pushin-interactive="true"></div>`.
+export const PUSH_IN_INTERACTIVE_DATA_ATTRIBUTE = 'pushinInteractive';
+
 export const PUSH_IN_TO_DATA_ATTRIBUTE = 'pushinTo';
 export const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
 
