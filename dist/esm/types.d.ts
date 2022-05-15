@@ -2,7 +2,6 @@ export interface LayerOptions {
     inpoints: number[];
     outpoints: number[];
     speed: number;
-    interactive: boolean;
 }
 export interface SceneOptions {
     speedDelta?: number;
@@ -26,11 +25,9 @@ export interface LayerRef {
     inpoints: number[];
     outpoints: number[];
     speed: number;
-    interactive: boolean;
 }
 export interface LayerParams {
     inpoint: number;
     outpoint: number;
     speed: number;
-    interactive: boolean;
 }

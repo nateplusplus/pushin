@@ -22,10 +22,6 @@ export declare class PushInLayer {
      */
     private getSpeed;
     /**
-     * Get the interaction status for the layer.
-     */
-    private getInteractive;
-    /**
      * Set the z-index of each layer so they overlap correctly.
      */
     setZIndex(total: number): void;
