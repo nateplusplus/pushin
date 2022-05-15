@@ -7,16 +7,12 @@
   "main": "dist/umd/pushin.js",
   "typings": "dist/esm/index.d.ts",
   "unpkg": "dist/umd/pushin.min.js",
-  "exports": {
-    ".": "./dist/esm/pushin.js",
-    "./pushin.css": {
-      "style": "./dist/pushin.css"
-    }
-  },
+  "jsdelivr": "dist/umd/pushin.min.js",
   "files": [
     "dist",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "src"
   ],
   "engines": {
     "node": ">= 16.0.0"

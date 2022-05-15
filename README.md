@@ -18,33 +18,29 @@ PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io
 
 ## Getting started
 
-### 1a. Install pushin with NPM
+### 1. Install pushin with NPM or a CDN
 
 If you're using npm, you can install the package by running:
 
-```bash
+```
 npm install --save pushin
 ```
 
-Then, in your Javascript, you can import the `PushIn` class:
+Import assets into your javascript (if using Webpack) or directly into your CSS files.
 
 ```js
-import { PushIn } from 'pushin';
+// webpack
+import 'pushin/dist/pushin.css';
 ```
 
-And also require assets in your CSS:
+~ _or_ ~
 
 ```css
-@import 'pushin/pushin.css';
+/* css */
+@import 'node_modules/pushin/dist/pushin.css';
 ```
 
-- _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
-
-### 1b. Use the CDN
-
-If you're not using npm, you can use the CDN instead. These two files will include all the functionality for the effect.
-
-**Example:**
+**Alternatively, you can use the CDN:**
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/pushin/dist/pushin.min.css" />
@@ -100,8 +96,6 @@ To assist in setting up your effect, you can use the debug tool to easily deteri
 
 See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
 
-**Example:**
-
 ```js
 import 'pushin';
 
@@ -114,12 +108,13 @@ pushInStart({ debug: true });
 The `PushIn` has a `destroy()` method that may be called to do all cleanups once the view is destroyed. For instance, this is how you would want to do this in React:
 
 ```jsx
+import React, { useLayoutEffect, useRef } from 'react';
 import { PushIn } from 'pushin';
 
 export default function PushInComponent() {
   const pushInContainer = useRef();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const pushIn = new PushIn(pushInContainer.current);
     pushIn.start();
 
@@ -127,10 +122,10 @@ export default function PushInComponent() {
   });
 
   return (
-    <div class="pushin" {ref}="pushInContainer">
-      <div class="pushin-scene">
-        <div class="pushin-layer">This is the first layer you'll see.</div>
-        <div class="pushin-layer">
+    <div className="pushin" ref={pushInContainer}>
+      <div className="pushin-scene">
+        <div className="pushin-layer">This is the first layer you'll see.</div>
+        <div className="pushin-layer">
           This is a second layer, which will be positioned behind the first one.
         </div>
       </div>
