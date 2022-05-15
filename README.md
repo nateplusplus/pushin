@@ -22,7 +22,7 @@ PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io
 
 If you're using npm, you can install the package by running:
 
-```bash
+```
 npm install --save pushin
 ```
 
@@ -108,12 +108,13 @@ pushInStart({ debug: true });
 The `PushIn` has a `destroy()` method that may be called to do all cleanups once the view is destroyed. For instance, this is how you would want to do this in React:
 
 ```jsx
+import React, { useLayoutEffect, useRef } from 'react';
 import { PushIn } from 'pushin';
 
 export default function PushInComponent() {
   const pushInContainer = useRef();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const pushIn = new PushIn(pushInContainer.current);
     pushIn.start();
 
@@ -121,10 +122,10 @@ export default function PushInComponent() {
   });
 
   return (
-    <div class="pushin" {ref}="pushInContainer">
-      <div class="pushin-scene">
-        <div class="pushin-layer">This is the first layer you'll see.</div>
-        <div class="pushin-layer">
+    <div className="pushin" ref={pushInContainer}>
+      <div className="pushin-scene">
+        <div className="pushin-layer">This is the first layer you'll see.</div>
+        <div className="pushin-layer">
           This is a second layer, which will be positioned behind the first one.
         </div>
       </div>
