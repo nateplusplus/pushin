@@ -18,7 +18,7 @@ PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io
 
 ## Getting started
 
-### 1a. Install pushin with NPM
+### 1. Install pushin with NPM or a CDN
 
 If you're using npm, you can install the package by running:
 
@@ -26,25 +26,21 @@ If you're using npm, you can install the package by running:
 npm install --save pushin
 ```
 
-Then, in your Javascript, you can import the `PushIn` class:
+Import assets into your javascript (if using Webpack) or directly into your CSS files.
 
 ```js
-import { PushIn } from 'pushin';
+// webpack
+import 'pushin/dist/pushin.css';
 ```
 
-And also require assets in your CSS:
+~ _or_ ~
 
 ```css
-@import 'pushin/pushin.css';
+/* css */
+@import 'node_modules/pushin/dist/pushin.css';
 ```
 
-- _**NOTE:** If you don't have a CSS Loader setup, you may not be able to import the CSS this way. If that's the case, you may need to manually download and include the CSS using the instructions in the next step below..._
-
-### 1b. Use the CDN
-
-If you're not using npm, you can use the CDN instead. These two files will include all the functionality for the effect.
-
-**Example:**
+**Alternatively, you can use the CDN:**
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/pushin/dist/pushin.min.css" />
@@ -99,8 +95,6 @@ pushInStart();
 To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
 
 See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
-
-**Example:**
 
 ```js
 import 'pushin';
