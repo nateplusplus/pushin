@@ -70,7 +70,6 @@
     "@typescript-eslint/parser": "^5.18.0",
     "clean-css": "^5.3.0",
     "clean-package": "^2.1.1",
-    "clean-publish": "^4.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "eslint": "^8.10.0",
