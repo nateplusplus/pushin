@@ -26,6 +26,9 @@ export class PushInLayer {
     this.originalScale = this.getElementScaleX(element);
     this.ref = { inpoints, outpoints, speed };
 
+    // Set tabindex so we can sync scrolling with screenreaders
+    this.element.setAttribute('tabindex', '0');
+
     this.params = {
       inpoint: this.getInpoint(inpoints),
       outpoint: this.getOutpoint(outpoints),

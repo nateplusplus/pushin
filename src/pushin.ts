@@ -118,6 +118,14 @@ export class PushIn {
     };
     window.addEventListener('resize', onResize);
     this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
+
+    const onBlur = (event: FocusEvent) => {
+      const target = <HTMLElement>event.target;
+      if (target?.classList && target?.classList.contains('pushin-layer')) {
+        // TODO: Find this layer in the layers array and get the scroll position from it's inpoint, then scroll to that position.
+      }
+    };
+    window.addEventListener('blur', onBlur, true);
   }
 
   /**
