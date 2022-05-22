@@ -240,7 +240,7 @@ export class PushInLayer {
   }
 
   /**
-   * Set the data-pushin-visible attribute depending on current opacity.
+   * Set a css class depending on current opacity.
    */
   setLayerVisibility() {
     if (parseFloat(this.element.style.opacity) > 0.1) {
