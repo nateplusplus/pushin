@@ -3,6 +3,8 @@ import { PushInLayer } from './pushInLayer';
 
 import { PushInOptions, SceneOptions } from './types';
 
+import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
+
 /**
  * PushIn object
  *
@@ -119,13 +121,26 @@ export class PushIn {
     window.addEventListener('resize', onResize);
     this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
 
-    const onBlur = (event: FocusEvent) => {
+    const onFocus = (event: FocusEvent) => {
       const target = <HTMLElement>event.target;
-      if (target?.classList && target?.classList.contains('pushin-layer')) {
-        // TODO: Find this layer in the layers array and get the scroll position from it's inpoint, then scroll to that position.
+      if (
+        'hasAttribute' in target &&
+        target.hasAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE)
+      ) {
+        const index = parseInt(
+          <string>target!.getAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE),
+          10
+        );
+        const layer = this.scene.layers[index];
+        if (layer) {
+          window.scrollTo(
+            0,
+            layer.params.inpoint + layer!.scene!.transitionLength
+          );
+        }
       }
     };
-    window.addEventListener('blur', onBlur, true);
+    window.addEventListener('focus', onFocus, true);
   }
 
   /**
