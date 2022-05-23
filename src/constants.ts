@@ -12,3 +12,5 @@ export const PUSH_IN_TO_DATA_ATTRIBUTE = 'pushinTo';
 export const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
 
 export const PUSH_IN_DEFAULT_BREAKPOINTS = [768, 1440, 1920];
+
+export const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
