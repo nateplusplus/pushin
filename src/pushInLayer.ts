@@ -9,14 +9,14 @@ import { PushInScene } from './pushInScene';
 import { LayerOptions, LayerRef, LayerParams } from './types';
 
 export class PushInLayer {
+  public params: LayerParams;
   private originalScale: number;
   private ref: LayerRef;
-  private params: LayerParams;
 
   constructor(
     private element: HTMLElement,
     private index: number,
-    private scene: PushInScene,
+    public scene: PushInScene,
     private options: LayerOptions | null
   ) {
     const inpoints = this.getInpoints(this.element, this.index);
@@ -25,6 +25,11 @@ export class PushInLayer {
 
     this.originalScale = this.getElementScaleX(element);
     this.ref = { inpoints, outpoints, speed };
+
+    this.element.setAttribute('data-pushin-layer-index', this.index.toString());
+
+    // Set tabindex so we can sync scrolling with screenreaders
+    this.element.setAttribute('tabindex', '0');
 
     this.params = {
       inpoint: this.getInpoint(inpoints),
