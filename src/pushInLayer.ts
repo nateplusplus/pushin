@@ -243,4 +243,15 @@ export class PushInLayer {
 
     this.element.style.opacity = opacity.toString();
   }
+
+  /**
+   * Set a css class depending on current opacity.
+   */
+  setLayerVisibility() {
+    if (parseFloat(this.element.style.opacity) > 0.1) {
+      this.element.classList.add('pushin-layer--visible');
+    } else {
+      this.element.classList.remove('pushin-layer--visible');
+    }
+  }
 }

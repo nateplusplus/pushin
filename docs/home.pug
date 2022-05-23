@@ -62,7 +62,7 @@ block append styles
 
 
 block content
-		header.container-fluid.py-5.bg-white.mt-5.mt-md-0
+		header.container-fluid.py-5.bg-white.mt-5.mt-md-0.position-relative(style="z-index:1")
 			div.row.justify-content-center
 				h1.col-10.col-lg-7.my-4 PushIn.js
 				div.col-10.col-lg-7
@@ -76,7 +76,7 @@ block content
 						li
 							a(href='cat.html') Building scenes with images - The cat
 		main
-			section.pushin.bg-secondary.bg-opacity-25(style="z-index:-1")
+			section.pushin.bg-secondary.bg-opacity-25
 				div.pushin-scene
 					div.pushin-layer
 						div.card.bg-info.bg-gradient.shadow-lg.position-absolute.demo-card-1
@@ -86,10 +86,13 @@ block content
 							div.card-body.fs-1.fw-bold.p-5 Each layer can come into view at different times.
 					div.pushin-layer
 						div.card.bg-gradient.text-light.shadow-lg.position-absolute.demo-card-3
-							div.card-body.fs-1.fw-bold.p-5 Use HTML data-attributes to control the timing and speed of each layer.
+							div.card-body.fs-1.fw-bold.p-5
+								| Use HTML 
+								a(href="https://github.com/nateplusplus/pushin/blob/main/docs/html-attributes.md" target="_blank").text-light data-attributes
+								|  to control the timing and speed of each layer.
 					div.pushin-layer
 						div.position-absolute.fs-1.fw-bold.p-5 PushIn.js
-			section.container-fluid.py-5.bg-white
+			section.container-fluid.py-5.bg-white.position-relative
 				div.row.justify-content-center
 					div.col-10.col-lg-7.pt-4
 						h2 Compatibility
