@@ -1,13 +1,13 @@
 import { PushInScene } from './pushInScene';
-import { LayerOptions } from './types';
+import { LayerOptions, LayerParams } from './types';
 export declare class PushInLayer {
     private element;
     private index;
-    private scene;
+    scene: PushInScene;
     private options;
+    params: LayerParams;
     private originalScale;
     private ref;
-    private params;
     constructor(element: HTMLElement, index: number, scene: PushInScene, options: LayerOptions | null);
     /**
      * Get all inpoints for the layer.
@@ -65,4 +65,8 @@ export declare class PushInLayer {
      * as the user scrolls.
      */
     setLayerStyle(): void;
+    /**
+     * Set a css class depending on current opacity.
+     */
+    setLayerVisibility(): void;
 }

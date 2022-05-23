@@ -1,4 +1,4 @@
-/* Pushin.js - v4.1.2
+/* Pushin.js - v4.1.3
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -17,6 +17,7 @@ License: MIT */
     const PUSH_IN_TO_DATA_ATTRIBUTE = 'pushinTo';
     const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
     const PUSH_IN_DEFAULT_BREAKPOINTS = [768, 1440, 1920];
+    const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
 
     class PushInLayer {
         constructor(element, index, scene, options) {
@@ -29,6 +30,9 @@ License: MIT */
             const speed = this.getSpeed(this.element);
             this.originalScale = this.getElementScaleX(element);
             this.ref = { inpoints, outpoints, speed };
+            this.element.setAttribute('data-pushin-layer-index', this.index.toString());
+            // Set tabindex so we can sync scrolling with screenreaders
+            this.element.setAttribute('tabindex', '0');
             this.params = {
                 inpoint: this.getInpoint(inpoints),
                 outpoint: this.getOutpoint(outpoints),
@@ -203,6 +207,17 @@ License: MIT */
                 opacity = Math.min(inpointDistance, outpointDistance);
             }
             this.element.style.opacity = opacity.toString();
+        }
+        /**
+         * Set a css class depending on current opacity.
+         */
+        setLayerVisibility() {
+            if (parseFloat(this.element.style.opacity) > 0.1) {
+                this.element.classList.add('pushin-layer--visible');
+            }
+            else {
+                this.element.classList.remove('pushin-layer--visible');
+            }
         }
     }
 
@@ -380,6 +395,18 @@ License: MIT */
             };
             window.addEventListener('resize', onResize);
             this.cleanupFns.push(() => window.removeEventListener('resize', onResize));
+            const onFocus = (event) => {
+                const target = event.target;
+                if ('hasAttribute' in target &&
+                    target.hasAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE)) {
+                    const index = parseInt(target.getAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE), 10);
+                    const layer = this.scene.layers[index];
+                    if (layer) {
+                        window.scrollTo(0, layer.params.inpoint + layer.scene.transitionLength);
+                    }
+                }
+            };
+            window.addEventListener('focus', onFocus, true);
         }
         /**
          * Animation effect, mimicking a camera dolly on the webpage.
@@ -394,7 +421,10 @@ License: MIT */
          * Show or hide layers and set their scale, depending on if active.
          */
         toggleLayers() {
-            this.scene.layers.forEach(layer => layer.setLayerStyle());
+            this.scene.layers.forEach(layer => {
+                layer.setLayerStyle();
+                layer.setLayerVisibility();
+            });
         }
         /**
          * Set the default container height based on a few factors:
