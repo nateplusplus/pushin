@@ -78,20 +78,21 @@ block content
 		main
 			section.pushin.bg-secondary.bg-opacity-25
 				div.pushin-scene
-					div.pushin-layer
-						div.card.bg-info.bg-gradient.shadow-lg.position-absolute.demo-card-1
-							div.card-body.fs-1.fw-bold.p-5 Scroll to push in
-					div.pushin-layer
-						div.card.bg-warning.bg-gradient.shadow-lg.position-absolute.demo-card-2
-							div.card-body.fs-1.fw-bold.p-5 Each layer can come into view at different times.
-					div.pushin-layer
-						div.card.bg-gradient.text-light.shadow-lg.position-absolute.demo-card-3
-							div.card-body.fs-1.fw-bold.p-5
-								| Use HTML 
-								a(href="https://github.com/nateplusplus/pushin/blob/main/docs/html-attributes.md" target="_blank").text-light data-attributes
-								|  to control the timing and speed of each layer.
-					div.pushin-layer
-						div.position-absolute.fs-1.fw-bold.p-5 PushIn.js
+					div.pushin-scene-container
+						div.pushin-layer
+							div.card.bg-info.bg-gradient.shadow-lg.position-absolute.demo-card-1
+								div.card-body.fs-1.fw-bold.p-5 Scroll to push in
+						div.pushin-layer
+							div.card.bg-warning.bg-gradient.shadow-lg.position-absolute.demo-card-2
+								div.card-body.fs-1.fw-bold.p-5 Each layer can come into view at different times.
+						div.pushin-layer
+							div.card.bg-gradient.text-light.shadow-lg.position-absolute.demo-card-3
+								div.card-body.fs-1.fw-bold.p-5
+									| Use HTML 
+									a(href="https://github.com/nateplusplus/pushin/blob/main/docs/html-attributes.md" target="_blank").text-light data-attributes
+									|  to control the timing and speed of each layer.
+						div.pushin-layer
+							div.position-absolute.fs-1.fw-bold.p-5 PushIn.js
 			section.container-fluid.py-5.bg-white.position-relative
 				div.row.justify-content-center
 					div.col-10.col-lg-7.pt-4
