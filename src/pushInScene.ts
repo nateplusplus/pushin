@@ -3,18 +3,20 @@ import {
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
   PUSH_IN_DEFAULT_BREAKPOINTS,
 } from './constants';
+import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
 import { LayerOptions, SceneOptions } from './types';
 
 export class PushInScene {
-  private container: HTMLElement;
+  public container: HTMLElement;
   public layers: PushInLayer[];
   public speedDelta: number;
   public transitionLength: number;
   public layerDepth: number;
   public options: SceneOptions;
+  public composition: PushInComposition;
 
   constructor(public pushin: PushIn) {
     const container =
@@ -41,6 +43,8 @@ export class PushInScene {
     this.transitionLength = this.options?.transitionLength || 200;
 
     this.layers = [];
+
+    this.composition = new PushInComposition(this);
 
     this.setBreakpoints();
     this.getLayers();
