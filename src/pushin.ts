@@ -158,7 +158,10 @@ export class PushIn {
    * Show or hide layers and set their scale, depending on if active.
    */
   private toggleLayers(): void {
-    this.scene.layers.forEach(layer => layer.setLayerStyle());
+    this.scene.layers.forEach(layer => {
+      layer.setLayerStyle();
+      layer.setLayerVisibility();
+    });
   }
 
   /**
