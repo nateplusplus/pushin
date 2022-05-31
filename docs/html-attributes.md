@@ -44,6 +44,23 @@ This can be used to specify custom breakpoints for responsive design. The defaul
 
 See a working demo of breakpoints and responsive design here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
 
+### **data-pushin-fixed-ratio**
+
+This can be used to specify the aspect ratio that you want your scene to be. Setting a fixed aspect ratio helps a lot when using absolute positioning on items within your scene. The default ratio is 1:2 because this includes most mobile devices. There can only be one fixed aspect ratio, so it's recommended to compose your scene with the mobile experience in mind.
+
+```html
+<div class="pushin-scene" data-pushin-fixed-ratio="2,3">
+  <div class="pushin-layer">
+    <!--
+        This layer (and all others) will be a fixed
+        aspect ratio of 2:3 on any window size.
+        -->
+  </div>
+</div>
+```
+
+See a working demo of a complex scene that uses a fixed 1:2 ratio here: [Building scenes with images - The cat](http://nateplusplus.github.io/pushin/cat.html)
+
 ---
 
 ## Layer configuration and animation timing

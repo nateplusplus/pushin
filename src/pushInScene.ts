@@ -7,7 +7,7 @@ import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
-import { LayerOptions, SceneOptions } from './types';
+import { LayerOptions, SceneOptions, CompositionOptions } from './types';
 
 export class PushInScene {
   public container: HTMLElement;
@@ -16,7 +16,7 @@ export class PushInScene {
   public transitionLength: number;
   public layerDepth: number;
   public options: SceneOptions;
-  public composition: PushInComposition;
+  public composition?: PushInComposition;
 
   constructor(public pushin: PushIn) {
     const container =
@@ -44,10 +44,33 @@ export class PushInScene {
 
     this.layers = [];
 
-    this.composition = new PushInComposition(this);
+    const compositionOptions = this.getFixedRatio();
+    this.composition = new PushInComposition(this, compositionOptions);
 
     this.setBreakpoints();
     this.getLayers();
+  }
+
+  getFixedRatio() {
+    let options = <CompositionOptions>{
+      isFixed: false,
+    };
+
+    if (this.container.hasAttribute('data-pushin-fixed-ratio')) {
+      const value = this.container.dataset.pushinFixedRatio;
+
+      options = {
+        isFixed: true,
+        ratio: value?.split(',').map(val => parseInt(val, 10)),
+      };
+    } else if (this.options?.fixedRatio) {
+      options = {
+        isFixed: true,
+        ratio: this.options.fixedRatio,
+      };
+    }
+
+    return options;
   }
 
   /**
