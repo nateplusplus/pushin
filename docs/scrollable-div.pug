@@ -1,0 +1,25 @@
+extends layout.pug
+
+block append head
+	title PushIn.js - Examples: Scrollable Div
+
+block append styles
+	style.
+		.box {
+			margin: 60px auto;
+			max-width: 750px;
+			height: 350px;
+			max-height: 100vh;
+			overflow-y: scroll;
+			background-color: #fafafa;
+			outline: 3px dotted #dedede;
+		}
+		.pushin-layer { padding: 0 3em; }
+
+block content
+	div.box
+		div.pushin
+			div.pushin-scene
+				div.pushin-layer This example demonstrates using PushIn.js within a scrollable div.
+				div.pushin-layer Optionally give PushIn an element to attach to.
+				div.pushin-layer All event listeners will be added to the element provided.
