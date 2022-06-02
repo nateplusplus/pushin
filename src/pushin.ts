@@ -102,6 +102,8 @@ export class PushIn {
    * Bind event listeners to watch for page load and user interaction.
    */
   bindEvents(): void {
+    const scrollTarget = this.target ? this.target : window;
+
     const onScroll = () => {
       this.scrollY = this.getScrollY();
       this.dolly();
@@ -117,8 +119,10 @@ export class PushIn {
         }
       }
     };
-    window.addEventListener('scroll', onScroll);
-    this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+    scrollTarget.addEventListener('scroll', onScroll);
+    this.cleanupFns.push(() =>
+      scrollTarget.removeEventListener('scroll', onScroll)
+    );
 
     let resizeTimeout: number;
     const onResize = () => {
