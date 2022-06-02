@@ -50,13 +50,15 @@ export class PushInScene {
   private setSceneClasses() {
     if (this.pushin.target) {
       this.container.classList.add('pushin-scene--with-target');
-      this.pushin.container.style.overflowY = 'scroll';
     }
   }
 
-  public setSceneHeight() {
-    const targetHeight = this.pushin.target?.getBoundingClientRect().height;
-    this.container.style.height = `${targetHeight}px`;
+  public resize() {
+    const sizes = this.pushin.target?.getBoundingClientRect();
+    if (sizes) {
+      this.container.style.height = `${sizes.height}px`;
+      this.container.style.width = `${sizes.width}px`;
+    }
   }
 
   /**

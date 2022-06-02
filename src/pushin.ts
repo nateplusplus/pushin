@@ -53,8 +53,8 @@ export class PushIn {
       this.scene = new PushInScene(this);
 
       this.setScrollLength();
-
-      this.scene.setSceneHeight();
+      this.setTargetOverflow();
+      this.scene.resize();
 
       if (typeof window !== 'undefined') {
         this.bindEvents();
@@ -98,6 +98,12 @@ export class PushIn {
     return scrollY;
   }
 
+  private setTargetOverflow() {
+    if (this.target) {
+      this.target.style.overflowY = 'scroll';
+    }
+  }
+
   /**
    * Bind event listeners to watch for page load and user interaction.
    */
@@ -131,7 +137,7 @@ export class PushIn {
       resizeTimeout = window.setTimeout(() => {
         this.scene.layers.forEach(layer => layer.resetLayerParams());
         this.setScrollLength();
-        this.scene.setSceneHeight();
+        this.scene.resize();
         this.toggleLayers();
       }, 300);
     };

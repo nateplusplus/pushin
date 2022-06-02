@@ -12,9 +12,11 @@
 
 .pushin-scene--with-target {
   top: auto;
+  left: auto;
   height: auto;
-  width: 100%;
+  width: auto;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .pushin-layer {
