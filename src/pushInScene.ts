@@ -42,8 +42,21 @@ export class PushInScene {
 
     this.layers = [];
 
+    this.setSceneClasses();
     this.setBreakpoints();
     this.getLayers();
+  }
+
+  private setSceneClasses() {
+    if (this.pushin.target) {
+      this.container.classList.add('pushin-scene--with-target');
+      this.pushin.container.style.overflowY = 'scroll';
+    }
+  }
+
+  public setSceneHeight() {
+    const targetHeight = this.pushin.target?.getBoundingClientRect().height;
+    this.container.style.height = `${targetHeight}px`;
   }
 
   /**

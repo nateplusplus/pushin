@@ -23,3 +23,11 @@ block content
 				div.pushin-layer This example demonstrates using PushIn.js within a scrollable div.
 				div.pushin-layer Optionally give PushIn an element to attach to.
 				div.pushin-layer All event listeners will be added to the element provided.
+
+block scripts
+	script( defer ).
+		document.addEventListener( 'DOMContentLoaded', function() {
+			pushInStart({
+				target: document.querySelector('.box'),
+			});
+		} );

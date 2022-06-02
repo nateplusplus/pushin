@@ -15,6 +15,7 @@ export interface SceneOptions {
 
 export interface PushInOptions {
   debug?: boolean;
+  target?: HTMLElement;
   layers?: LayerOptions[];
   scene?: SceneOptions;
 }

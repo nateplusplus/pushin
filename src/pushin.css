@@ -1,6 +1,7 @@
 .pushin {
   position: relative;
 }
+
 .pushin-scene {
   height: 100vh;
   left: 0;
@@ -8,6 +9,15 @@
   width: 100%;
   top: 0;
 }
+
+.pushin-scene--with-target {
+  position: fixed;
+  top: auto;
+  height: auto;
+  width: 100%;
+  pointer-events: none;
+}
+
 .pushin-layer {
   align-items: center;
   display: flex;

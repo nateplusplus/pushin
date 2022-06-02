@@ -15,6 +15,7 @@ export class PushIn {
   private scene!: PushInScene;
   private pushinDebug?: HTMLElement;
   public sceneOptions: SceneOptions;
+  public target?: HTMLElement | null;
 
   public scrollY = 0;
 
@@ -34,6 +35,8 @@ export class PushIn {
     if (options?.layers) {
       Object.assign(this.sceneOptions, options.layers);
     }
+
+    this.target = options?.target;
   }
 
   /**
@@ -50,6 +53,8 @@ export class PushIn {
       this.scene = new PushInScene(this);
 
       this.setScrollLength();
+
+      this.scene.setSceneHeight();
 
       if (typeof window !== 'undefined') {
         this.bindEvents();
@@ -83,7 +88,14 @@ export class PushIn {
    * Otherwise default to 0.
    */
   private getScrollY(): number {
-    return typeof window !== 'undefined' ? window.scrollY : 0;
+    let scrollY = 0;
+    if (this.target) {
+      scrollY = this.target.scrollTop;
+    } else if (typeof window !== 'undefined') {
+      scrollY = window.scrollY;
+    }
+
+    return scrollY;
   }
 
   /**
@@ -115,6 +127,7 @@ export class PushIn {
       resizeTimeout = window.setTimeout(() => {
         this.scene.layers.forEach(layer => layer.resetLayerParams());
         this.setScrollLength();
+        this.scene.setSceneHeight();
         this.toggleLayers();
       }, 300);
     };
