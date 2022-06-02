@@ -12,7 +12,7 @@ import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
  * bind events to begin interacting with dom.
  */
 export class PushIn {
-  private scene!: PushInScene;
+  public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
   public sceneOptions: SceneOptions;
 

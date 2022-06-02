@@ -12,22 +12,6 @@ block append styles
 			height: 5000px;
 		}
 
-		.layer-container {
-			position: relative;
-			width: 100%;
-			padding-top: 201%;
-		}
-		.layer-inner {
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
 		.wall {
 			position: absolute;
 			width: 40%;
@@ -94,33 +78,28 @@ block append styles
 block content
 	div.pushin
 		div.pushin-scene
-			div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="1000" data-pushin-speed="80")
-				div.layer-container
-					div.layer-inner
-						div.table
-						div.plant
-							include images/plant.svg
-			div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="16")
-				div.layer-container
-					div.layer-inner
-						div.light
-							include images/light.svg
-						div.chair
-							include images/chair.svg
-						div.tv
-							include images/tv.svg
-			div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="10")
-				div.layer-container
-					div.layer-inner
-						div.sofa
-							include images/livingroom-3.svg
-			div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5200")
-				div.layer-container
-					div.layer-inner
-						div.floor
-			div.pushin-layer.layer-5(data-pushin-from="-200" data-pushin-to="5000")
-				div.layer-container
-					div.layer-inner
-						div.ceiling
-						div.wall
-							include images/livingroom-4.svg
+			div.pushin-composition
+				div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="1000" data-pushin-speed="80")
+					div.table
+					div.plant
+						include images/plant.svg
+
+				div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="16")
+					div.light
+						include images/light.svg
+					div.chair
+						include images/chair.svg
+					div.tv
+						include images/tv.svg
+
+				div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="10")
+					div.sofa
+						include images/livingroom-3.svg
+
+				div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5200")
+					div.floor
+
+				div.pushin-layer.layer-5(data-pushin-from="-200" data-pushin-to="5000")
+					div.ceiling
+					div.wall
+						include images/livingroom-4.svg
