@@ -11,12 +11,13 @@
 }
 
 .pushin-scene--with-target {
-  top: auto;
+  top: 0;
   left: auto;
   height: auto;
   width: auto;
   pointer-events: none;
   overflow: hidden;
+  position: sticky;
 }
 
 .pushin-layer {

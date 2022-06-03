@@ -10,13 +10,21 @@ block append styles
 			max-width: 750px;
 			height: 350px;
 			max-height: 100vh;
-			overflow-y: scroll;
 			background-color: #fafafa;
 			outline: 3px dotted #dedede;
 		}
 		.pushin-layer { padding: 0 3em; }
 
 block content
+	div.container.my-5
+		div.row
+			div.col
+				h1.my-4 Attach PushIn.js to scrollable elements with target.
+				p The original concept of PushIn.js was focused on full-page animations. This approach leans heavily on the window scroll event, and each layer is fixed, meaning it is positioned relative to the viewport instead of being relatively positioned within the page content. This works great for full-page animations but it doesn't work well within the constraints of any sort of page layout.
+				p By providing a "target" element, you can now position the effect within a container on the page. Doing so will attach any scroll events to that target element, and constrain the effect to live within that container.
+				p.mt-5.mb-0.fw-bold Example: 
+				code pushInStart({ target: document.querySelector('.container') });
+				p.mt-5 Below is an example of PushIn.js being applied to a scrollable div element.
 	div.box
 		div.pushin
 			div.pushin-scene
@@ -29,5 +37,6 @@ block scripts
 		document.addEventListener( 'DOMContentLoaded', function() {
 			pushInStart({
 				target: document.querySelector('.box'),
+				debug: true,
 			});
 		} );

@@ -232,6 +232,8 @@ export class PushIn {
     this.pushinDebug.appendChild(scrollTitle);
     this.pushinDebug.appendChild(debuggerContent);
 
-    document.body.appendChild(this.pushinDebug);
+    const target = this.target ?? document.body;
+
+    target.appendChild(this.pushinDebug);
   }
 }
