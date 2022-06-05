@@ -18,7 +18,7 @@ block content
 				| This could interfere with the timing of pushIn.js animations, since it relies directly 
 				| on the window scroll position. This is where specifying different settings per breakpoint
 				| can come in handy.
-	main
+	.target(style="height: 350px").mb-5
 		div.pushin.bg-secondary.bg-opacity-25(style="z-index:-1")
 			div.pushin-scene(data-pushin-breakpoints='768, 1440')
 				div.pushin-layer(data-pushin-from='580,280,200')
@@ -33,5 +33,8 @@ block content
 block scripts
 	script( defer ).
 		document.addEventListener( 'DOMContentLoaded', function() {
-			pushInStart( { debug: true } );
+			pushInStart({
+				debug: true,
+				target: document.querySelector('.target'),
+			});
 		} );
