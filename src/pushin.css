@@ -14,6 +14,16 @@
   height: 100vh;
 }
 
+.pushin-scene--with-target {
+  top: 0;
+  left: auto;
+  height: auto;
+  width: auto;
+  pointer-events: none;
+  overflow: hidden;
+  position: sticky;
+}
+
 .pushin-composition {
   flex: 0 0 100%;
   padding-top: 201%;

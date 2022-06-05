@@ -56,6 +56,11 @@ module.exports = (env, { mode }) => {
         minify: false,
         template: '!!pug-loader!docs/cat.pug',
       }),
+      new HtmlWebpackPlugin({
+        filename: 'scrollable-div.html',
+        minify: false,
+        template: '!!pug-loader!docs/scrollable-div.pug',
+      }),
     ],
     module: {
       rules: [

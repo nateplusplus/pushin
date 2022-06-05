@@ -26,7 +26,10 @@ export class PushInComposition {
     this.setRatio();
   }
 
-  setRatio() {
+  /**
+   * Set the aspect ratio based setting.
+   */
+  setRatio(): void {
     if (this.options?.isFixed && this.options?.ratio) {
       const paddingTop =
         this.options!.ratio.reduce((prev, cur) => cur / prev) * 100;
