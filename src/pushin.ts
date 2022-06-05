@@ -101,6 +101,7 @@ export class PushIn {
   private setTargetOverflow() {
     if (this.target) {
       this.target.style.overflowY = 'scroll';
+      this.target.style.scrollBehavior = 'smooth';
     }
   }
 
@@ -154,12 +155,17 @@ export class PushIn {
           <string>target!.getAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE),
           10
         );
+
         const layer = this.scene.layers[index];
         if (layer) {
-          window.scrollTo(
-            0,
-            layer.params.inpoint + layer!.scene!.transitionLength
-          );
+          const scrollTo =
+            layer.params.inpoint + layer!.scene!.transitionLength;
+
+          if (!this.target) {
+            window.scrollTo(0, scrollTo);
+          } else {
+            this.target.scrollTop = scrollTo;
+          }
         }
       }
     };

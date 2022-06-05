@@ -112,7 +112,11 @@ export class PushInScene {
   }
 
   getTop() {
-    return this.container.getBoundingClientRect().top;
+    let { top } = this.container.getBoundingClientRect();
+    if (this.pushin.target) {
+      top -= this.pushin.target.getBoundingClientRect().top;
+    }
+    return top;
   }
 
   getInpoints(): number[] {
