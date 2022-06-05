@@ -70,7 +70,13 @@ export class PushIn {
     }
   }
 
-  setTarget(options: PushInOptions | undefined) {
+  /**
+   * Set the target parameter and make sure
+   * pushin is always a child of that target.
+   *
+   * @param options
+   */
+  setTarget(options: PushInOptions | undefined): void {
     this.target = options?.target;
 
     if (this.container.hasAttribute('data-pushin-target')) {
@@ -112,7 +118,11 @@ export class PushIn {
     return scrollY;
   }
 
-  private setTargetOverflow() {
+  /**
+   * Set overflow-y and scroll-behavior styles
+   * on the provided target element.
+   */
+  private setTargetOverflow(): void {
     if (this.target) {
       this.target.style.overflowY = 'scroll';
       this.target.style.scrollBehavior = 'smooth';
