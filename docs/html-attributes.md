@@ -4,6 +4,30 @@ HTML attributes can be used to customize the timing and speed at which elements 
 
 ---
 
+## PushIn configuration
+
+Global settings that affect the entire pushin container can be set on the element with the class "pushin".
+
+### **data-pushin-target**
+
+By default, PushIn.js will attach the effect to the viewport and target the window object for any scrolling behaviors.
+
+Alternatively, you can use the `data-pushin-target` attribute to attach the PushIn effect to an element on the page. This will automatically make the element scrollable, and will constrain the effect within it.
+
+To specify a target element, provide any element selector, like in the example below:
+
+```html
+<div class="my-parent">
+  <div class="pushin" data-pushin-target=".my-parent">
+    <!-- ... -->
+  </div>
+</div>
+```
+
+_**NOTE:** If the pushin element is a direct child of this target, it will simply attach the effect as is. If it is not a direct child of the target, it will move pushin into the container in order for the effect to work._
+
+---
+
 ## Scene configuration
 
 The "scene" is the container element for all layers. There are some scene configurations you can customize for your unique project, which will affect all layers.

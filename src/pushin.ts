@@ -36,7 +36,7 @@ export class PushIn {
       Object.assign(this.sceneOptions, options.layers);
     }
 
-    this.target = options?.target;
+    this.setTarget(options);
   }
 
   /**
@@ -67,6 +67,20 @@ export class PushIn {
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
+    }
+  }
+
+  setTarget(options: PushInOptions | undefined) {
+    this.target = options?.target;
+
+    if (this.container.hasAttribute('data-pushin-target')) {
+      const selector = <string>this.container!.dataset!.pushinTarget;
+      this.target = document.querySelector(selector);
+    }
+
+    if (this.target && this.container.parentElement !== this.target) {
+      // Move pushin into the target container
+      this.target.appendChild(this.container);
     }
   }
 
