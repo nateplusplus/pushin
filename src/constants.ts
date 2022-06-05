@@ -14,3 +14,5 @@ export const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
 export const PUSH_IN_DEFAULT_BREAKPOINTS = [768, 1440, 1920];
 
 export const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
+
+export const PUSH_IN_DEFAULT_ASPECT_RATIO = [1, 2];

@@ -3,18 +3,20 @@ import {
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
   PUSH_IN_DEFAULT_BREAKPOINTS,
 } from './constants';
+import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
-import { LayerOptions, SceneOptions } from './types';
+import { LayerOptions, SceneOptions, CompositionOptions } from './types';
 
 export class PushInScene {
-  private container: HTMLElement;
+  public container: HTMLElement;
   public layers: PushInLayer[];
   public speedDelta: number;
   public transitionLength: number;
   public layerDepth: number;
   public options: SceneOptions;
+  public composition?: PushInComposition;
 
   constructor(public pushin: PushIn) {
     const container =
@@ -43,6 +45,9 @@ export class PushInScene {
     this.layers = [];
 
     this.setSceneClasses();
+    const compositionOptions = this.getFixedRatio();
+    this.composition = new PushInComposition(this, compositionOptions);
+
     this.setBreakpoints();
     this.getLayers();
   }
@@ -51,6 +56,28 @@ export class PushInScene {
     if (this.pushin.target) {
       this.container.classList.add('pushin-scene--with-target');
     }
+  }
+
+  private getFixedRatio() {
+    let options = <CompositionOptions>{
+      isFixed: false,
+    };
+
+    if (this.container.hasAttribute('data-pushin-fixed-ratio')) {
+      const value = this.container.dataset.pushinFixedRatio;
+
+      options = {
+        isFixed: true,
+        ratio: value?.split(',').map(val => parseInt(val, 10)),
+      };
+    } else if (this.options?.fixedRatio) {
+      options = {
+        isFixed: true,
+        ratio: this.options.fixedRatio,
+      };
+    }
+
+    return options;
   }
 
   public resize() {

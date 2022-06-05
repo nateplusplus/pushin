@@ -11,6 +11,7 @@ export interface SceneOptions {
   breakpoints: number[];
   inpoints: number[];
   layers?: LayerOptions[];
+  fixedRatio?: number[];
 }
 
 export interface PushInOptions {
@@ -36,4 +37,9 @@ export interface LayerParams {
   inpoint: number;
   outpoint: number;
   speed: number;
+}
+
+export interface CompositionOptions {
+  isFixed: boolean;
+  ratio?: number[];
 }
