@@ -42,24 +42,24 @@ module.exports = (env, { mode }) => {
         template: '!!pug-loader!docs/home.pug',
       }),
       new HtmlWebpackPlugin({
-        filename: 'simple.html',
+        filename: 'examples/simple/index.html',
         minify: false,
         template: '!!pug-loader!docs/simple.pug',
       }),
       new HtmlWebpackPlugin({
-        filename: 'responsive.html',
+        filename: 'examples/responsive/index.html',
         minify: false,
         template: '!!pug-loader!docs/responsive.pug',
       }),
       new HtmlWebpackPlugin({
-        filename: 'cat.html',
+        filename: 'examples/cat/index.html',
         minify: false,
         template: '!!pug-loader!docs/cat.pug',
       }),
       new HtmlWebpackPlugin({
-        filename: 'scrollable-div.html',
+        filename: 'examples/target/index.html',
         minify: false,
-        template: '!!pug-loader!docs/scrollable-div.pug',
+        template: '!!pug-loader!docs/target.pug',
       }),
     ],
     module: {

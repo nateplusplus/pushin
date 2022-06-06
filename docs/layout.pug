@@ -11,7 +11,7 @@ html(lang="en-us")
 			script( src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" )
 
 	body
-		.container-fluid(style="z-index:10" class=(siteNavFullWidth ? 'position-fixed' : ''))
+		.container-fluid(style="z-index:10" class=(siteNavFullWidth ? 'position-fixed top-0' : ''))
 			.row
 				.navbar.bg-light.border-bottom.shadow-sm(style="z-index: 100;" class=(siteNavFullWidth ? '' : 'navbar-expand-lg'))
 					.container
@@ -19,28 +19,31 @@ html(lang="en-us")
 							img(src="/images/pushin-logo-banner.svg" style="height: 50px;")
 						button.navbar-toggler(type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" class=(siteNavFullWidth ? '' : 'd-lg-none'))
 							span Menu
-		.container
+		.container(class=(siteNavFullWidth ? 'mt-5' : ''))
 			.row 
 				.col-12(class=(siteNavFullWidth ? '' : 'col-lg-4'))
 					#site-nav.offcanvas-end(tabindex="-1" class=(siteNavFullWidth ? 'offcanvas' : 'offcanvas-lg'))
 						nav.offcanvas-body
 							block sidebar
 								ul.list-group.list-group-flush.pt-4
+									li.list-group-item.fw-bold Getting Started
+									li.list-group-item.ps-5
+											a(href='/') About PushIn.js 
 									li.list-group-item.fw-bold Examples
 									li.list-group-item.ps-5
-										a(href='simple.html') Simple - Zero configuration
+										a(href='/examples/simple') Simple (no configuration)
 									li.list-group-item.ps-5
-										a(href='responsive.html') Responsive design
+										a(href='/examples/responsive') Responsive design
 									li.list-group-item.ps-5
-										a(href='cat.html') Building a scene with images
+										a(href='/examples/cat') Building a scene with images
 									li.list-group-item.ps-5
-										a(href='scrollable-div.html') Attaching to scrollable elements
+										a(href='/examples/target') Attaching to scrollable elements
 				main.col-12(class=(siteNavFullWidth ? '' : 'col-lg-8'))
 					block content
 		footer.position-fixed.bottom-0.start-0.d-flex.justify-content-end.w-100
 			ul.list-unstyled
 				li
-					a.github-link.d-flex.btn.btn-outline-secondary.pe-4(href="https://github.com/nateplusplus/pushin" style="margin-right: -10px;") 
+					a.github-link.d-flex.btn.btn-outline-secondary.bg-light.pe-4(href="https://github.com/nateplusplus/pushin" style="margin-right: -10px;") 
 						span View on github 
 						span.ps-2(style="width:24px")
 							include images/github.svg
