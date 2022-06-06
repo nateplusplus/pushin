@@ -1,5 +1,6 @@
+block variables
 doctype html
-html
+html(lang="en-us")
 	head
 		block head
 			meta(charset='utf-8')
@@ -10,18 +11,18 @@ html
 			script( src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" )
 
 	body
-		.container-fluid
+		.container-fluid(style="z-index:10" class=(siteNavFullWidth ? 'position-fixed' : ''))
 			.row
-				.navbar.navbar-expand-lg.bg-light.border-bottom.shadow-sm(style="z-index: 100;")
+				.navbar.bg-light.border-bottom.shadow-sm(style="z-index: 100;" class=(siteNavFullWidth ? '' : 'navbar-expand-lg'))
 					.container
 						a.navbar-brand(href="/")
 							img(src="/images/pushin-logo-banner.svg" style="height: 50px;")
-						button.navbar-toggler.d-lg-none(type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav")
+						button.navbar-toggler(type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" class=(siteNavFullWidth ? '' : 'd-lg-none'))
 							span Menu
 		.container
 			.row 
-				.col-12.col-lg-4
-					#site-nav.offcanvas-lg.offcanvas-end(tabindex="-1")
+				.col-12(class=(siteNavFullWidth ? '' : 'col-lg-4'))
+					#site-nav.offcanvas-end(tabindex="-1" class=(siteNavFullWidth ? 'offcanvas' : 'offcanvas-lg'))
 						nav.offcanvas-body
 							block sidebar
 								ul.list-group.list-group-flush.pt-4
@@ -34,7 +35,7 @@ html
 										a(href='cat.html') Building a scene with images
 									li.list-group-item.ps-5
 										a(href='scrollable-div.html') Attaching to scrollable elements
-				main.col-12.col-lg-8
+				main.col-12(class=(siteNavFullWidth ? '' : 'col-lg-8'))
 					block content
 		footer.position-fixed.bottom-0.start-0.d-flex.justify-content-end.w-100
 			ul.list-unstyled
