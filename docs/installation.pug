@@ -1,0 +1,73 @@
+extends layout.pug
+block append head
+	title PushIn.js - Installation
+
+
+block content
+	header.container.py-5.bg-white
+		div.row
+			h1.my-4 Quick Start
+			div
+				p.lead Follow these steps to start using PushIn.js in your project.
+				p For more information, questions, bug reporting or feature requests, checkout the <a href="https://github.com/nateplusplus/pushin" target="_blank">project on GitHub</a>.
+	section.container.mb-5
+		.row 
+			.col
+				h2 Install pushin with NPM or a CDN
+				p If you're using npm, you can install the package by running:
+				pre.bg-dark.bg-gradient.text-light.p-3.rounded
+					code
+						| npm install --save pushin
+		.row 
+			.col
+				p Import assets into your javascript (if using Webpack) or directly into your CSS files.
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						| // webpack
+						| import 'pushin/dist/pushin.css';
+				p ~or~
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						| /* css */
+						| @import 'node_modules/pushin/dist/pushin.css';
+
+		.row 
+			.col 
+				p Alternatively, you can use a CDN:
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						| https://unpkg.com/pushin/dist/pushin.min.css
+						| https://unpkg.com/pushin/dist/umd/pushin.min.js
+		.row.mt-5
+			.col 
+				h2 Insert required HTML structure
+				p At the most basic level, there are a few things you need to set up on your page in order for this to work properly.
+				p Use the following example snippet to create a "scene" for the pushin effect.
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						|&lt;div class="pushin"&gt;
+						|  &lt;div class="pushin-scene"&gt;
+						|    &lt;div class="pushin-layer"&gt;This is the first layer you'll see.&lt;/div&gt;
+						|    &lt;div class="pushin-layer"&gt;
+						|      This is a second layer, which will be positioned behind the first one.
+						|    &lt;/div&gt;
+						|  &lt;/div&gt;
+						|&lt;/div&gt;
+
+		.row.mt-5
+			.col 
+				h2 Initialize the effect
+				p
+					| Once you have your HTML set up, you can initialize the effect with 
+					code pushInStart() 
+					| which is exported to the global scope.
+				p
+					| If using the global scope is not best for your project, you can alternatively call the 
+					code start() 
+					| method: 
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						|import { PushIn } from 'pushin';
+						| 
+						|const container = document.querySelector('.pushin');
+						|new PushIn(container).start();
