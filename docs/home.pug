@@ -6,58 +6,38 @@ block append head
 block append styles
 	style.
 		.demo-card-1 {
+			left: 5%;
 			top: 60%;
-			left: 10%;
 			max-width: 16rem;
 		}
 
 		@media ( min-width: 768px ) {
 			.demo-card-1 {
-				left: 10%;
-				top: 350px;
+				top: 50%;
 				max-width: 19rem;
 			}
 		}
 
 		.demo-card-2 {
-			top: 10px;
-			right: 3%;
+			right: -20%;
+			top: 30%;
 			transform: scale(0.5);
 			max-width: 37.5rem;
 		}
 
 		@media ( min-width: 768px ) {
 			.demo-card-2 {
+				right: 0;
 				top: 40%;
-			}
-		}
-
-		@media ( min-width: 1100px ) {
-			.demo-layer-2-text {
-				right: 15%;
-				top: 15%;
 			}
 		}
 
 		.demo-card-3 {
 			background-color: rgb(116, 61, 187);
 			max-width: 43.75rem;
-			left: -5%;
-			top: 30%;
+			left: 0;
+			top: 40%;
 			transform: scale( 0.5 );
-		}
-
-		@media ( min-width: 768px ) {
-			.demo-card-3 {
-				top: 10%;
-			}
-		}
-
-		@media ( min-width: 1100px ) {
-			.demo-card-3 {
-				top: 20%;
-				left: 5%;
-			}
 		}
 
 
@@ -75,6 +55,8 @@ block content
 							a(href='responsive.html') Responsive design
 						li
 							a(href='cat.html') Building scenes with images - The cat
+						li
+							a(href='scrollable-div.html') Attaching to scrollable elements
 		main
 			section.pushin.bg-secondary.bg-opacity-25
 				div.pushin-scene
@@ -129,6 +111,7 @@ block scripts
 			scene: {
 				breakpoints: [768, 1440, 1920, 2560],
 				inpoints: [200],
+				fixedRatio: [1, 2],
 			},
 			layerOptions: [
 				{ outpoints: [1000] },

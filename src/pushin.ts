@@ -12,9 +12,10 @@ import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
  * bind events to begin interacting with dom.
  */
 export class PushIn {
-  private scene!: PushInScene;
+  public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
   public sceneOptions: SceneOptions;
+  public target?: HTMLElement | null;
 
   public scrollY = 0;
 
@@ -34,6 +35,8 @@ export class PushIn {
     if (options?.layers) {
       Object.assign(this.sceneOptions, options.layers);
     }
+
+    this.setTarget(options);
   }
 
   /**
@@ -50,6 +53,8 @@ export class PushIn {
       this.scene = new PushInScene(this);
 
       this.setScrollLength();
+      this.setTargetOverflow();
+      this.scene.resize();
 
       if (typeof window !== 'undefined') {
         this.bindEvents();
@@ -62,6 +67,26 @@ export class PushIn {
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
+    }
+  }
+
+  /**
+   * Set the target parameter and make sure
+   * pushin is always a child of that target.
+   *
+   * @param options
+   */
+  setTarget(options: PushInOptions | undefined): void {
+    this.target = options?.target;
+
+    if (this.container.hasAttribute('data-pushin-target')) {
+      const selector = <string>this.container!.dataset!.pushinTarget;
+      this.target = document.querySelector(selector);
+    }
+
+    if (this.target && this.container.parentElement !== this.target) {
+      // Move pushin into the target container
+      this.target.appendChild(this.container);
     }
   }
 
@@ -83,13 +108,33 @@ export class PushIn {
    * Otherwise default to 0.
    */
   private getScrollY(): number {
-    return typeof window !== 'undefined' ? window.scrollY : 0;
+    let scrollY = 0;
+    if (this.target) {
+      scrollY = this.target.scrollTop;
+    } else if (typeof window !== 'undefined') {
+      scrollY = window.scrollY;
+    }
+
+    return scrollY;
+  }
+
+  /**
+   * Set overflow-y and scroll-behavior styles
+   * on the provided target element.
+   */
+  private setTargetOverflow(): void {
+    if (this.target) {
+      this.target.style.overflowY = 'scroll';
+      this.target.style.scrollBehavior = 'smooth';
+    }
   }
 
   /**
    * Bind event listeners to watch for page load and user interaction.
    */
   bindEvents(): void {
+    const scrollTarget = this.target ? this.target : window;
+
     const onScroll = () => {
       this.scrollY = this.getScrollY();
       this.dolly();
@@ -105,8 +150,10 @@ export class PushIn {
         }
       }
     };
-    window.addEventListener('scroll', onScroll);
-    this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+    scrollTarget.addEventListener('scroll', onScroll);
+    this.cleanupFns.push(() =>
+      scrollTarget.removeEventListener('scroll', onScroll)
+    );
 
     let resizeTimeout: number;
     const onResize = () => {
@@ -115,6 +162,7 @@ export class PushIn {
       resizeTimeout = window.setTimeout(() => {
         this.scene.layers.forEach(layer => layer.resetLayerParams());
         this.setScrollLength();
+        this.scene.resize();
         this.toggleLayers();
       }, 300);
     };
@@ -131,12 +179,17 @@ export class PushIn {
           <string>target!.getAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE),
           10
         );
+
         const layer = this.scene.layers[index];
         if (layer) {
-          window.scrollTo(
-            0,
-            layer.params.inpoint + layer!.scene!.transitionLength
-          );
+          const scrollTo =
+            layer.params.inpoint + layer!.scene!.transitionLength;
+
+          if (!this.target) {
+            window.scrollTo(0, scrollTo);
+          } else {
+            this.target.scrollTop = scrollTo;
+          }
         }
       }
     };
@@ -209,6 +262,8 @@ export class PushIn {
     this.pushinDebug.appendChild(scrollTitle);
     this.pushinDebug.appendChild(debuggerContent);
 
-    document.body.appendChild(this.pushinDebug);
+    const target = this.target ?? document.body;
+
+    target.appendChild(this.pushinDebug);
   }
 }

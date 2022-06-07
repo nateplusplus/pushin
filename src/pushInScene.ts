@@ -3,18 +3,20 @@ import {
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
   PUSH_IN_DEFAULT_BREAKPOINTS,
 } from './constants';
+import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
-import { LayerOptions, SceneOptions } from './types';
+import { LayerOptions, SceneOptions, CompositionOptions } from './types';
 
 export class PushInScene {
-  private container: HTMLElement;
+  public container: HTMLElement;
   public layers: PushInLayer[];
   public speedDelta: number;
   public transitionLength: number;
   public layerDepth: number;
   public options: SceneOptions;
+  public composition?: PushInComposition;
 
   constructor(public pushin: PushIn) {
     const container =
@@ -42,8 +44,58 @@ export class PushInScene {
 
     this.layers = [];
 
+    this.setSceneClasses();
+    const compositionOptions = this.getFixedRatio();
+    this.composition = new PushInComposition(this, compositionOptions);
+
     this.setBreakpoints();
     this.getLayers();
+  }
+
+  /**
+   * Set scene class names.
+   */
+  private setSceneClasses(): void {
+    if (this.pushin.target) {
+      this.container.classList.add('pushin-scene--with-target');
+    }
+  }
+
+  /**
+   * Get the composition options based on
+   * what has been passed in through the JavaScript API
+   * and/or what has been passed in via HTML data-attributes.
+   *
+   * @returns CompositionOptions
+   */
+  private getFixedRatio(): CompositionOptions {
+    let options = <CompositionOptions>{
+      isFixed: false,
+    };
+
+    if (this.container.hasAttribute('data-pushin-fixed-ratio')) {
+      const value = this.container.dataset.pushinFixedRatio;
+
+      options = {
+        isFixed: true,
+        ratio: value?.split(',').map(val => parseInt(val, 10)),
+      };
+    } else if (this.options?.fixedRatio) {
+      options = {
+        isFixed: true,
+        ratio: this.options.fixedRatio,
+      };
+    }
+
+    return options;
+  }
+
+  public resize() {
+    const sizes = this.pushin.target?.getBoundingClientRect();
+    if (sizes) {
+      this.container.style.height = `${sizes.height}px`;
+      this.container.style.width = `${sizes.width}px`;
+    }
   }
 
   /**
@@ -96,10 +148,28 @@ export class PushInScene {
     return searchIndex === -1 ? 0 : breakpoints.length - 1 - searchIndex;
   }
 
-  getTop() {
-    return this.container.getBoundingClientRect().top;
+  /**
+   * Get the screen-top value of the container.
+   *
+   * If using a target, get the top of the
+   * container relative to the target's top.
+   *
+   * @returns {number}
+   */
+  getTop(): number {
+    let { top } = this.container.getBoundingClientRect();
+    if (this.pushin.target) {
+      top -= this.pushin.target.getBoundingClientRect().top;
+    }
+    return top;
   }
 
+  /**
+   * Get the scene inpoints provided by the JavaScript API
+   * and/or the HTML data-attributes.
+   *
+   * @returns {number[]}
+   */
   getInpoints(): number[] {
     let inpoints = <number[]>[this.getTop()];
 
