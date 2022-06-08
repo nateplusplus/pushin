@@ -73,17 +73,17 @@ export class PushInScene {
       isFixed: false,
     };
 
-    if (this.container.hasAttribute('data-pushin-fixed-ratio')) {
-      const value = this.container.dataset.pushinFixedRatio;
+    if (this.container.hasAttribute('data-pushin-ratio')) {
+      const value = this.container.dataset.pushinRatio;
 
       options = {
         isFixed: true,
         ratio: value?.split(',').map(val => parseInt(val, 10)),
       };
-    } else if (this.options?.fixedRatio) {
+    } else if (this.options?.ratio) {
       options = {
         isFixed: true,
-        ratio: this.options.fixedRatio,
+        ratio: this.options.ratio,
       };
     }
 

@@ -1,0 +1,188 @@
+extends layout.pug
+block append head
+	title PushIn.js - API Reference
+
+
+block content
+	header.container.py-5.bg-white
+		div.row
+			h1.my-4 PushIn API Reference
+			div
+				p For more information, questions, bug reporting or feature requests, checkout the <a href="https://github.com/nateplusplus/pushin" target="_blank">project on GitHub</a>.
+	section.container.mb-5
+		.row 
+			.col
+				h2 PushIn Full HTML Layout
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						|&lt;div class="pushin"&gt;
+						|  &lt;div class="pushin-scene"&gt;
+						|    &lt;div class="pushin-composition"&gt;
+						|      &lt;div class="pushin-layer"&gt;layer 1&lt;/div&gt;
+						|      &lt;div class="pushin-layer"&gt;layer 2&lt;/div&gt;
+						|    &lt;/div&gt;
+						|  &lt;/div&gt;
+						|&lt;/div&gt;
+	section.container.mb-5
+		.row 
+			.col
+				h2 JavaScript and HTML configuration
+				p For ultimate flexibility, PushIn can be configured in a couple ways: through the JavaScript API, and/or through data-attributes within the HTML. When using both in combination, the HTML attributes will take precedence.
+				h3 JavaScript API
+				p
+					| Pass in a configuration object to the effect contstructor, whether you are using 
+					code pushInStart() 
+					| or 
+					code new PushIn()
+					| .
+				p The example below demonstrates how you can configure PushIn using the JavaScript API.
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						|const config = {
+						|  target: document.querySelector('#my-target'),
+						|  scene: {
+						|    breakpoints: [768, 1440, 1920, 2560],
+						|    inpoints: [200, 300],
+						|    ratio: [1, 2],
+						|  },
+						|  layers: [
+						|    // Layer 1
+						|    {
+						|      inpoints: [100, 300],
+						|      outpoints: [300, 600],
+						|      speed: 25
+						|    },
+						|    // Layer 2...
+						|  ],
+						|};
+						|
+						|// Using global function
+						|pushInStart(config);
+						|
+						|// Using class constructor
+						|new PushIn(config);
+				h3 HTML attributes
+				p Alternatively, use HTML data-attributes as needed.
+				p
+					strong NOTE: Any attributes added within the HTML markup will take precedence over configurations in the JavaScript API.
+				p The example below demonstrates how you can use the HTML data-attributes to configure PushIn.
+				pre.bg-light.bg-gradient.p-3.rounded
+					code
+						|&lt;div class="pushin" data-pushin-target="#my-target"&gt;
+						|  &lt;div class="pushin-scene"
+						|      data-pushin-breakpoints="768,1440,1920,2560"
+						|      data-pushin-inpoints="200,300"
+						|      data-pushin-ratio="1,2"&gt;
+						|    &lt;div class="pushin-composition"&gt;
+						|      &lt;!-- layer 1 --&gt;
+						|      &lt;div class="pushin-layer"
+						|        data-pushin-from="100,300"
+						|        data-pushin-to="300,600"
+						|        data-pushin-speed="25"&gt;
+						|        &lt;!-- content --&gt;
+						|      &lt;/div&gt;
+						|      &lt;!-- layer 2... --&gt;
+						|    &lt;/div&gt;
+						|  &lt;/div&gt;
+						|&lt;/div&gt;
+	section.container.my-5
+		.row 
+			.col
+				h2 Modules
+	section.container.my-5
+		.row 
+			.col
+				h3 pushin (top level)
+				table.table
+					tr 
+						th(scope="col") Name 
+						th(scope="col") HTML Attribute
+						th(scope="col") Type 
+						th(scope="col") Default 
+						th(scope="col") Description
+					tr
+						th(scope="row") target 
+						td 
+							code data-pushin-target
+						td string 
+						td 
+							code undefined 
+						td JavaScript selector used to attach PushIn to an element on the page.
+					tr
+						th(scope="row") debug 
+						td
+							code.text-muted none
+						td boolean 
+						td 
+							code false 
+						td Enables a tool to display the current scroll position which can help with animation timing.
+	section.container.my-5
+		.row 
+			.col
+				h3 scene
+				table.table
+					tr 
+						th(scope="col") Name 
+						th(scope="col") HTML Attribute
+						th(scope="col") Type 
+						th(scope="col") Default 
+						th(scope="col") Description
+					tr
+						th(scope="row") breakpoints 
+						td 
+							code data-pushin-breakpoints
+						td string 
+						td 
+							code 0,768,1440,1920
+						td Provide a comma-separated list of numbers to configure appropriate responsive design breakpoints.
+					tr
+						th(scope="row") from 
+						td 
+							code data-pushin-from
+						td string 
+						td 
+							code 0
+						td Comma-separated list of numbers representing the screen position at which the scene should begin animating.
+					tr
+						th(scope="row") ratio 
+						td 
+							code data-pushin-ratio
+						td string 
+						td 
+							code 1,2
+						td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
+	section.container.my-5
+		.row 
+			.col
+				h3 layers
+				table.table
+					tr 
+						th(scope="col") Name 
+						th(scope="col") HTML Attribute
+						th(scope="col") Type 
+						th(scope="col") Default 
+						th(scope="col") Description
+					tr
+						th(scope="row") inpoints 
+						td 
+							code data-pushin-from
+						td string 
+						td 
+							code undefined
+						td Comma-separated list of numbers representing the screen position at which the layer should begin animating.
+					tr
+						th(scope="row") outpoints 
+						td 
+							code data-pushin-to
+						td string 
+						td 
+							code undefined
+						td Comma-separated list of numbers representing the screen position at which the layer should stop animating.
+					tr
+						th(scope="row") speed 
+						td 
+							code data-pushin-speed
+						td number 
+						td 
+							code 8
+						td A number representing how fast or slow the layer should grow or shrink during scroll events.

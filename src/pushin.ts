@@ -77,7 +77,9 @@ export class PushIn {
    * @param options
    */
   setTarget(options: PushInOptions | undefined): void {
-    this.target = options?.target;
+    if (options?.target) {
+      this.target = document.querySelector(options!.target);
+    }
 
     if (this.container.hasAttribute('data-pushin-target')) {
       const selector = <string>this.container!.dataset!.pushinTarget;

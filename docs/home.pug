@@ -39,7 +39,7 @@ block append styles
 			transform: scale( 0.5 );
 		}
 
-		.demo {
+		#demo {
 			height: 500px;
 		}
 
@@ -51,7 +51,7 @@ block content
 			div
 				p.lead PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 				p Scroll down below to try out the effect, or browse some of the other examples on this site.
-	section.demo
+	section#demo
 		div.pushin.bg-secondary.bg-opacity-25
 			div.pushin-scene
 				div.pushin-layer
@@ -102,13 +102,13 @@ block content
 block scripts
 	script( defer ).
 		var pushInOptions = {
-			target: document.querySelector('.demo'),
+			target: '#demo',
 			scene: {
 				breakpoints: [768, 1440, 1920, 2560],
 				inpoints: [200],
 				fixedRatio: [1, 2],
 			},
-			layerOptions: [
+			layers: [
 				{ outpoints: [1000] },
 				{ inpoints: [700], outpoints: [2500] },
 				{ inpoints: [1500], outpoints: [3000] },

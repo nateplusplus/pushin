@@ -66,6 +66,11 @@ module.exports = (env, { mode }) => {
         minify: false,
         template: '!!pug-loader!docs/installation.pug',
       }),
+      new HtmlWebpackPlugin({
+        filename: 'api/index.html',
+        minify: false,
+        template: '!!pug-loader!docs/api.pug',
+      }),
     ],
     module: {
       rules: [

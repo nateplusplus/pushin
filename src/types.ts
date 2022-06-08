@@ -11,12 +11,12 @@ export interface SceneOptions {
   breakpoints: number[];
   inpoints: number[];
   layers?: LayerOptions[];
-  fixedRatio?: number[];
+  ratio?: number[];
 }
 
 export interface PushInOptions {
   debug?: boolean;
-  target?: HTMLElement;
+  target?: string;
   layers?: LayerOptions[];
   scene?: SceneOptions;
 }
