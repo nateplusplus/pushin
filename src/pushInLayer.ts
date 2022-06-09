@@ -35,7 +35,21 @@ export class PushInLayer {
       inpoint: this.getInpoint(inpoints),
       outpoint: this.getOutpoint(outpoints),
       speed,
+      transitions: this.getTransitions(),
     };
+  }
+
+  /**
+   * Get the transitions setting, either from the API or HTML attributes.
+   *
+   * @returns boolean
+   */
+  private getTransitions(): boolean {
+    let transitions = this.options?.transitions ?? true;
+    if (this.element.hasAttribute('pushin-transitions')) {
+      transitions = !!this.element!.dataset!.pushinTransitions;
+    }
+    return transitions;
   }
 
   /**
