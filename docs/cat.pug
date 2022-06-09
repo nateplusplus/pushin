@@ -81,12 +81,12 @@ block content
 	div.pushin
 		div.pushin-scene
 			div.pushin-composition
-				div.pushin-layer.layer-1(data-pushin-from="-200" data-pushin-to="1000" data-pushin-speed="80")
+				div.pushin-layer.layer-1(data-pushin-transition-start="-1" data-pushin-to="1000" data-pushin-speed="80")
 					div.table
 					div.plant
 						include images/plant.svg
 
-				div.pushin-layer.layer-2(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="16")
+				div.pushin-layer.layer-2(data-pushin-transitions="false" data-pushin-speed="16")
 					div.light
 						include images/light.svg
 					div.chair
@@ -94,14 +94,14 @@ block content
 					div.tv
 						include images/tv.svg
 
-				div.pushin-layer.layer-3(data-pushin-from="-200" data-pushin-to="5200" data-pushin-speed="10")
+				div.pushin-layer.layer-3(data-pushin-transitions="false" data-pushin-speed="10")
 					div.sofa
 						include images/livingroom-3.svg
 
-				div.pushin-layer.layer-4(data-pushin-from="-200" data-pushin-to="5200")
+				div.pushin-layer.layer-4(data-pushin-transitions="false")
 					div.floor
 
-				div.pushin-layer.layer-5(data-pushin-from="-200" data-pushin-to="5000")
+				div.pushin-layer.layer-5(data-pushin-transitions="false")
 					div.ceiling
 					div.wall
 						include images/livingroom-4.svg

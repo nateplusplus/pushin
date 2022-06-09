@@ -4,12 +4,12 @@ block append head
 
 
 block content
-	header.container.py-5.bg-white
+	header.container-fluid.py-5.bg-white
 		div.row
 			h1.my-4 PushIn API Reference
 			div
 				p For more information, questions, bug reporting or feature requests, checkout the <a href="https://github.com/nateplusplus/pushin" target="_blank">project on GitHub</a>.
-	section.container.mb-5
+	section.container-fluid.mb-5
 		.row 
 			.col
 				h2 PushIn Full HTML Layout
@@ -23,7 +23,7 @@ block content
 						|    &lt;/div&gt;
 						|  &lt;/div&gt;
 						|&lt;/div&gt;
-	section.container.mb-5
+	section.container-fluid.mb-5
 		.row 
 			.col
 				h2 JavaScript and HTML configuration
@@ -85,11 +85,11 @@ block content
 						|    &lt;/div&gt;
 						|  &lt;/div&gt;
 						|&lt;/div&gt;
-	section.container.my-5
+	section.container-fluid.my-5
 		.row 
 			.col
 				h2 Modules
-	section.container.my-5
+	section.container-fluid.my-5
 		.row 
 			.col
 				h3 pushin (top level)
@@ -116,7 +116,7 @@ block content
 						td 
 							code false 
 						td Enables a tool to display the current scroll position which can help with animation timing.
-	section.container.my-5
+	section.container-fluid.my-5
 		.row 
 			.col
 				h3 scene
@@ -151,7 +151,7 @@ block content
 						td 
 							code 1,2
 						td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
-	section.container.my-5
+	section.container-fluid.my-5
 		.row 
 			.col
 				h3 layers
@@ -186,3 +186,46 @@ block content
 						td 
 							code 8
 						td A number representing how fast or slow the layer should grow or shrink during scroll events.
+					tr
+						th(scope="row") transitions 
+						td 
+							code data-pushin-transitions
+						td boolean 
+						td 
+							code true
+						td
+							p
+								| Whether to fade in or out when the layer is not active. Setting this to 
+								code false 
+								| will turn off both start and end transitions.
+							p
+								strong Note: 
+								| By default, the first layer does not fade in, and the last layer does not fade out.
+					tr
+						th(scope="row") transitionStart
+						td 
+							code data-pushin-transition-start
+						td number 
+						td 
+							code 200
+						td
+							p The number of pixels to scroll before the layer fades all the in after becoming active.
+							p
+								strong Note: 
+								| Use 
+								code -1 
+								| to turn off the start transition only (does not affect end transition).
+					tr
+						th(scope="row") transitionEnd
+						td 
+							code data-pushin-transition-end
+						td number 
+						td 
+							code 200
+						td
+							p The number of pixels to scroll before the layer fades all the out and then becomes inactive.
+							p
+								strong Note: 
+								| Use 
+								code -1 
+								| to turn off the end transition only (does not affect start transition).

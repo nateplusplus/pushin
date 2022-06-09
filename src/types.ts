@@ -2,12 +2,14 @@ export interface LayerOptions {
   inpoints: number[];
   outpoints: number[];
   speed: number;
+  transitions?: boolean;
+  transitionStart?: number;
+  transitionEnd?: number;
 }
 
 export interface SceneOptions {
   speedDelta?: number;
   layerDepth?: number;
-  transitionLength?: number;
   breakpoints: number[];
   inpoints: number[];
   layers?: LayerOptions[];
