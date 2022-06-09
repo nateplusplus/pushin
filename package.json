@@ -85,7 +85,7 @@
     "mini-css-extract-plugin": "^2.5.2",
     "prettier": "^2.6.1",
     "pug": "^3.0.2",
-    "pug-loader": "^2.4.0",
+    "pug-plugin": "^2.7.0",
     "rollup": "2.75.5",
     "rollup-plugin-copy": "3.4.0",
     "rollup-plugin-terser": "^7.0.2",
