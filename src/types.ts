@@ -40,6 +40,8 @@ export interface LayerParams {
   outpoint: number;
   speed: number;
   transitions: boolean;
+  transitionStart: number;
+  transitionEnd: number;
 }
 
 export interface CompositionOptions {

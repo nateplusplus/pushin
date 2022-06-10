@@ -162,7 +162,7 @@ export class PushIn {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = window.setTimeout(() => {
-        this.scene.layers.forEach(layer => layer.resetLayerParams());
+        this.scene.layers.forEach(layer => layer.setLayerParams());
         this.setScrollLength();
         this.scene.resize();
         this.toggleLayers();
@@ -184,8 +184,7 @@ export class PushIn {
 
         const layer = this.scene.layers[index];
         if (layer) {
-          const scrollTo =
-            layer.params.inpoint + layer!.scene!.transitionLength;
+          const scrollTo = layer.params.inpoint + layer.params.transitionStart;
 
           if (!this.target) {
             window.scrollTo(0, scrollTo);
@@ -233,15 +232,11 @@ export class PushIn {
       'px',
       ''
     );
-
-    const transitions = (this.scene.layers.length - 1) * this.scene.speedDelta;
-    const scrollLength =
-      this.scene.layers.length *
-      (this.scene.layerDepth + this.scene.transitionLength);
+    const scrollLength = this.scene.layers.length * this.scene.layerDepth;
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),
-      scrollLength - transitions
+      scrollLength
     )}px`;
   }
 

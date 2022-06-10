@@ -3,13 +3,14 @@ import {
   PUSH_IN_TO_DATA_ATTRIBUTE,
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_SPEED_DATA_ATTRIBUTE,
+  PUSH_IN_DEFAULT_TRANSITION_LENGTH,
 } from './constants';
 import { PushInScene } from './pushInScene';
 
 import { LayerOptions, LayerRef, LayerParams } from './types';
 
 export class PushInLayer {
-  public params: LayerParams;
+  public params!: LayerParams;
   private originalScale: number;
   private ref: LayerRef;
 
@@ -31,12 +32,7 @@ export class PushInLayer {
     // Set tabindex so we can sync scrolling with screenreaders
     this.element.setAttribute('tabindex', '0');
 
-    this.params = {
-      inpoint: this.getInpoint(inpoints),
-      outpoint: this.getOutpoint(outpoints),
-      speed,
-      transitions: this.getTransitions(),
-    };
+    this.setLayerParams();
   }
 
   /**
@@ -50,6 +46,34 @@ export class PushInLayer {
       transitions = !!this.element!.dataset!.pushinTransitions;
     }
     return transitions;
+  }
+
+  /**
+   * Get the transitionStart setting, either from the API or HTML attributes.
+   *
+   * @returns number
+   */
+  private getTransitionStart(): number {
+    let start = this.options?.transitionStart ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    if (this.element.hasAttribute('pushin-transition-start')) {
+      const attr = <string>this.element!.dataset!.pushinTransitionStart;
+      start = parseInt(attr, 10);
+    }
+    return start;
+  }
+
+  /**
+   * Get the transitionEnd setting, either from the API or HTML attributes.
+   *
+   * @returns number
+   */
+  private getTransitionEnd(): number {
+    let end = this.options?.transitionEnd ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    if (this.element.hasAttribute('pushin-transition-end')) {
+      const attr = <string>this.element!.dataset!.pushinTransitionEnd;
+      end = parseInt(attr, 10);
+    }
+    return end;
   }
 
   /**
@@ -116,16 +140,19 @@ export class PushInLayer {
   }
 
   /**
-   * Reset all the layer parameters.
+   * Set all the layer parameters.
    *
-   * This is used if the window is resized
-   * and things need to be recalculated.
+   * This is used during initalization and
+   * if the window is resized.
    */
-  resetLayerParams(): void {
+  setLayerParams(): void {
     this.params = {
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
       speed: this.ref.speed,
+      transitions: this.getTransitions(),
+      transitionStart: this.getTransitionStart(),
+      transitionEnd: this.getTransitionEnd(),
     };
   }
 
@@ -228,10 +255,10 @@ export class PushInLayer {
         Math.max(
           Math.min(
             this.scene.pushin.scrollY - inpoint,
-            this.scene.transitionLength
+            this.params.transitionStart
           ),
           0
-        ) / this.scene.transitionLength;
+        ) / this.params.transitionStart;
 
       // Set opacity to 1 if its the first layer and it is active (no fading in here)
       if (isFirst) {
@@ -242,10 +269,10 @@ export class PushInLayer {
         Math.max(
           Math.min(
             outpoint - this.scene.pushin.scrollY,
-            this.scene.transitionLength
+            this.params.transitionEnd
           ),
           0
-        ) / this.scene.transitionLength;
+        ) / this.params.transitionEnd;
 
       // Set opacity to 1 if its the last layer and it is active (no fading out)
       if (isLast) {
