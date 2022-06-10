@@ -54,7 +54,8 @@ export class PushInLayer {
    * @returns number
    */
   private getTransitionStart(): number {
-    let start = this.options?.transitionStart ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    let start =
+      this.options?.transitionStart ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
     if (this.element.hasAttribute('pushin-transition-start')) {
       const attr = <string>this.element!.dataset!.pushinTransitionStart;
       start = parseInt(attr, 10);
