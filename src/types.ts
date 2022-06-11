@@ -36,8 +36,10 @@ export interface LayerRef {
 }
 
 export interface LayerParams {
+  depth: number;
   inpoint: number;
   outpoint: number;
+  overlap: number;
   speed: number;
   transitions: boolean;
   transitionStart: number;

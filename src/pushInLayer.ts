@@ -51,6 +51,13 @@ export class PushInLayer {
     return transitions;
   }
 
+  private getOverlap() {
+    const overlap = 0;
+    if (this.index > 0) {
+      // TODO: get half of the average of each layer’s transitionLength values
+    }
+  }
+
   /**
    * Get the transitionStart setting, either from the API or HTML attributes.
    *
@@ -151,6 +158,7 @@ export class PushInLayer {
    */
   setLayerParams(): void {
     this.params = {
+      depth: this.getDepth(),
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
       speed: this.ref.speed,
@@ -158,6 +166,12 @@ export class PushInLayer {
       transitionStart: this.getTransitionStart(),
       transitionEnd: this.getTransitionEnd(),
     };
+  }
+
+  private getDepth(): number {
+    return (
+      this.getOutpoint(this.ref.outpoints) - this.getInpoint(this.ref.inpoints)
+    );
   }
 
   /**

@@ -15,7 +15,7 @@ describe('setScrollLength', () => {
             </body>
         </html>`);
 
-    container = document.querySelector<HTMLElement>('.pushin');
+    container = <HTMLElement>document.querySelector('.pushin');
 
     const mockScene = Object.create(PushInScene.prototype);
     Object.assign(
@@ -48,14 +48,16 @@ describe('setScrollLength', () => {
     expect(result).toEqual('500px');
   });
 
-  it('Should calculate container height based on layerDepth and transitionLength properties', () => {
+  it('Should calculate container height based on number of layers, their depth, and their overlap', () => {
+    /**
+     * add each layer's depth - overlap
+     */
     mockPushIn['scene']['speedDelta'] = 0;
     mockPushIn['scene']['layerDepth'] = 200;
-    mockPushIn['scene']['transitionLength'] = 200;
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('1200px');
+    expect(result).toEqual('600px');
   });
 
   it('Should reduce container height to account for overlapping transition length', () => {
