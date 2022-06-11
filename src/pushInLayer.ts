@@ -42,8 +42,11 @@ export class PushInLayer {
    */
   private getTransitions(): boolean {
     let transitions = this.options?.transitions ?? true;
-    if (this.element.hasAttribute('pushin-transitions')) {
-      transitions = !!this.element!.dataset!.pushinTransitions;
+    if (this.element.hasAttribute('data-pushin-transitions')) {
+      const attr = this.element!.dataset!.pushinTransitions;
+      if (attr) {
+        transitions = attr !== 'false' && attr !== '0';
+      }
     }
     return transitions;
   }
@@ -56,7 +59,7 @@ export class PushInLayer {
   private getTransitionStart(): number {
     let start =
       this.options?.transitionStart ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-    if (this.element.hasAttribute('pushin-transition-start')) {
+    if (this.element.hasAttribute('data-pushin-transition-start')) {
       const attr = <string>this.element!.dataset!.pushinTransitionStart;
       start = parseInt(attr, 10);
     }
@@ -70,7 +73,7 @@ export class PushInLayer {
    */
   private getTransitionEnd(): number {
     let end = this.options?.transitionEnd ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-    if (this.element.hasAttribute('pushin-transition-end')) {
+    if (this.element.hasAttribute('data-pushin-transition-end')) {
       const attr = <string>this.element!.dataset!.pushinTransitionEnd;
       end = parseInt(attr, 10);
     }
@@ -183,10 +186,16 @@ export class PushInLayer {
   private isActive(): boolean {
     const { inpoint } = this.params;
     const { outpoint } = this.params;
-    return (
-      this.scene.pushin.scrollY >= inpoint &&
-      this.scene.pushin.scrollY <= outpoint
-    );
+
+    let active = true;
+
+    if (this.params.transitions) {
+      const min = this.scene.pushin.scrollY >= inpoint;
+      const max = this.scene.pushin.scrollY <= outpoint;
+      active = min && max;
+    }
+
+    return active;
   }
 
   /**
@@ -249,6 +258,10 @@ export class PushInLayer {
       opacity = 1;
     } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
+
+      if (!this.params.transitions) {
+        this.setScale(this.element, this.getScaleValue(this));
+      }
     } else if (this.isActive()) {
       this.setScale(this.element, this.getScaleValue(this));
 
@@ -280,7 +293,9 @@ export class PushInLayer {
         outpointDistance = 1;
       }
 
-      opacity = Math.min(inpointDistance, outpointDistance);
+      opacity = this.params.transitions
+        ? Math.min(inpointDistance, outpointDistance)
+        : 1;
     }
 
     this.element.style.opacity = opacity.toString();
