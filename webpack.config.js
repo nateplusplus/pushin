@@ -23,7 +23,6 @@ module.exports = (env, { mode }) => {
     entry: './docs/main.ts',
     output: {
       path: path.resolve(__dirname, 'docs'),
-      publicPath: path.resolve(__dirname, 'docs'),
       filename: 'pushin.min.js',
     },
     resolve: {
