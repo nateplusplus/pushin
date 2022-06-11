@@ -8,7 +8,6 @@ export interface LayerOptions {
 }
 
 export interface SceneOptions {
-  speedDelta?: number;
   layerDepth?: number;
   breakpoints: number[];
   inpoints: number[];

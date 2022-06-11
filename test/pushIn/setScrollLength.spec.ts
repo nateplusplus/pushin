@@ -2,6 +2,7 @@ import { setupJSDOM } from '../setup';
 import { PushIn } from '../../src/pushin';
 import { PushInLayer } from '../../src/pushInLayer';
 import { PushInScene } from '../../src/pushInScene';
+import { layerParams } from '../__mocks__/layers';
 
 describe('setScrollLength', () => {
   let mockPushIn: PushIn;
@@ -11,26 +12,38 @@ describe('setScrollLength', () => {
     setupJSDOM(`
         <!DOCTYPE html>
             <body>
-                <div class="pushin" style="height:500px;"></div>
+                <div class="pushin" style="height:5000px;"></div>
             </body>
         </html>`);
 
     container = <HTMLElement>document.querySelector('.pushin');
 
+    const mockPushinLayer = Object.create(PushInLayer.prototype);
+    mockPushinLayer['params'] = Object.create(layerParams);
+    Object.assign(
+      mockPushinLayer['params'],
+      {
+        depth: 1000,
+        overlap: 100,
+      }
+    );
+
     const mockScene = Object.create(PushInScene.prototype);
     Object.assign(
       mockScene,
       {
-        speedDelta: 100,
-        layerDepth: 100,
-        transitionLength: 100,
+        layerDepth: 1000,
         layers: [
-          Object.create(PushInLayer.prototype),
-          Object.create(PushInLayer.prototype),
-          Object.create(PushInLayer.prototype),
+          Object.create(mockPushinLayer),
+          Object.create(mockPushinLayer),
+          Object.create(mockPushinLayer),
         ]
       }
     );
+
+    // First layer always has 0 overlap
+    mockScene.layers[0].params = Object.create(layerParams);
+    mockScene.layers[0].params.overlap = 0;
 
     mockPushIn = Object.create(PushIn.prototype);
     Object.assign(
@@ -45,28 +58,14 @@ describe('setScrollLength', () => {
   it('Should set the container height to its original value if it is higher than calculated value', () => {
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('500px');
+    expect(result).toEqual('5000px');
   });
 
   it('Should calculate container height based on number of layers, their depth, and their overlap', () => {
-    /**
-     * add each layer's depth - overlap
-     */
-    mockPushIn['scene']['speedDelta'] = 0;
-    mockPushIn['scene']['layerDepth'] = 200;
+    container!.style!.height = '0';
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('600px');
-  });
-
-  it('Should reduce container height to account for overlapping transition length', () => {
-    mockPushIn['scene']['speedDelta'] = 100;
-    mockPushIn['scene']['layerDepth'] = 200;
-    mockPushIn['scene']['transitionLength'] = 200;
-
-    mockPushIn['setScrollLength']();
-    const result = container.style.height;
-    expect(result).toEqual('1000px');
+    expect(result).toEqual('2800px');
   });
 });

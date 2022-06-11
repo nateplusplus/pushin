@@ -232,7 +232,11 @@ export class PushIn {
       'px',
       ''
     );
-    const scrollLength = this.scene.layers.length * this.scene.layerDepth;
+
+    let scrollLength = 0;
+    this.scene.layers.forEach(layer => {
+      scrollLength += layer.params.depth - layer.params.overlap;
+    });
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),

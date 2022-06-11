@@ -38,7 +38,7 @@ export class PushInLayer {
   /**
    * Get the transitions setting, either from the API or HTML attributes.
    *
-   * @returns boolean
+   * @return {boolean}
    */
   private getTransitions(): boolean {
     let transitions = this.options?.transitions ?? true;
@@ -51,11 +51,25 @@ export class PushInLayer {
     return transitions;
   }
 
-  private getOverlap() {
-    const overlap = 0;
+  /**
+   * Get the amount of overlap between previous and current layer.
+   *
+   * @return {number}
+   */
+  private getOverlap(): number {
+    let overlap = 0;
+
     if (this.index > 0) {
-      // TODO: get half of the average of each layer’s transitionLength values
+      const prevLayer = this.scene.layers[this.index - 1];
+      const prevTranEnd = prevLayer.params.transitionEnd;
+      const curTranStart = this.params.transitionStart;
+
+      const average = (curTranStart + prevTranEnd) / 2;
+
+      overlap = Math.min(average * 0.5, curTranStart);
     }
+
+    return overlap;
   }
 
   /**
@@ -103,7 +117,7 @@ export class PushInLayer {
     } else if (index > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.scene.layers[index - 1].params;
-      inpoints = [outpoint - this.scene.speedDelta];
+      inpoints = [outpoint - this.params.overlap];
     }
 
     return inpoints;
@@ -161,6 +175,7 @@ export class PushInLayer {
       depth: this.getDepth(),
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
+      overlap: this.getOverlap(),
       speed: this.ref.speed,
       transitions: this.getTransitions(),
       transitionStart: this.getTransitionStart(),
@@ -272,10 +287,6 @@ export class PushInLayer {
       opacity = 1;
     } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
-
-      if (!this.params.transitions) {
-        this.setScale(this.element, this.getScaleValue(this));
-      }
     } else if (this.isActive()) {
       this.setScale(this.element, this.getScaleValue(this));
 
@@ -288,8 +299,7 @@ export class PushInLayer {
           0
         ) / this.params.transitionStart;
 
-      // Set opacity to 1 if its the first layer and it is active (no fading in here)
-      if (isFirst) {
+      if (isFirst || this.params.transitionStart < 0) {
         inpointDistance = 1;
       }
 
@@ -302,8 +312,7 @@ export class PushInLayer {
           0
         ) / this.params.transitionEnd;
 
-      // Set opacity to 1 if its the last layer and it is active (no fading out)
-      if (isLast) {
+      if (isLast || this.params.transitionEnd < 0) {
         outpointDistance = 1;
       }
 

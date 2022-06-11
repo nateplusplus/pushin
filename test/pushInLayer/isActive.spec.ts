@@ -3,21 +3,27 @@ import { PushIn } from '../../src/pushin';
 import { PushInLayer } from '../../src/pushInLayer';
 import { PushInScene } from '../../src/pushInScene';
 import { LayerParams } from '../../src/types';
+import { layerParams } from '../__mocks__/layers';
 
 describe('isActive', () => {
   let mockPushInLayer: PushInLayer;
 
   beforeEach(() => {
     setupJSDOM(`<!DOCTYPE html></html>`);
-    mockPushInLayer = Object.create(PushInLayer.prototype);
+    const mockLayerParams = Object.create(layerParams);
+    Object.assign(
+      mockLayerParams,
+      {
+        inpoint: 10,
+        outpoint: 20
+      },
+    );
 
+    mockPushInLayer = Object.create(PushInLayer.prototype);
     Object.assign(
       mockPushInLayer,
       {
-        'params': <LayerParams>{
-          inpoint: 10,
-          outpoint: 20
-        },
+        'params': mockLayerParams,
         'scene': Object.create(PushInScene.prototype),
       });
 
