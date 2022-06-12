@@ -31,7 +31,7 @@ describe('setScrollLength', () => {
     const layer1 = Object.create(mockPushinLayer);
     const layer2 = Object.create(mockPushinLayer);
     const layer3 = Object.create(mockPushinLayer);
-    layer3.params.outpoint = 3000;
+    layer3.params.outpoint = 2800;
 
     const mockScene = Object.create(PushInScene.prototype);
     Object.assign(

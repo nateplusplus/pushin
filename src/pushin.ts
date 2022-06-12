@@ -212,10 +212,7 @@ export class PushIn {
   }
 
   /**
-   * Automatically set the container height based on:
-   * 1. The depth of each layer
-   * 2. The overlap between layers
-   * 3. The greatest outpoint
+   * Automatically set the container height based on the greatest outpoint.
    *
    * If the container has a height set already (e.g. if set by CSS),
    * the larger of the two numbers will be used.
@@ -226,20 +223,22 @@ export class PushIn {
       ''
     );
 
-    let scrollLength = 0;
-    let max = 0;
-    this.scene.layers.forEach(layer => {
-      max = Math.max(max, layer.params.outpoint);
-      scrollLength += layer.params.depth - layer.params.overlap;
-    });
-
-    if (max > 0) {
-      scrollLength = Math.min(scrollLength, max);
+    let targetHeight = window.innerHeight;
+    if (this.target) {
+      targetHeight = parseInt(
+        getComputedStyle(this.target).height.replace('px', ''),
+        10
+      );
     }
+
+    let maxOutpoint = 0;
+    this.scene.layers.forEach(layer => {
+      maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
+    });
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),
-      scrollLength
+      maxOutpoint + targetHeight
     )}px`;
   }
 
