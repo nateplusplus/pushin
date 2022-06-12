@@ -17,9 +17,15 @@ describe('getOverlap', () => {
     ];
 
     mockPushInLayer = Object.create(PushInLayer.prototype);
-    mockPushInLayer['index'] = 0;
-    mockPushInLayer['scene'] = mockPushInScene;
-    mockPushInLayer['params'] = Object.create(layerParams);
+    Object.assign(
+      mockPushInLayer,
+      {
+        index: 0,
+        scene: mockPushInScene,
+        params: Object.create(layerParams),
+        getTransitionStart: layerParams.transitionStart,
+      }
+    );
   });
 
   it('Should return 0 for first layer', () => {
@@ -30,7 +36,7 @@ describe('getOverlap', () => {
 
   it('Should calculate based on average transition lengths of previous layer and current layer', () => {
     mockPushInLayer['index'] = 1;
-    mockPushInLayer['params'].transitionStart = 250;
+    mockPushInLayer['getTransitionStart'] = () => 250;
     mockPushInLayer.scene.layers[0]['params'].transitionEnd = 200;
     const result = mockPushInLayer['getOverlap']();
 
@@ -39,7 +45,7 @@ describe('getOverlap', () => {
 
   it('Should not exceed current layer transition start', () => {
     mockPushInLayer['index'] = 1;
-    mockPushInLayer['params'].transitionStart = 20;
+    mockPushInLayer['getTransitionStart'] = () => 20;
     mockPushInLayer.scene.layers[0]['params'].transitionEnd = 500;
     const result = mockPushInLayer['getOverlap']();
 

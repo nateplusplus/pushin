@@ -35,7 +35,7 @@ block append styles
 			background-color: rgb(116, 61, 187);
 			max-width: 43.75rem;
 			left: 0;
-			top: 40%;
+			top: 0;
 			transform: scale( 0.5 );
 		}
 
@@ -105,16 +105,16 @@ block scripts
 			target: '#demo',
 			scene: {
 				breakpoints: [768, 1440, 1920, 2560],
-				inpoints: [200],
 				fixedRatio: [1, 2],
 			},
 			layers: [
-				{ outpoints: [1000] },
+				{ outpoints: [2000], speed: 15 },
 				{ inpoints: [700], outpoints: [2500] },
-				{ inpoints: [1500], outpoints: [3000] },
-				{ inpoints: [2000], outpoints: [6000], speed: 25 },
+				{ inpoints: [1500], outpoints: [3000], speed: 6 },
+				{ inpoints: [2000], outpoints: [3000], speed: 3 },
 			],
 		};
 		document.addEventListener( 'DOMContentLoaded', function() {
-			pushInStart(pushInOptions);
+			var pushin = pushInStart(pushInOptions);
+			console.log(pushin);
 		} );

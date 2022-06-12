@@ -35,17 +35,30 @@ describe('getInpoints', () => {
     mockLayer['params'] = mockLayerParams;
 
     mockPushInScene = Object.create(PushInScene.prototype);
-    mockPushInScene['getTop'] = () => 0;
-    mockPushInScene['getInpoints'] = () => [10];
-    mockPushInScene['layers'] = [
-      null,
-      mockLayer,
-      mockLayer
-    ];
-    mockPushInScene['speedDelta'] = 100;
+    Object.assign(
+      mockPushInScene,
+      {
+        getTop: () => 0,
+        getInpoints: () => [10],
+        layers: [
+          mockLayer,
+          mockLayer,
+          mockLayer,
+        ],
+
+      }
+    );
 
     mockPushInLayer = Object.create(mockLayer);
     mockPushInLayer['scene'] = mockPushInScene;
+
+    // Stub functions
+    Object.assign(
+      mockPushInLayer,
+      {
+        getOverlap: () => mockLayerParams.overlap,
+      }
+    );
   });
 
   it('Should return scene top value as the default for first layer', () => {

@@ -28,16 +28,17 @@ describe('setScrollLength', () => {
       }
     );
 
+    const layer1 = Object.create(mockPushinLayer);
+    const layer2 = Object.create(mockPushinLayer);
+    const layer3 = Object.create(mockPushinLayer);
+    layer3.params.outpoint = 3000;
+
     const mockScene = Object.create(PushInScene.prototype);
     Object.assign(
       mockScene,
       {
         layerDepth: 1000,
-        layers: [
-          Object.create(mockPushinLayer),
-          Object.create(mockPushinLayer),
-          Object.create(mockPushinLayer),
-        ]
+        layers: [ layer1, layer2, layer3 ],
       }
     );
 
@@ -67,5 +68,15 @@ describe('setScrollLength', () => {
     mockPushIn['setScrollLength']();
     const result = container.style.height;
     expect(result).toEqual('2800px');
+  });
+
+  it('Should not exceed the greatest outpoint', () => {
+    container!.style!.height = '0';
+
+    mockPushIn.scene.layers[1].params.outpoint = 2000;
+
+    mockPushIn['setScrollLength']();
+    const result = container.style.height;
+    expect(result).toEqual('2000px');
   });
 });

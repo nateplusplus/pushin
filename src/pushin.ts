@@ -1,8 +1,5 @@
 import { PushInScene } from './pushInScene';
-import { PushInLayer } from './pushInLayer';
-
-import { PushInOptions, SceneOptions } from './types';
-
+import { PushInOptions } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 
 /**
@@ -14,28 +11,24 @@ import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 export class PushIn {
   public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
-  public sceneOptions: SceneOptions;
   public target?: HTMLElement | null;
-
   public scrollY = 0;
-
-  private readonly layers: PushInLayer[] = [];
-  private readonly debug: boolean;
-
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
+  public options: PushInOptions;
 
   constructor(public container: HTMLElement, options?: PushInOptions) {
-    this.debug = options?.debug ?? false;
+    options = options ?? {};
 
-    this.sceneOptions = { breakpoints: [], inpoints: [] };
-    if (options?.scene) {
-      Object.assign(this.sceneOptions, options.scene);
-    }
-    if (options?.layers) {
-      Object.assign(this.sceneOptions, options.layers);
-    }
+    this.options = {
+      debug: options?.debug ?? false,
+      scene: options?.scene ?? { breakpoints: [], inpoints: [] },
+      target: options?.target ?? undefined,
+    };
 
+    this.options.scene!.layers = options?.layers ?? undefined;
+
+    this.options.debug = options?.debug ?? false;
     this.setTarget(options);
   }
 
@@ -45,7 +38,7 @@ export class PushIn {
   start(): void {
     this.scrollY = this.getScrollY();
 
-    if (this.debug) {
+    if (this.options.debug) {
       this.showDebugger();
     }
 
@@ -219,13 +212,13 @@ export class PushIn {
   }
 
   /**
-   * Set the default container height based on a few factors:
-   * 1. Number of layers present
-   * 2. The transition length between layers
-   * 3. The length of scrolling time during each layer
+   * Automatically set the container height based on:
+   * 1. The depth of each layer
+   * 2. The overlap between layers
+   * 3. The greatest outpoint
    *
-   * If this calculation is smaller than the container's current height,
-   * the current height will be used instead.
+   * If the container has a height set already (e.g. if set by CSS),
+   * the larger of the two numbers will be used.
    */
   private setScrollLength(): void {
     const containerHeight = getComputedStyle(this.container).height.replace(
@@ -234,9 +227,15 @@ export class PushIn {
     );
 
     let scrollLength = 0;
+    let max = 0;
     this.scene.layers.forEach(layer => {
+      max = Math.max(max, layer.params.outpoint);
       scrollLength += layer.params.depth - layer.params.overlap;
     });
+
+    if (max > 0) {
+      scrollLength = Math.min(scrollLength, max);
+    }
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),

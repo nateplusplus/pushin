@@ -34,7 +34,7 @@ export class PushInScene {
       });
     }
 
-    this.options = pushin.sceneOptions;
+    this.options = pushin.options.scene!;
 
     this.layerDepth = this.options?.layerDepth || 1000;
 

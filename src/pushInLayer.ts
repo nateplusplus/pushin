@@ -62,7 +62,7 @@ export class PushInLayer {
     if (this.index > 0) {
       const prevLayer = this.scene.layers[this.index - 1];
       const prevTranEnd = prevLayer.params.transitionEnd;
-      const curTranStart = this.params.transitionStart;
+      const curTranStart = this.getTransitionStart();
 
       const average = (curTranStart + prevTranEnd) / 2;
 
@@ -117,7 +117,7 @@ export class PushInLayer {
     } else if (index > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.scene.layers[index - 1].params;
-      inpoints = [outpoint - this.params.overlap];
+      inpoints = [outpoint - this.getOverlap()];
     }
 
     return inpoints;
