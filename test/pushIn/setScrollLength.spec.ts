@@ -12,7 +12,9 @@ describe('setScrollLength', () => {
     setupJSDOM(`
         <!DOCTYPE html>
             <body>
-                <div class="pushin" style="height:5000px;"></div>
+                <div class="target" style="height:1000px;">
+                  <div class="pushin" style="height:5000px;"></div>
+                </div>
             </body>
         </html>`);
 
@@ -51,7 +53,8 @@ describe('setScrollLength', () => {
       mockPushIn,
       {
         container,
-        scene: mockScene
+        scene: mockScene,
+        target: document.querySelector('.target'),
       }
     );
   });
@@ -62,21 +65,23 @@ describe('setScrollLength', () => {
     expect(result).toEqual('5000px');
   });
 
-  it('Should calculate container height based on number of layers, their depth, and their overlap', () => {
+  it('Should calculate container height based on the maximum outpoint and the height of the target element', () => {
     container!.style!.height = '0';
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('2800px');
+
+    // 3 * 1000 (depth) - 200 (overlap twice) + 1000 (target height)
+    expect(result).toEqual('3800px');
   });
 
-  it('Should not exceed the greatest outpoint', () => {
+  it('Should not exceed the greatest outpoint + target height', () => {
     container!.style!.height = '0';
 
     mockPushIn.scene.layers[1].params.outpoint = 2000;
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('2000px');
+    expect(result).toEqual('3000px');
   });
 });

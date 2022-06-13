@@ -222,6 +222,11 @@ export class PushInLayer {
       const min = this.scene.pushin.scrollY >= inpoint;
       const max = this.scene.pushin.scrollY <= outpoint;
       active = min && max;
+      if (!active && this.params.transitionStart < 0 && !min) {
+        active = true;
+      } else if (!active && this.params.transitionEnd < 0 && !max) {
+        active = true;
+      }
     }
 
     return active;
@@ -288,8 +293,6 @@ export class PushInLayer {
     } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
     } else if (this.isActive()) {
-      this.setScale(this.element, this.getScaleValue(this));
-
       let inpointDistance =
         Math.max(
           Math.min(
@@ -319,6 +322,10 @@ export class PushInLayer {
       opacity = this.params.transitions
         ? Math.min(inpointDistance, outpointDistance)
         : 1;
+    }
+
+    if (this.isActive()) {
+      this.setScale(this.element, this.getScaleValue(this));
     }
 
     this.element.style.opacity = opacity.toString();
