@@ -1,8 +1,5 @@
 import { PushInScene } from './pushInScene';
-import { PushInLayer } from './pushInLayer';
-
-import { PushInOptions, SceneOptions } from './types';
-
+import { PushInOptions } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 
 /**
@@ -14,28 +11,24 @@ import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 export class PushIn {
   public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
-  public sceneOptions: SceneOptions;
   public target?: HTMLElement | null;
-
   public scrollY = 0;
-
-  private readonly layers: PushInLayer[] = [];
-  private readonly debug: boolean;
-
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
+  public options: PushInOptions;
 
   constructor(public container: HTMLElement, options?: PushInOptions) {
-    this.debug = options?.debug ?? false;
+    options = options ?? {};
 
-    this.sceneOptions = { breakpoints: [], inpoints: [] };
-    if (options?.scene) {
-      Object.assign(this.sceneOptions, options.scene);
-    }
-    if (options?.layers) {
-      Object.assign(this.sceneOptions, options.layers);
-    }
+    this.options = {
+      debug: options?.debug ?? false,
+      scene: options?.scene ?? { breakpoints: [], inpoints: [] },
+      target: options?.target ?? undefined,
+    };
 
+    this.options.scene!.layers = options?.layers ?? undefined;
+
+    this.options.debug = options?.debug ?? false;
     this.setTarget(options);
   }
 
@@ -45,7 +38,7 @@ export class PushIn {
   start(): void {
     this.scrollY = this.getScrollY();
 
-    if (this.debug) {
+    if (this.options.debug) {
       this.showDebugger();
     }
 
@@ -162,7 +155,7 @@ export class PushIn {
       clearTimeout(resizeTimeout);
 
       resizeTimeout = window.setTimeout(() => {
-        this.scene.layers.forEach(layer => layer.resetLayerParams());
+        this.scene.layers.forEach(layer => layer.setLayerParams());
         this.setScrollLength();
         this.scene.resize();
         this.toggleLayers();
@@ -184,8 +177,7 @@ export class PushIn {
 
         const layer = this.scene.layers[index];
         if (layer) {
-          const scrollTo =
-            layer.params.inpoint + layer!.scene!.transitionLength;
+          const scrollTo = layer.params.inpoint + layer.params.transitionStart;
 
           if (!this.target) {
             window.scrollTo(0, scrollTo);
@@ -220,13 +212,10 @@ export class PushIn {
   }
 
   /**
-   * Set the default container height based on a few factors:
-   * 1. Number of layers present
-   * 2. The transition length between layers
-   * 3. The length of scrolling time during each layer
+   * Automatically set the container height based on the greatest outpoint.
    *
-   * If this calculation is smaller than the container's current height,
-   * the current height will be used instead.
+   * If the container has a height set already (e.g. if set by CSS),
+   * the larger of the two numbers will be used.
    */
   private setScrollLength(): void {
     const containerHeight = getComputedStyle(this.container).height.replace(
@@ -234,14 +223,22 @@ export class PushIn {
       ''
     );
 
-    const transitions = (this.scene.layers.length - 1) * this.scene.speedDelta;
-    const scrollLength =
-      this.scene.layers.length *
-      (this.scene.layerDepth + this.scene.transitionLength);
+    let targetHeight = window.innerHeight;
+    if (this.target) {
+      targetHeight = parseInt(
+        getComputedStyle(this.target).height.replace('px', ''),
+        10
+      );
+    }
+
+    let maxOutpoint = 0;
+    this.scene.layers.forEach(layer => {
+      maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
+    });
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),
-      scrollLength - transitions
+      maxOutpoint + targetHeight
     )}px`;
   }
 

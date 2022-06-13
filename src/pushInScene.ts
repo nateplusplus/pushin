@@ -12,8 +12,6 @@ import { LayerOptions, SceneOptions, CompositionOptions } from './types';
 export class PushInScene {
   public container: HTMLElement;
   public layers: PushInLayer[];
-  public speedDelta: number;
-  public transitionLength: number;
   public layerDepth: number;
   public options: SceneOptions;
   public composition?: PushInComposition;
@@ -36,11 +34,9 @@ export class PushInScene {
       });
     }
 
-    this.options = pushin.sceneOptions;
+    this.options = pushin.options.scene!;
 
-    this.speedDelta = this.options?.speedDelta || 100;
     this.layerDepth = this.options?.layerDepth || 1000;
-    this.transitionLength = this.options?.transitionLength || 200;
 
     this.layers = [];
 

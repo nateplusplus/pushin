@@ -4,7 +4,6 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const PugPlugin = require('pug-plugin');
 
 const banner = require('./build/banner');
 
@@ -24,7 +23,6 @@ module.exports = (env, { mode }) => {
     entry: './docs/main.ts',
     output: {
       path: path.resolve(__dirname, 'docs'),
-      publicPath: path.resolve(__dirname, 'docs'),
       filename: 'pushin.min.js',
     },
     resolve: {
@@ -38,50 +36,37 @@ module.exports = (env, { mode }) => {
       new MiniCssExtractPlugin({
         filename: 'pushin.min.css',
       }),
-      new PugPlugin({
-        modules: [
-          {
-            test: /\/home\.pug$/,
-            outputPath: path.join(__dirname, 'docs/'),
-            filename: 'index.html',
-          },
-          {
-            test: /\/simple\.pug$/,
-            outputPath: path.join(__dirname, 'docs/simple'),
-            filename: 'index.html',
-          },
-          {
-            test: /\/responsive\.pug$/,
-            outputPath: path.join(__dirname, 'docs/responsive'),
-            filename: 'index.html',
-          },
-          {
-            test: /\/cat\.pug$/,
-            outputPath: path.join(__dirname, 'docs/cat'),
-            filename: 'index.html',
-          },
-          {
-            test: /\/target\.pug$/,
-            outputPath: path.join(__dirname, 'docs/target'),
-            filename: 'index.html',
-          },
-          {
-            test: /\/api\.pug$/,
-            outputPath: path.join(__dirname, 'docs/api'),
-            filename: 'index.html',
-          },
-        ],
+      new HtmlWebpackPlugin({
+        template: './docs/home.pug',
+        filename: 'index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/simple.pug',
+        filename: 'examples/simple/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/responsive.pug',
+        filename: 'examples/responsive/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/target.pug',
+        filename: 'examples/target/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/cat.pug',
+        filename: 'examples/cat/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/api.pug',
+        filename: 'api/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/installation.pug',
+        filename: 'installation/index.html',
       }),
     ],
     module: {
       rules: [
-        {
-          test: /\.pug$/,
-          loader: PugPlugin.loader,
-          options: {
-            method: 'render',
-          },
-        },
         {
           test: /\.css$/i,
           use: [MiniCssExtractPlugin.loader, 'css-loader'],
@@ -90,6 +75,10 @@ module.exports = (env, { mode }) => {
           test: /.ts$/,
           exclude: /node_modules/,
           loader: 'ts-loader',
+        },
+        {
+          test: /\.pug$/,
+          loader: 'simple-pug-loader',
         },
       ],
     },

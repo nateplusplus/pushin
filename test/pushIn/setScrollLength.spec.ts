@@ -2,6 +2,7 @@ import { setupJSDOM } from '../setup';
 import { PushIn } from '../../src/pushin';
 import { PushInLayer } from '../../src/pushInLayer';
 import { PushInScene } from '../../src/pushInScene';
+import { layerParams } from '../__mocks__/layers';
 
 describe('setScrollLength', () => {
   let mockPushIn: PushIn;
@@ -11,33 +12,49 @@ describe('setScrollLength', () => {
     setupJSDOM(`
         <!DOCTYPE html>
             <body>
-                <div class="pushin" style="height:500px;"></div>
+                <div class="target" style="height:1000px;">
+                  <div class="pushin" style="height:5000px;"></div>
+                </div>
             </body>
         </html>`);
 
-    container = document.querySelector<HTMLElement>('.pushin');
+    container = <HTMLElement>document.querySelector('.pushin');
+
+    const mockPushinLayer = Object.create(PushInLayer.prototype);
+    mockPushinLayer['params'] = Object.create(layerParams);
+    Object.assign(
+      mockPushinLayer['params'],
+      {
+        depth: 1000,
+        overlap: 100,
+      }
+    );
+
+    const layer1 = Object.create(mockPushinLayer);
+    const layer2 = Object.create(mockPushinLayer);
+    const layer3 = Object.create(mockPushinLayer);
+    layer3.params.outpoint = 2800;
 
     const mockScene = Object.create(PushInScene.prototype);
     Object.assign(
       mockScene,
       {
-        speedDelta: 100,
-        layerDepth: 100,
-        transitionLength: 100,
-        layers: [
-          Object.create(PushInLayer.prototype),
-          Object.create(PushInLayer.prototype),
-          Object.create(PushInLayer.prototype),
-        ]
+        layerDepth: 1000,
+        layers: [ layer1, layer2, layer3 ],
       }
     );
+
+    // First layer always has 0 overlap
+    mockScene.layers[0].params = Object.create(layerParams);
+    mockScene.layers[0].params.overlap = 0;
 
     mockPushIn = Object.create(PushIn.prototype);
     Object.assign(
       mockPushIn,
       {
         container,
-        scene: mockScene
+        scene: mockScene,
+        target: document.querySelector('.target'),
       }
     );
   });
@@ -45,26 +62,26 @@ describe('setScrollLength', () => {
   it('Should set the container height to its original value if it is higher than calculated value', () => {
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('500px');
+    expect(result).toEqual('5000px');
   });
 
-  it('Should calculate container height based on layerDepth and transitionLength properties', () => {
-    mockPushIn['scene']['speedDelta'] = 0;
-    mockPushIn['scene']['layerDepth'] = 200;
-    mockPushIn['scene']['transitionLength'] = 200;
+  it('Should calculate container height based on the maximum outpoint and the height of the target element', () => {
+    container!.style!.height = '0';
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('1200px');
+
+    // 3 * 1000 (depth) - 200 (overlap twice) + 1000 (target height)
+    expect(result).toEqual('3800px');
   });
 
-  it('Should reduce container height to account for overlapping transition length', () => {
-    mockPushIn['scene']['speedDelta'] = 100;
-    mockPushIn['scene']['layerDepth'] = 200;
-    mockPushIn['scene']['transitionLength'] = 200;
+  it('Should not exceed the greatest outpoint + target height', () => {
+    container!.style!.height = '0';
+
+    mockPushIn.scene.layers[1].params.outpoint = 2000;
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
-    expect(result).toEqual('1000px');
+    expect(result).toEqual('3000px');
   });
 });
