@@ -52,22 +52,30 @@ block content
 				p.lead PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 				p Scroll down below to try out the effect, or browse some of the other examples on this site.
 	section#demo
-		div.pushin.bg-secondary.bg-opacity-25
+		div.pushin
 			div.pushin-scene
-				div.pushin-layer
-					div.card.bg-info.bg-gradient.shadow-lg.position-absolute.demo-card-1
-						div.card-body.fs-1.fw-bold.p-5 Scroll to push in
-				div.pushin-layer
-					div.card.bg-warning.bg-gradient.shadow-lg.position-absolute.demo-card-2
-						div.card-body.fs-1.fw-bold.p-5 Each layer can come into view at different times.
-				div.pushin-layer
-					div.card.bg-gradient.text-light.shadow-lg.position-absolute.demo-card-3
-						div.card-body.fs-1.fw-bold.p-5
-							| Use HTML 
-							a(href="https://github.com/nateplusplus/pushin/blob/main/docs/html-attributes.md" target="_blank").text-light data-attributes
-							|  to control the timing and speed of each layer.
-				div.pushin-layer
-					div.position-absolute.fs-1.fw-bold.p-5 PushIn.js
+				div.pushin-composition
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-0
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-1
+							img(src='../../images/mountain-01-trees.svg')
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-2
+							img(src='../../images/mountain-02-hill-1.svg')
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-3
+							img(src='../../images/mountain-03-hill-2.svg')
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-4
+							img(src='../../images/mountain-04-landscape.svg')
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-5
+							img(src='../../images/mountain-05-logo.svg')
+					div.pushin-layer(data-pushin-transitions='false')
+						div.mountain-6
+							img(src='../../images/mountain-06-sky.svg')
+
 	section.container-fluid.py-5.bg-white.position-relative
 		div.row
 			.pt-4
@@ -104,15 +112,8 @@ block scripts
 		var pushInOptions = {
 			target: '#demo',
 			scene: {
-				breakpoints: [768, 1440, 1920, 2560],
 				fixedRatio: [1, 2],
 			},
-			layers: [
-				{ outpoints: [2000], speed: 15 },
-				{ inpoints: [700], outpoints: [2500] },
-				{ inpoints: [1500], outpoints: [3000], speed: 6 },
-				{ inpoints: [2000], outpoints: [4000], speed: 3 },
-			],
 		};
 		document.addEventListener( 'DOMContentLoaded', function() {
 			pushInStart(pushInOptions);

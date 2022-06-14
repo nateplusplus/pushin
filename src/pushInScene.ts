@@ -98,7 +98,7 @@ export class PushInScene {
    * Set breakpoints for responsive design settings.
    */
   private setBreakpoints(): void {
-    if (this.options?.breakpoints.length === 0) {
+    if (!this.options?.breakpoints || this.options?.breakpoints.length === 0) {
       this.options.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
     }
 
