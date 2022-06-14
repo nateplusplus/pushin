@@ -4,80 +4,91 @@ block append head
 
 block append styles
 	style.
-		.demo-card-1 {
-			left: 5%;
-			top: 60%;
-			max-width: 16rem;
-		}
-
-		@media ( min-width: 768px ) {
-			.demo-card-1 {
-				top: 50%;
-				max-width: 19rem;
-			}
-		}
-
-		.demo-card-2 {
-			right: -20%;
-			top: 30%;
-			transform: scale(0.5);
-			max-width: 37.5rem;
-		}
-
-		@media ( min-width: 768px ) {
-			.demo-card-2 {
-				right: 0;
-				top: 40%;
-			}
-		}
-
-		.demo-card-3 {
-			background-color: rgb(116, 61, 187);
-			max-width: 43.75rem;
-			left: 0;
-			top: 0;
-			transform: scale( 0.5 );
-		}
-
 		#demo {
 			height: 500px;
+		}
+
+		.pushin-layer img {
+			width: 100%;
+		}
+
+		.no-pointer {
+			pointer-events: none !important;
+		}
+
+		.mountain-0 {
+			transform: scale(2);
+		}
+
+		.mountain-0-text {
+			top: 17%;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			transform: scale(0.6);
+		}
+
+		.mountain-4 {
+			position: absolute;
+			top: 15%;
+		}
+
+		.mountain-5 {
+			transform: scale(0.8);
+			margin-bottom: 23px;
+		}
+
+		.mountain-5-text {
+			top: 105%;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			font-size: 68.7px;
+			font-weight: 700;
 		}
 
 
 block content
 	header.container-fluid.py-5.bg-white.mt-5.mt-md-0.position-relative(style="z-index:1")
-		div.row
+		.row
 			h1.my-4 About PushIn.js
 			div
 				p.lead PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 				p Scroll down below to try out the effect, or browse some of the other examples on this site.
 	section#demo
-		div.pushin
-			div.pushin-scene
-				div.pushin-composition
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-0
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-1
-							img(src='../../images/mountain-01-trees.svg')
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-2
+		.pushin
+			.pushin-scene
+				.pushin-composition
+					.pushin-layer(data-pushin-transitions='false' data-pushin-to="1000" data-pushin-speed="20")
+						.mountain-0.no-pointer
+							.mountain-0-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
+								p Scroll to begin
+							img(src='../../images/mountain-0-mask.svg')
+					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="3500" data-pushin-speed="7")
+						.mountain-1.no-pointer
 							img(src='../../images/mountain-02-hill-1.svg')
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-3
+					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="5000" data-pushin-speed="8")
+						.mountain-2.no-pointer
+							img(src='../../images/mountain-01-trees.svg')
+					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="4")
+						.mountain-3.no-pointer
 							img(src='../../images/mountain-03-hill-2.svg')
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-4
+					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="1")
+						.mountain-4.no-pointer
 							img(src='../../images/mountain-04-landscape.svg')
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-5
+					.pushin-layer(data-pushin-transitions='false' data-pushin-from="0" data-pushin-to="6000" data-pushin-speed='0.9')
+						.mountain-5.no-pointer
+							.mountain-5-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
+								p PushIn.js
 							img(src='../../images/mountain-05-logo.svg')
-					div.pushin-layer(data-pushin-transitions='false')
-						div.mountain-6
+					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1000" data-pushin-from="0" data-pushin-to="5000" data-pushin-speed='0.5')
+						.mountain-6.no-pointer
 							img(src='../../images/mountain-06-sky.svg')
+					.pushin-layer
+						//- HACK: last layer can't fade out.
 
 	section.container-fluid.py-5.bg-white.position-relative
-		div.row
+		.row
 			.pt-4
 				h2 Compatibility
 				p PushIn.js supports all browsers that are ES5-compliant (IE8 and below are not supported).

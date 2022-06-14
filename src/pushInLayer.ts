@@ -146,7 +146,7 @@ export class PushInLayer {
     let speed: number | null = null;
 
     if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
-      speed = parseInt(element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]!, 10);
+      speed = parseFloat(element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]!);
       if (Number.isNaN(speed)) {
         speed = DEFAULT_SPEED;
       }
