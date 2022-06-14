@@ -3,13 +3,14 @@ import {
   PUSH_IN_TO_DATA_ATTRIBUTE,
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_SPEED_DATA_ATTRIBUTE,
+  PUSH_IN_DEFAULT_TRANSITION_LENGTH,
 } from './constants';
 import { PushInScene } from './pushInScene';
 
 import { LayerOptions, LayerRef, LayerParams } from './types';
 
 export class PushInLayer {
-  public params: LayerParams;
+  public params!: LayerParams;
   private originalScale: number;
   private ref: LayerRef;
 
@@ -31,11 +32,73 @@ export class PushInLayer {
     // Set tabindex so we can sync scrolling with screenreaders
     this.element.setAttribute('tabindex', '0');
 
-    this.params = {
-      inpoint: this.getInpoint(inpoints),
-      outpoint: this.getOutpoint(outpoints),
-      speed,
-    };
+    this.setLayerParams();
+  }
+
+  /**
+   * Get the transitions setting, either from the API or HTML attributes.
+   *
+   * @return {boolean}
+   */
+  private getTransitions(): boolean {
+    let transitions = this.options?.transitions ?? true;
+    if (this.element.hasAttribute('data-pushin-transitions')) {
+      const attr = this.element!.dataset!.pushinTransitions;
+      if (attr) {
+        transitions = attr !== 'false' && attr !== '0';
+      }
+    }
+    return transitions;
+  }
+
+  /**
+   * Get the amount of overlap between previous and current layer.
+   *
+   * @return {number}
+   */
+  private getOverlap(): number {
+    let overlap = 0;
+
+    if (this.index > 0) {
+      const prevLayer = this.scene.layers[this.index - 1];
+      const prevTranEnd = prevLayer.params.transitionEnd;
+      const curTranStart = this.getTransitionStart();
+
+      const average = (curTranStart + prevTranEnd) / 2;
+
+      overlap = Math.min(average * 0.5, curTranStart);
+    }
+
+    return overlap;
+  }
+
+  /**
+   * Get the transitionStart setting, either from the API or HTML attributes.
+   *
+   * @returns number
+   */
+  private getTransitionStart(): number {
+    let start =
+      this.options?.transitionStart ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    if (this.element.hasAttribute('data-pushin-transition-start')) {
+      const attr = <string>this.element!.dataset!.pushinTransitionStart;
+      start = parseInt(attr, 10);
+    }
+    return start;
+  }
+
+  /**
+   * Get the transitionEnd setting, either from the API or HTML attributes.
+   *
+   * @returns number
+   */
+  private getTransitionEnd(): number {
+    let end = this.options?.transitionEnd ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    if (this.element.hasAttribute('data-pushin-transition-end')) {
+      const attr = <string>this.element!.dataset!.pushinTransitionEnd;
+      end = parseInt(attr, 10);
+    }
+    return end;
   }
 
   /**
@@ -54,7 +117,7 @@ export class PushInLayer {
     } else if (index > 0) {
       // Set default for middle layers if none provided
       const { outpoint } = this.scene.layers[index - 1].params;
-      inpoints = [outpoint - this.scene.speedDelta];
+      inpoints = [outpoint - this.getOverlap()];
     }
 
     return inpoints;
@@ -102,17 +165,28 @@ export class PushInLayer {
   }
 
   /**
-   * Reset all the layer parameters.
+   * Set all the layer parameters.
    *
-   * This is used if the window is resized
-   * and things need to be recalculated.
+   * This is used during initalization and
+   * if the window is resized.
    */
-  resetLayerParams(): void {
+  setLayerParams(): void {
     this.params = {
+      depth: this.getDepth(),
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
+      overlap: this.getOverlap(),
       speed: this.ref.speed,
+      transitions: this.getTransitions(),
+      transitionStart: this.getTransitionStart(),
+      transitionEnd: this.getTransitionEnd(),
     };
+  }
+
+  private getDepth(): number {
+    return (
+      this.getOutpoint(this.ref.outpoints) - this.getInpoint(this.ref.inpoints)
+    );
   }
 
   /**
@@ -141,10 +215,21 @@ export class PushInLayer {
   private isActive(): boolean {
     const { inpoint } = this.params;
     const { outpoint } = this.params;
-    return (
-      this.scene.pushin.scrollY >= inpoint &&
-      this.scene.pushin.scrollY <= outpoint
-    );
+
+    let active = true;
+
+    if (this.params.transitions) {
+      const min = this.scene.pushin.scrollY >= inpoint;
+      const max = this.scene.pushin.scrollY <= outpoint;
+      active = min && max;
+      if (!active && this.params.transitionStart < 0 && !min) {
+        active = true;
+      } else if (!active && this.params.transitionEnd < 0 && !max) {
+        active = true;
+      }
+    }
+
+    return active;
   }
 
   /**
@@ -208,19 +293,16 @@ export class PushInLayer {
     } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
     } else if (this.isActive()) {
-      this.setScale(this.element, this.getScaleValue(this));
-
       let inpointDistance =
         Math.max(
           Math.min(
             this.scene.pushin.scrollY - inpoint,
-            this.scene.transitionLength
+            this.params.transitionStart
           ),
           0
-        ) / this.scene.transitionLength;
+        ) / this.params.transitionStart;
 
-      // Set opacity to 1 if its the first layer and it is active (no fading in here)
-      if (isFirst) {
+      if (isFirst || this.params.transitionStart < 0) {
         inpointDistance = 1;
       }
 
@@ -228,17 +310,22 @@ export class PushInLayer {
         Math.max(
           Math.min(
             outpoint - this.scene.pushin.scrollY,
-            this.scene.transitionLength
+            this.params.transitionEnd
           ),
           0
-        ) / this.scene.transitionLength;
+        ) / this.params.transitionEnd;
 
-      // Set opacity to 1 if its the last layer and it is active (no fading out)
-      if (isLast) {
+      if (isLast || this.params.transitionEnd < 0) {
         outpointDistance = 1;
       }
 
-      opacity = Math.min(inpointDistance, outpointDistance);
+      opacity = this.params.transitions
+        ? Math.min(inpointDistance, outpointDistance)
+        : 1;
+    }
+
+    if (this.isActive()) {
+      this.setScale(this.element, this.getScaleValue(this));
     }
 
     this.element.style.opacity = opacity.toString();

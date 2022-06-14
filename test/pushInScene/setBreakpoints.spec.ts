@@ -26,7 +26,6 @@ describe('setBreakpoints', () => {
   it('Should set the default breakpoints', () => {
     mockPushInScene['setBreakpoints']();
     const result = mockPushInScene['options'].breakpoints;
-    console.log(PUSH_IN_DEFAULT_BREAKPOINTS);
     const expected = [0, ...PUSH_IN_DEFAULT_BREAKPOINTS];
     expect(result).toEqual(expected);
   });

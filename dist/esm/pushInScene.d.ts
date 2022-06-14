@@ -6,7 +6,6 @@ export declare class PushInScene {
     private container;
     layers: PushInLayer[];
     speedDelta: number;
-    transitionLength: number;
     layerDepth: number;
     options: SceneOptions;
     constructor(pushin: PushIn);

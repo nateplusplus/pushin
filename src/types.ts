@@ -2,19 +2,22 @@ export interface LayerOptions {
   inpoints: number[];
   outpoints: number[];
   speed: number;
+  transitions?: boolean;
+  transitionStart?: number;
+  transitionEnd?: number;
 }
 
 export interface SceneOptions {
-  speedDelta?: number;
   layerDepth?: number;
-  transitionLength?: number;
   breakpoints: number[];
   inpoints: number[];
   layers?: LayerOptions[];
+  ratio?: number[];
 }
 
 export interface PushInOptions {
   debug?: boolean;
+  target?: string;
   layers?: LayerOptions[];
   scene?: SceneOptions;
 }
@@ -32,7 +35,17 @@ export interface LayerRef {
 }
 
 export interface LayerParams {
+  depth: number;
   inpoint: number;
   outpoint: number;
+  overlap: number;
   speed: number;
+  transitions: boolean;
+  transitionStart: number;
+  transitionEnd: number;
+}
+
+export interface CompositionOptions {
+  isFixed: boolean;
+  ratio?: number[];
 }
