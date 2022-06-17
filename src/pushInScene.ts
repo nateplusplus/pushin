@@ -7,7 +7,7 @@ import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
-import { LayerOptions, SceneOptions, CompositionOptions } from './types';
+import { LayerOptions, SceneOptions } from './types';
 
 export class PushInScene {
   public container: HTMLElement;
