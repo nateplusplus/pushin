@@ -37,24 +37,36 @@ module.exports = (env, { mode }) => {
         filename: 'pushin.min.css',
       }),
       new HtmlWebpackPlugin({
+        template: './docs/home.pug',
         filename: 'index.html',
-        minify: false,
-        template: '!!pug-loader!docs/home.pug',
       }),
       new HtmlWebpackPlugin({
-        filename: 'simple.html',
-        minify: false,
-        template: '!!pug-loader!docs/simple.pug',
+        template: './docs/simple.pug',
+        filename: 'examples/simple/index.html',
       }),
       new HtmlWebpackPlugin({
-        filename: 'responsive.html',
-        minify: false,
-        template: '!!pug-loader!docs/responsive.pug',
+        template: './docs/responsive.pug',
+        filename: 'examples/responsive/index.html',
       }),
       new HtmlWebpackPlugin({
-        filename: 'cat.html',
-        minify: false,
-        template: '!!pug-loader!docs/cat.pug',
+        template: './docs/target.pug',
+        filename: 'target/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/cat.pug',
+        filename: 'examples/cat/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/api.pug',
+        filename: 'api/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/installation.pug',
+        filename: 'installation/index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './docs/composition.pug',
+        filename: 'composition/index.html',
       }),
     ],
     module: {
@@ -67,6 +79,10 @@ module.exports = (env, { mode }) => {
           test: /.ts$/,
           exclude: /node_modules/,
           loader: 'ts-loader',
+        },
+        {
+          test: /\.pug$/,
+          loader: 'simple-pug-loader',
         },
       ],
     },

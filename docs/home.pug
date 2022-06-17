@@ -1,142 +1,137 @@
 extends layout.pug
-
 block append head
 	title PushIn.js
 
 block append styles
 	style.
-		.demo-card-1 {
-			top: 60%;
-			left: 10%;
-			max-width: 16rem;
+		#demo {
+			height: 500px;
 		}
 
-		@media ( min-width: 768px ) {
-			.demo-card-1 {
-				left: 10%;
-				top: 350px;
-				max-width: 19rem;
-			}
+		.pushin-layer img {
+			width: 100%;
 		}
 
-		.demo-card-2 {
-			top: 10px;
-			right: 3%;
-			transform: scale(0.5);
-			max-width: 37.5rem;
+		.no-pointer {
+			pointer-events: none !important;
 		}
 
-		@media ( min-width: 768px ) {
-			.demo-card-2 {
-				top: 40%;
-			}
+		.mountain-0 {
+			transform: scale(2);
 		}
 
-		@media ( min-width: 1100px ) {
-			.demo-layer-2-text {
-				right: 15%;
-				top: 15%;
-			}
+		.mountain-0-text {
+			top: 17%;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			transform: scale(0.6);
 		}
 
-		.demo-card-3 {
-			background-color: rgb(116, 61, 187);
-			max-width: 43.75rem;
-			left: -5%;
-			top: 30%;
-			transform: scale( 0.5 );
+		.mountain-2 {
+			position: absolute;
+			left: 15%;
+			bottom: 20%;
 		}
 
-		@media ( min-width: 768px ) {
-			.demo-card-3 {
-				top: 10%;
-			}
+		.mountain-4 {
+			position: absolute;
+			top: 15%;
 		}
 
-		@media ( min-width: 1100px ) {
-			.demo-card-3 {
-				top: 20%;
-				left: 5%;
-			}
+		.mountain-5 {
+			transform: scale(0.8);
+			margin-bottom: 23px;
+		}
+
+		.mountain-5-text {
+			top: 105%;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			font-size: 68.7px;
+			font-weight: 700;
 		}
 
 
 block content
-		header.container-fluid.py-5.bg-white.mt-5.mt-md-0.position-relative(style="z-index:1")
-			div.row.justify-content-center
-				h1.col-10.col-lg-7.my-4 PushIn.js
-				div.col-10.col-lg-7
-					p.lead PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
-					p Scroll down below to try out the effect, or browse other examples:
-					ul
-						li
-							a(href='simple.html') Simple - Zero configuration
-						li
-							a(href='responsive.html') Responsive design
-						li
-							a(href='cat.html') Building scenes with images - The cat
-		main
-			section.pushin.bg-secondary.bg-opacity-25
-				div.pushin-scene
-					div.pushin-layer
-						div.card.bg-info.bg-gradient.shadow-lg.position-absolute.demo-card-1
-							div.card-body.fs-1.fw-bold.p-5 Scroll to push in
-					div.pushin-layer
-						div.card.bg-warning.bg-gradient.shadow-lg.position-absolute.demo-card-2
-							div.card-body.fs-1.fw-bold.p-5 Each layer can come into view at different times.
-					div.pushin-layer
-						div.card.bg-gradient.text-light.shadow-lg.position-absolute.demo-card-3
-							div.card-body.fs-1.fw-bold.p-5
-								| Use HTML 
-								a(href="https://github.com/nateplusplus/pushin/blob/main/docs/html-attributes.md" target="_blank").text-light data-attributes
-								|  to control the timing and speed of each layer.
-					div.pushin-layer
-						div.position-absolute.fs-1.fw-bold.p-5 PushIn.js
-			section.container-fluid.py-5.bg-white.position-relative
-				div.row.justify-content-center
-					div.col-10.col-lg-7.pt-4
-						h2 Compatibility
-						p PushIn.js supports all browsers that are ES5-compliant (IE8 and below are not supported).
-					div.col-10.col-lg-7.pt-4
-						h2 How does it work?
-						p
-							| This plugin uses a combination of JavaScript and CSS to create the illusion of objects moving forward or backward by manipulating their scale while the user scrolls on the page. The effect uses the modern browser's built in 
-							a(href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame", target="_blank", rel="noopener noreferrer nofollow") requestAnimationFrame
-							|  to deliver a performant experience that is cross-browser compatible.
-						ul
-							li Zero dependencies!
-							li No canvas elements!
-							li No webGL!
-							li No flash!
-					div.col-10.col-lg-7.pt-4
-						h2 How much does this cost?
-						p It's completely free open source code under the MIT License!
-					div.col-10.col-lg-7.pt-4
-						h2 How can I use it on my site?
-						p
-							| Check out the 
-							a(href="https://github.com/nateplusplus/pushin") GitHub README
-							|  to learn more about how to use this on your own projects.
-					div.col-10.col-lg-7.pt-4
-						h2 What do I do if I'm experiencing an issue?
-						p
-							| Please submit a 
-							a(href="https://github.com/nateplusplus/pushin/issues/new?assignees=&labels=&template=bug_report.md&title=") bug report
-							|  so I can put on my detective hat and look into it further!
+	header.container-fluid.py-5.bg-white.mt-5.mt-md-0.position-relative(style="z-index:1")
+		.row
+			h1.my-4 About PushIn.js
+			div
+				p.lead PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
+	section
+		h2 Working Demo
+		p Scroll over the image below to try out this effect.
+		#demo
+			.pushin
+				.pushin-scene
+					.pushin-composition
+						.pushin-layer(data-pushin-transitions='false' data-pushin-to="1000" data-pushin-speed="20")
+							.mountain-0.no-pointer
+								.mountain-0-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
+									p Scroll to begin
+								img(src='../../images/mountain-0-mask.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="3500" data-pushin-speed="7")
+							.mountain-1.no-pointer
+								img(src='../../images/mountain-02-hill-1.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="5000" data-pushin-speed="8")
+							.mountain-2.no-pointer
+								img(src='../../images/mountain-01-trees.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="4")
+							.mountain-3.no-pointer
+								img(src='../../images/mountain-03-hill-2.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="1")
+							.mountain-4.no-pointer
+								img(src='../../images/mountain-04-landscape.svg')
+						.pushin-layer(data-pushin-transitions='false' data-pushin-from="0" data-pushin-to="6000" data-pushin-speed='0.9')
+							.mountain-5.no-pointer
+								.mountain-5-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
+									p PushIn.js
+								img(src='../../images/mountain-05-logo.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1000" data-pushin-from="0" data-pushin-to="5000" data-pushin-speed='0.5')
+							.mountain-6.no-pointer
+								img(src='../../images/mountain-06-sky.svg')
+						.pushin-layer
+							//- HACK: last layer can't fade out.
+
+	section.container-fluid.py-5.bg-white.position-relative
+		.row
+			.pt-4
+				h2 Compatibility
+				p PushIn.js supports all browsers that are ES5-compliant (IE8 and below are not supported).
+			.pt-4
+				h2 How does it work?
+				p
+					| This plugin uses a combination of JavaScript and CSS to create the illusion of objects moving forward or backward by manipulating their scale while the user scrolls on the page. The effect uses the modern browser's built in 
+					a(href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame", target="_blank", rel="noopener noreferrer nofollow") requestAnimationFrame
+					|  to deliver a performant experience that is cross-browser compatible.
+				ul
+					li Zero dependencies!
+					li No canvas elements!
+					li No webGL!
+					li No flash!
+			.pt-4
+				h2 How much does this cost?
+				p It's completely free open source code under the MIT License!
+			.pt-4
+				h2 How can I use it on my site?
+				p
+					| Read the 
+					a(href="https://github.com/nateplusplus/pushin") Installation Guide
+					|  to learn more about how to use this on your own projects.
+				p
+					| You can also check out the 
+					a(href="https://github.com/nateplusplus/pushin") GitHub README
+					|  for more information about this plugin and how to contribute!
+			.pt-4
+				h2 What do I do if I'm experiencing an issue?
+				p
+					| Please submit a 
+					a(href="https://github.com/nateplusplus/pushin/issues/new?assignees=&labels=&template=bug_report.md&title=") bug report
+					|  so I can put on my detective hat and look into it further!
 block scripts
 	script( defer ).
-		var pushInOptions = {
-			scene: {
-				breakpoints: [768, 1440, 1920, 2560],
-				inpoints: [200],
-			},
-			layerOptions: [
-				{ outpoints: [1000] },
-				{ inpoints: [700], outpoints: [2500] },
-				{ inpoints: [1500], outpoints: [3000] },
-				{ inpoints: [2000], outpoints: [6000], speed: 25 },
-			],
-		};
 		document.addEventListener( 'DOMContentLoaded', function() {
-			pushInStart(pushInOptions);
+			pushInStart({ target: '#demo' });
 		} );
