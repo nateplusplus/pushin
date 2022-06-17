@@ -8,7 +8,10 @@ html(lang="en-us")
 			link(rel="icon" href="images/favicon.ico")
 		block styles
 			link( href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" )
+			link( href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css" rel="stylesheet" )
 			script( src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" )
+			script( src="https://cdn.jsdelivr.net/npm/prismjs@v1/components/prism-core.min.js" )
+			script( src="https://cdn.jsdelivr.net/npm/prismjs@v1/plugins/autoloader/prism-autoloader.min.js" )
 
 	body
 		.container-fluid(style="z-index:10" class=(siteNavFullWidth ? 'position-fixed top-0' : ''))

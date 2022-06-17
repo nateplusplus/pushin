@@ -15,27 +15,25 @@ block content
 			.col
 				h2 Install pushin with NPM or a CDN
 				p If you're using npm, you can install the package by running:
-				pre.bg-dark.bg-gradient.text-light.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-bash
 						| npm install --save pushin
 		.row 
 			.col
-				p Import assets into your javascript (if using Webpack) or directly into your CSS files.
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
-						| // webpack
+				p Import assets into your javascript (if using Webpack).
+				pre.rounded.mb-5
+					code.language-javascript
 						| import 'pushin/dist/pushin.css';
-				p ~or~
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
-						| /* css */
+				p If not using Webpack, you can import the CSS from node_modules.
+				pre.rounded.mb-5
+					code.language-css
 						| @import 'node_modules/pushin/dist/pushin.css';
 
 		.row 
 			.col 
 				p Alternatively, you can use a CDN:
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-html
 						| https://unpkg.com/pushin/dist/pushin.min.css
 						| https://unpkg.com/pushin/dist/umd/pushin.min.js
 		.row.mt-5
@@ -43,8 +41,8 @@ block content
 				h2 Insert required HTML structure
 				p At the most basic level, there are a few things you need to set up on your page in order for this to work properly.
 				p Use the following example snippet to create a "scene" for the pushin effect.
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-html
 						|&lt;div class="pushin"&gt;
 						|  &lt;div class="pushin-scene"&gt;
 						|    &lt;div class="pushin-layer"&gt;This is the first layer you'll see.&lt;/div&gt;
@@ -61,12 +59,15 @@ block content
 					| Once you have your HTML set up, you can initialize the effect with 
 					code pushInStart() 
 					| which is exported to the global scope.
+				pre.rounded.mb-5
+					code.language-javascript
+						|pushInStart();
 				p
 					| If using the global scope is not best for your project, you can alternatively call the 
 					code start() 
 					| method: 
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-javascript
 						|import { PushIn } from 'pushin';
 						| 
 						|const container = document.querySelector('.pushin');

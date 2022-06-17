@@ -126,12 +126,6 @@ block content
 					|  so I can put on my detective hat and look into it further!
 block scripts
 	script( defer ).
-		var pushInOptions = {
-			target: '#demo',
-			scene: {
-				fixedRatio: [1, 2],
-			},
-		};
 		document.addEventListener( 'DOMContentLoaded', function() {
-			pushInStart(pushInOptions);
+			pushInStart({ target: '#demo' });
 		} );

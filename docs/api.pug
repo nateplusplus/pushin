@@ -13,8 +13,8 @@ block content
 		.row 
 			.col
 				h2 PushIn Full HTML Layout
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-html
 						|&lt;div class="pushin"&gt;
 						|  &lt;div class="pushin-scene"&gt;
 						|    &lt;div class="pushin-composition"&gt;
@@ -36,8 +36,8 @@ block content
 					code new PushIn()
 					| .
 				p The example below demonstrates how you can configure PushIn using the JavaScript API.
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-javascript
 						|const config = {
 						|  target: document.querySelector('#my-target'),
 						|  scene: {
@@ -66,8 +66,8 @@ block content
 				p
 					strong NOTE: Any attributes added within the HTML markup will take precedence over configurations in the JavaScript API.
 				p The example below demonstrates how you can use the HTML data-attributes to configure PushIn.
-				pre.bg-light.bg-gradient.p-3.rounded
-					code
+				pre.rounded.mb-5
+					code.language-html
 						|&lt;div class="pushin" data-pushin-target="#my-target"&gt;
 						|  &lt;div class="pushin-scene"
 						|      data-pushin-breakpoints="768,1440,1920,2560"
@@ -89,151 +89,183 @@ block content
 		.row 
 			.col
 				h2 Modules
+				p Each component of the PushIn plugin has its own set of configurations, separated into modules below.
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3 pushin (top level)
-				table.table
-					tr 
-						th(scope="col") Name 
-						th(scope="col") HTML Attribute
-						th(scope="col") Type 
-						th(scope="col") Default 
-						th(scope="col") Description
-					tr
-						th(scope="row") target 
-						td 
-							code data-pushin-target
-						td string 
-						td 
-							code undefined 
-						td JavaScript selector used to attach PushIn to an element on the page.
-					tr
-						th(scope="row") debug 
-						td
-							code.text-muted none
-						td boolean 
-						td 
-							code false 
-						td Enables a tool to display the current scroll position which can help with animation timing.
-	section.container-fluid.my-5
-		.row 
-			.col
-				h3 scene
-				table.table
-					tr 
-						th(scope="col") Name 
-						th(scope="col") HTML Attribute
-						th(scope="col") Type 
-						th(scope="col") Default 
-						th(scope="col") Description
-					tr
-						th(scope="row") breakpoints 
-						td 
-							code data-pushin-breakpoints
-						td string 
-						td 
-							code 0,768,1440,1920
-						td Provide a comma-separated list of numbers to configure appropriate responsive design breakpoints.
-					tr
-						th(scope="row") from 
-						td 
-							code data-pushin-from
-						td string 
-						td 
-							code 0
-						td Comma-separated list of numbers representing the screen position at which the scene should begin animating.
-					tr
-						th(scope="row") layerDepth 
-						td 
-							code n/a
-						td number 
-						td 
-							code 1000
-						td When an inpoint or outpoint is not provided for a layer, pushIn will use this number to calculate how long the layer should animate when scrolling.
-					tr
-						th(scope="row") ratio 
-						td 
-							code data-pushin-ratio
-						td string 
-						td 
-							code 1,2
-						td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
-	section.container-fluid.my-5
-		.row 
-			.col
-				h3 layers
-				table.table
-					tr 
-						th(scope="col") Name 
-						th(scope="col") HTML Attribute
-						th(scope="col") Type 
-						th(scope="col") Default 
-						th(scope="col") Description
-					tr
-						th(scope="row") inpoints 
-						td 
-							code data-pushin-from
-						td string 
-						td 
-							code undefined
-						td Comma-separated list of numbers representing the screen position at which the layer should begin animating.
-					tr
-						th(scope="row") outpoints 
-						td 
-							code data-pushin-to
-						td string 
-						td 
-							code undefined
-						td Comma-separated list of numbers representing the screen position at which the layer should stop animating.
-					tr
-						th(scope="row") speed 
-						td 
-							code data-pushin-speed
-						td number 
-						td 
-							code 8
-						td A number representing how fast or slow the layer should grow or shrink during scroll events.
-					tr
-						th(scope="row") transitions 
-						td 
-							code data-pushin-transitions
-						td boolean 
-						td 
-							code true
-						td
-							p
-								| Whether to fade in or out when the layer is not active. Setting this to 
+				h3
+					| pushin (top level) | 
+					code .pushin
+				.table-responsive
+					table.table
+						tr 
+							th(scope="col") Name 
+							th(scope="col") HTML Attribute
+							th(scope="col") Type 
+							th(scope="col") Default 
+							th(scope="col") Description
+						tr
+							th(scope="row") target 
+							td 
+								code data-pushin-target
+							td string 
+							td 
+								code undefined 
+							td JavaScript selector used to attach PushIn to an element on the page.
+						tr
+							th(scope="row") debug 
+							td
+								code.text-muted none
+							td boolean 
+							td 
 								code false 
-								| will turn off both start and end transitions.
-							p
-								strong Note: 
-								| By default, the first layer does not fade in, and the last layer does not fade out.
-					tr
-						th(scope="row") transitionStart
-						td 
-							code data-pushin-transition-start
-						td number 
-						td 
-							code 200
-						td
-							p Duration of the fade-in effect after the layer becomes active (in pixels).
-							p
-								strong Note: 
-								| Use 
-								code -1 
-								| to turn off the start transition only (does not affect end transition).
-					tr
-						th(scope="row") transitionEnd
-						td 
-							code data-pushin-transition-end
-						td number 
-						td 
-							code 200
-						td
-							p Duration of the fade-out effect before the layer becomes inactive (in pixels).
-							p
-								strong Note: 
-								| Use 
-								code -1 
-								| to turn off the end transition only (does not affect start transition).
+							td Enables a tool to display the current scroll position which can help with animation timing.
+	section.container-fluid.my-5
+		.row 
+			.col
+				h3
+					| scene | 
+					code .pushin-scene
+				.table-responsive
+					table.table
+						tr 
+							th(scope="col") Name 
+							th(scope="col") HTML Attribute
+							th(scope="col") Type 
+							th(scope="col") Default 
+							th(scope="col") Description
+						tr
+							th(scope="row") breakpoints 
+							td 
+								code data-pushin-breakpoints
+							td string 
+							td 
+								code 0,768,1440,1920
+							td Provide a comma-separated list of numbers to configure appropriate responsive design breakpoints.
+						tr
+							th(scope="row") from 
+							td 
+								code data-pushin-from
+							td string 
+							td 
+								code 0
+							td Comma-separated list of numbers representing the screen position at which the scene should begin animating.
+						tr
+							th(scope="row") layerDepth 
+							td 
+								code n/a
+							td number 
+							td 
+								code 1000
+							td When an inpoint or outpoint is not provided for a layer, pushIn will use this number to calculate how long the layer should animate when scrolling.
+						tr
+							th(scope="row") ratio 
+							td 
+								code data-pushin-ratio
+							td string 
+							td 
+								code 1,2
+							td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
+	section.container-fluid.my-5
+		.row 
+			.col
+				h3
+					| composition | 
+					code .pushin-composition
+				.table-responsive
+					table.table
+						tr 
+							th(scope="col") Name 
+							th(scope="col") HTML Attribute
+							th(scope="col") Type 
+							th(scope="col") Default 
+							th(scope="col") Description
+						tr
+							th(scope="row") ratio 
+							td 
+								code data-pushin-ratio
+							td string 
+							td 
+								code 1,2
+							td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
+	section.container-fluid.my-5
+		.row 
+			.col
+				h3
+					| layers | 
+					code .pushin-layer
+				.table-responsive
+					table.table
+						tr 
+							th(scope="col") Name 
+							th(scope="col") HTML Attribute
+							th(scope="col") Type 
+							th(scope="col") Default 
+							th(scope="col") Description
+						tr
+							th(scope="row") inpoints 
+							td 
+								code data-pushin-from
+							td string 
+							td 
+								code undefined
+							td Comma-separated list of numbers representing the screen position at which the layer should begin animating.
+						tr
+							th(scope="row") outpoints 
+							td 
+								code data-pushin-to
+							td string 
+							td 
+								code undefined
+							td Comma-separated list of numbers representing the screen position at which the layer should stop animating.
+						tr
+							th(scope="row") speed 
+							td 
+								code data-pushin-speed
+							td number 
+							td 
+								code 8
+							td A number representing how fast or slow the layer should grow or shrink during scroll events.
+						tr
+							th(scope="row") transitions 
+							td 
+								code data-pushin-transitions
+							td boolean 
+							td 
+								code true
+							td
+								p
+									| Whether to fade in or out when the layer is not active. Setting this to 
+									code false 
+									| will turn off both start and end transitions.
+								p
+									strong Note: 
+									| By default, the first layer does not fade in, and the last layer does not fade out.
+						tr
+							th(scope="row") transitionStart
+							td 
+								code data-pushin-transition-start
+							td number 
+							td 
+								code 200
+							td
+								p Duration of the fade-in effect after the layer becomes active (in pixels).
+								p
+									strong Note: 
+									| Use 
+									code -1 
+									| to turn off the start transition only (does not affect end transition).
+						tr
+							th(scope="row") transitionEnd
+							td 
+								code data-pushin-transition-end
+							td number 
+							td 
+								code 200
+							td
+								p Duration of the fade-out effect before the layer becomes inactive (in pixels).
+								p
+									strong Note: 
+									| Use 
+									code -1 
+									| to turn off the end transition only (does not affect start transition).
