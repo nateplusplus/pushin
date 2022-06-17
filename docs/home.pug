@@ -60,38 +60,40 @@ block content
 			h1.my-4 About PushIn.js
 			div
 				p.lead PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
-				p Scroll down below to try out the effect, or browse some of the other examples on this site.
-	section#demo
-		.pushin
-			.pushin-scene
-				.pushin-composition
-					.pushin-layer(data-pushin-transitions='false' data-pushin-to="1000" data-pushin-speed="20")
-						.mountain-0.no-pointer
-							.mountain-0-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
-								p Scroll to begin
-							img(src='../../images/mountain-0-mask.svg')
-					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="3500" data-pushin-speed="7")
-						.mountain-1.no-pointer
-							img(src='../../images/mountain-02-hill-1.svg')
-					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="5000" data-pushin-speed="8")
-						.mountain-2.no-pointer
-							img(src='../../images/mountain-01-trees.svg')
-					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="4")
-						.mountain-3.no-pointer
-							img(src='../../images/mountain-03-hill-2.svg')
-					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="1")
-						.mountain-4.no-pointer
-							img(src='../../images/mountain-04-landscape.svg')
-					.pushin-layer(data-pushin-transitions='false' data-pushin-from="0" data-pushin-to="6000" data-pushin-speed='0.9')
-						.mountain-5.no-pointer
-							.mountain-5-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
-								p PushIn.js
-							img(src='../../images/mountain-05-logo.svg')
-					.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1000" data-pushin-from="0" data-pushin-to="5000" data-pushin-speed='0.5')
-						.mountain-6.no-pointer
-							img(src='../../images/mountain-06-sky.svg')
-					.pushin-layer
-						//- HACK: last layer can't fade out.
+	section
+		h2 Working Demo
+		p Scroll over the image below to try out this effect.
+		#demo
+			.pushin
+				.pushin-scene
+					.pushin-composition
+						.pushin-layer(data-pushin-transitions='false' data-pushin-to="1000" data-pushin-speed="20")
+							.mountain-0.no-pointer
+								.mountain-0-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
+									p Scroll to begin
+								img(src='../../images/mountain-0-mask.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="3500" data-pushin-speed="7")
+							.mountain-1.no-pointer
+								img(src='../../images/mountain-02-hill-1.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="2000" data-pushin-from="0"  data-pushin-to="5000" data-pushin-speed="8")
+							.mountain-2.no-pointer
+								img(src='../../images/mountain-01-trees.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="4")
+							.mountain-3.no-pointer
+								img(src='../../images/mountain-03-hill-2.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1500" data-pushin-from="0" data-pushin-to="4000" data-pushin-speed="1")
+							.mountain-4.no-pointer
+								img(src='../../images/mountain-04-landscape.svg')
+						.pushin-layer(data-pushin-transitions='false' data-pushin-from="0" data-pushin-to="6000" data-pushin-speed='0.9')
+							.mountain-5.no-pointer
+								.mountain-5-text.position-absolute.d-flex.align-items-center.justify-content-center.no-pointer
+									p PushIn.js
+								img(src='../../images/mountain-05-logo.svg')
+						.pushin-layer(data-pushin-transition-start='-1' data-pushin-transition-end="1000" data-pushin-from="0" data-pushin-to="5000" data-pushin-speed='0.5')
+							.mountain-6.no-pointer
+								img(src='../../images/mountain-06-sky.svg')
+						.pushin-layer
+							//- HACK: last layer can't fade out.
 
 	section.container-fluid.py-5.bg-white.position-relative
 		.row

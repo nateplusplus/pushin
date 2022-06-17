@@ -71,22 +71,30 @@ block content
 						|&lt;div class="pushin-composition" data-pushin-ratio="16,9"&gt;
 						|  &lt;!-- Use a 16:9 composition --&gt;
 						| &lt;/div&gt;
-				p.fw-bold Using HTML attributes
+				p.fw-bold Using JavaScript API
 				pre.rounded.mb-5
 					code.language-javascript
-						| // Using JavaScript API
-						|
 						| // Option 1: Global function
-						| pushInStart({ ratio: [16, 9] });
+						| pushInStart({
+						|   composition: {
+						|     ratio: [16, 9],
+						|   }
+						| });
 						|
 						| // Option 2: Class constructor
-						| const element = document.querySelector('.pushin');
-						| const pushIn = new PushIn(element, { ratio: [16, 9] });
+						| const pushIn = new PushIn(
+						|   document.querySelector('.pushin'),
+						|   {
+						|     composition:{
+						|       ratio: [16, 9],
+						|     }
+						|   }
+						| );
 						| pushIn.start();
 		.row.mb-5
 			.col
 				h2 Tips and Tricks
-				p There are a few tricks which have proven helpful when building complex scenes. Here are a few tricks that could help you along your way.
+				p There are a few tricks which have proven helpful when building complex scenes:
 				ol 
 					li When working with graphics, build the entire composition in the aspect ratio you want it to be, and export the layers separately.
 					li SVG Graphics work best, since you will be scaling them quite a lot.

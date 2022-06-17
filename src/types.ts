@@ -7,10 +7,15 @@ export interface LayerOptions {
   transitionEnd?: number;
 }
 
+export interface CompositionOptions {
+  ratio?: number[];
+}
+
 export interface SceneOptions {
   layerDepth?: number;
   breakpoints: number[];
   inpoints: number[];
+  composition?: CompositionOptions;
   layers?: LayerOptions[];
   ratio?: number[];
 }
@@ -18,6 +23,7 @@ export interface SceneOptions {
 export interface PushInOptions {
   debug?: boolean;
   target?: string;
+  composition?: CompositionOptions;
   layers?: LayerOptions[];
   scene?: SceneOptions;
 }
@@ -43,9 +49,4 @@ export interface LayerParams {
   transitions: boolean;
   transitionStart: number;
   transitionEnd: number;
-}
-
-export interface CompositionOptions {
-  isFixed: boolean;
-  ratio?: number[];
 }
