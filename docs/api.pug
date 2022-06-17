@@ -71,9 +71,9 @@ block content
 						|&lt;div class="pushin" data-pushin-target="#my-target"&gt;
 						|  &lt;div class="pushin-scene"
 						|      data-pushin-breakpoints="768,1440,1920,2560"
-						|      data-pushin-inpoints="200,300"
-						|      data-pushin-ratio="1,2"&gt;
-						|    &lt;div class="pushin-composition"&gt;
+						|      data-pushin-inpoints="200,300"&gt;
+						|    &lt;div class="pushin-composition"
+						|        data-pushin-ratio="1,2"&gt;
 						|      &lt;!-- layer 1 --&gt;
 						|      &lt;div class="pushin-layer"
 						|        data-pushin-from="100,300"
@@ -105,14 +105,6 @@ block content
 							th(scope="col") Default 
 							th(scope="col") Description
 						tr
-							th(scope="row") target 
-							td 
-								code data-pushin-target
-							td string 
-							td 
-								code undefined 
-							td JavaScript selector used to attach PushIn to an element on the page.
-						tr
 							th(scope="row") debug 
 							td
 								code.text-muted none
@@ -120,6 +112,30 @@ block content
 							td 
 								code false 
 							td Enables a tool to display the current scroll position which can help with animation timing.
+						tr
+							th(scope="row") selector 
+							td 
+								code N/A
+							td string 
+							td 
+								code '.pushin' 
+							td
+								p
+									| If you are using the global 
+									code pushInStart() 
+									| function to create multiple instances of PushIn on one page, and you need to supply specific configurations to each instance, use this option to target a specific element (or multiple elements) as the PushIn container(s).
+								p
+									| NOTE: If using the 
+									code new PushIn() 
+									| class constructor, you will pass an element in as the first parameter, so this option is unnecessary and will be ignored.
+						tr
+							th(scope="row") target 
+							td 
+								code data-pushin-target
+							td string 
+							td 
+								code undefined 
+							td JavaScript selector used to attach PushIn to an element on the page.
 	section.container-fluid.my-5
 		.row 
 			.col

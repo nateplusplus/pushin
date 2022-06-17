@@ -50,7 +50,7 @@ module.exports = (env, { mode }) => {
       }),
       new HtmlWebpackPlugin({
         template: './docs/target.pug',
-        filename: 'examples/target/index.html',
+        filename: 'target/index.html',
       }),
       new HtmlWebpackPlugin({
         template: './docs/cat.pug',

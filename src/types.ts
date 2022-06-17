@@ -21,11 +21,12 @@ export interface SceneOptions {
 }
 
 export interface PushInOptions {
-  debug?: boolean;
-  target?: string;
   composition?: CompositionOptions;
+  debug?: boolean;
   layers?: LayerOptions[];
   scene?: SceneOptions;
+  selector?: string;
+  target?: string;
 }
 
 export interface PushInLayer {
