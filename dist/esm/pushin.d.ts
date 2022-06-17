@@ -1,4 +1,5 @@
-import { PushInOptions, SceneOptions } from './types';
+import { PushInScene } from './pushInScene';
+import { PushInOptions } from './types';
 /**
  * PushIn object
  *
@@ -7,19 +8,25 @@ import { PushInOptions, SceneOptions } from './types';
  */
 export declare class PushIn {
     container: HTMLElement;
-    private scene;
+    scene: PushInScene;
     private pushinDebug?;
-    sceneOptions: SceneOptions;
+    target?: HTMLElement | null;
     scrollY: number;
-    private readonly layers;
-    private readonly debug;
     private lastAnimationFrameId;
     cleanupFns: VoidFunction[];
+    options: PushInOptions;
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
      */
     start(): void;
+    /**
+     * Set the target parameter and make sure
+     * pushin is always a child of that target.
+     *
+     * @param options
+     */
+    setTarget(): void;
     /**
      * Does all necessary cleanups by removing event listeners.
      */
@@ -31,6 +38,11 @@ export declare class PushIn {
      * Otherwise default to 0.
      */
     private getScrollY;
+    /**
+     * Set overflow-y and scroll-behavior styles
+     * on the provided target element.
+     */
+    private setTargetOverflow;
     /**
      * Bind event listeners to watch for page load and user interaction.
      */
@@ -44,13 +56,10 @@ export declare class PushIn {
      */
     private toggleLayers;
     /**
-     * Set the default container height based on a few factors:
-     * 1. Number of layers present
-     * 2. The transition length between layers
-     * 3. The length of scrolling time during each layer
+     * Automatically set the container height based on the greatest outpoint.
      *
-     * If this calculation is smaller than the container's current height,
-     * the current height will be used instead.
+     * If the container has a height set already (e.g. if set by CSS),
+     * the larger of the two numbers will be used.
      */
     private setScrollLength;
     /**
