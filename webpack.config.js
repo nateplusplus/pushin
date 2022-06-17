@@ -64,6 +64,10 @@ module.exports = (env, { mode }) => {
         template: './docs/installation.pug',
         filename: 'installation/index.html',
       }),
+      new HtmlWebpackPlugin({
+        template: './docs/composition.pug',
+        filename: 'composition/index.html',
+      }),
     ],
     module: {
       rules: [
