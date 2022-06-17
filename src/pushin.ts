@@ -30,13 +30,14 @@ export class PushIn {
     this.options.scene!.layers = options?.layers ?? undefined;
 
     this.options.debug = options?.debug ?? false;
-    this.setTarget(options);
   }
 
   /**
    * Initialize the object to start everything up.
    */
   start(): void {
+    this.setTarget();
+
     this.scrollY = this.getScrollY();
 
     if (this.options.debug) {
@@ -70,9 +71,9 @@ export class PushIn {
    *
    * @param options
    */
-  setTarget(options: PushInOptions | undefined): void {
-    if (options?.target) {
-      this.target = document.querySelector(options!.target);
+  setTarget(): void {
+    if (this.options.target) {
+      this.target = document.querySelector(this.options!.target);
     }
 
     if (this.container.hasAttribute('data-pushin-target')) {

@@ -35,6 +35,7 @@ html(lang="en-us")
 					#site-nav.offcanvas-end(tabindex="-1" class=(siteNavFullWidth ? 'offcanvas' : 'offcanvas-lg'))
 						nav.offcanvas-body
 							block sidebar
+								button.fs-1.btn.btn-link.link-dark.text-decoration-none(type="button" label="Close menu" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" class=(siteNavFullWidth ? '' : 'd-lg-none')) &times;
 								ul.list-group.list-group-flush.pt-4
 									li.list-group-item.fw-bold Getting Started
 									li.list-group-item.ps-5
@@ -44,6 +45,8 @@ html(lang="en-us")
 									li.list-group-item.ps-5
 											a(href='/composition') Composition
 									li.list-group-item.ps-5
+										a(href='/target') Target
+									li.list-group-item.ps-5
 										a(href='/api') API Reference
 									li.list-group-item.fw-bold Examples
 									li.list-group-item.ps-5
@@ -52,8 +55,6 @@ html(lang="en-us")
 										a(href='/examples/responsive') Responsive design
 									li.list-group-item.ps-5
 										a(href='/examples/cat') Building a scene with images
-									li.list-group-item.ps-5
-										a(href='/examples/target') Attaching to scrollable elements
 				main.col-12(class=(siteNavFullWidth ? '' : 'col-lg-8'))
 					block content
 		footer.position-fixed.bottom-0.start-0.d-flex.justify-content-end.w-100
