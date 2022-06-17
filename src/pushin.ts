@@ -26,6 +26,7 @@ export class PushIn {
       target: options?.target ?? undefined,
     };
 
+    this.options.scene!.composition = options?.composition ?? undefined;
     this.options.scene!.layers = options?.layers ?? undefined;
 
     this.options.debug = options?.debug ?? false;

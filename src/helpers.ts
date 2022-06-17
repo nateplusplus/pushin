@@ -14,7 +14,14 @@ declare global {
 const pushInStart = (options?: PushInOptions): PushIn[] => {
   const pushInOptions = options ?? {};
 
-  const elements = document.querySelectorAll<HTMLElement>('.pushin');
+  let elements = document.querySelectorAll<HTMLElement>('.pushin');
+
+  if (options?.target) {
+    elements = document.querySelectorAll<HTMLElement>(
+      `${options.target} .pushin`
+    );
+  }
+
   const instances: PushIn[] = [];
   for (const element of elements) {
     const instance = new PushIn(element, pushInOptions);

@@ -7,7 +7,7 @@ import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 
-import { LayerOptions, SceneOptions, CompositionOptions } from './types';
+import { LayerOptions, SceneOptions } from './types';
 
 export class PushInScene {
   public container: HTMLElement;
@@ -41,7 +41,10 @@ export class PushInScene {
     this.layers = [];
 
     this.setSceneClasses();
-    const compositionOptions = this.getFixedRatio();
+
+    const compositionOptions = {
+      ratio: pushin.options.composition?.ratio ?? undefined,
+    };
     this.composition = new PushInComposition(this, compositionOptions);
 
     this.setBreakpoints();
@@ -57,35 +60,6 @@ export class PushInScene {
     }
   }
 
-  /**
-   * Get the composition options based on
-   * what has been passed in through the JavaScript API
-   * and/or what has been passed in via HTML data-attributes.
-   *
-   * @returns CompositionOptions
-   */
-  private getFixedRatio(): CompositionOptions {
-    let options = <CompositionOptions>{
-      isFixed: false,
-    };
-
-    if (this.container.hasAttribute('data-pushin-ratio')) {
-      const value = this.container.dataset.pushinRatio;
-
-      options = {
-        isFixed: true,
-        ratio: value?.split(',').map(val => parseInt(val, 10)),
-      };
-    } else if (this.options?.ratio) {
-      options = {
-        isFixed: true,
-        ratio: this.options.ratio,
-      };
-    }
-
-    return options;
-  }
-
   public resize() {
     const sizes = this.pushin.target?.getBoundingClientRect();
     if (sizes) {
@@ -98,7 +72,7 @@ export class PushInScene {
    * Set breakpoints for responsive design settings.
    */
   private setBreakpoints(): void {
-    if (this.options?.breakpoints.length === 0) {
+    if (!this.options?.breakpoints || this.options?.breakpoints.length === 0) {
       this.options.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
     }
 
