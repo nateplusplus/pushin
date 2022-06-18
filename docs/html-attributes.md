@@ -4,6 +4,30 @@ HTML attributes can be used to customize the timing and speed at which elements 
 
 ---
 
+## PushIn configuration
+
+Global settings that affect the entire pushin container can be set on the element with the class "pushin".
+
+### **data-pushin-target**
+
+By default, PushIn.js will attach the effect to the viewport and target the window object for any scrolling behaviors.
+
+Alternatively, you can use the `data-pushin-target` attribute to attach the PushIn effect to an element on the page. This will automatically make the element scrollable, and will constrain the effect within it.
+
+To specify a target element, provide any element selector, like in the example below:
+
+```html
+<div class="my-parent">
+  <div class="pushin" data-pushin-target=".my-parent">
+    <!-- ... -->
+  </div>
+</div>
+```
+
+_**NOTE:** If the pushin element is a direct child of this target, it will simply attach the effect as is. If it is not a direct child of the target, it will move pushin into the container in order for the effect to work._
+
+---
+
 ## Scene configuration
 
 The "scene" is the container element for all layers. There are some scene configurations you can customize for your unique project, which will affect all layers.
@@ -43,6 +67,23 @@ This can be used to specify custom breakpoints for responsive design. The defaul
 ```
 
 See a working demo of breakpoints and responsive design here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
+
+### **data-pushin-fixed-ratio**
+
+This can be used to specify the aspect ratio that you want your scene to be. Setting a fixed aspect ratio helps a lot when using absolute positioning on items within your scene. The default ratio is 1:2 because this includes most mobile devices. There can only be one fixed aspect ratio, so it's recommended to compose your scene with the mobile experience in mind.
+
+```html
+<div class="pushin-scene" data-pushin-fixed-ratio="2,3">
+  <div class="pushin-layer">
+    <!--
+        This layer (and all others) will be a fixed
+        aspect ratio of 2:3 on any window size.
+        -->
+  </div>
+</div>
+```
+
+See a working demo of a complex scene that uses a fixed 1:2 ratio here: [Building scenes with images - The cat](http://nateplusplus.github.io/pushin/cat.html)
 
 ---
 

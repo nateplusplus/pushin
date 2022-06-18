@@ -1,15 +1,20 @@
+import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 import { SceneOptions } from './types';
 export declare class PushInScene {
     pushin: PushIn;
-    private container;
+    container: HTMLElement;
     layers: PushInLayer[];
-    speedDelta: number;
-    transitionLength: number;
     layerDepth: number;
     options: SceneOptions;
+    composition?: PushInComposition;
     constructor(pushin: PushIn);
+    /**
+     * Set scene class names.
+     */
+    private setSceneClasses;
+    resize(): void;
     /**
      * Set breakpoints for responsive design settings.
      */
@@ -22,6 +27,20 @@ export declare class PushInScene {
      * Get the array index of the current window breakpoint.
      */
     getBreakpointIndex(breakpoints: number[]): number;
+    /**
+     * Get the screen-top value of the container.
+     *
+     * If using a target, get the top of the
+     * container relative to the target's top.
+     *
+     * @returns {number}
+     */
     getTop(): number;
+    /**
+     * Get the scene inpoints provided by the JavaScript API
+     * and/or the HTML data-attributes.
+     *
+     * @returns {number[]}
+     */
     getInpoints(): number[];
 }

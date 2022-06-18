@@ -10,6 +10,30 @@ export declare class PushInLayer {
     private ref;
     constructor(element: HTMLElement, index: number, scene: PushInScene, options: LayerOptions | null);
     /**
+     * Get the transitions setting, either from the API or HTML attributes.
+     *
+     * @return {boolean}
+     */
+    private getTransitions;
+    /**
+     * Get the amount of overlap between previous and current layer.
+     *
+     * @return {number}
+     */
+    private getOverlap;
+    /**
+     * Get the transitionStart setting, either from the API or HTML attributes.
+     *
+     * @returns number
+     */
+    private getTransitionStart;
+    /**
+     * Get the transitionEnd setting, either from the API or HTML attributes.
+     *
+     * @returns number
+     */
+    private getTransitionEnd;
+    /**
      * Get all inpoints for the layer.
      */
     private getInpoints;
@@ -26,12 +50,13 @@ export declare class PushInLayer {
      */
     setZIndex(total: number): void;
     /**
-     * Reset all the layer parameters.
+     * Set all the layer parameters.
      *
-     * This is used if the window is resized
-     * and things need to be recalculated.
+     * This is used during initalization and
+     * if the window is resized.
      */
-    resetLayerParams(): void;
+    setLayerParams(): void;
+    private getDepth;
     /**
      * Get the initial scale of the element at time of DOM load.
      */

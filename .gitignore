@@ -11,8 +11,8 @@ coverage
 
 #docs
 /docs/index.html
-/docs/simple.html
-/docs/responsive.html
-/docs/cat.html
 /docs/pushin.min.css
 /docs/pushin.min.js
+/docs/examples
+/docs/installation
+/docs/api
