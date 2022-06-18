@@ -1,0 +1,61 @@
+extends layout.pug
+block append head
+	title PushIn.js - Installation
+
+
+block content
+	header.container.py-5.bg-white
+		div.row
+			h1.my-4 Quick Start
+			div
+				p.lead Follow these steps to start using PushIn.js in your project.
+				p For more information, questions, bug reporting or feature requests, checkout the <a href="https://github.com/nateplusplus/pushin" target="_blank">project on GitHub</a>.
+	section.container.mb-5
+		.row 
+			.col
+				h2 Install pushin with NPM or a CDN
+				p If you're using npm, you can install the package by running:
+				+code.rounded.mb-5: :highlight(bash)
+					npm install --save pushin
+		.row 
+			.col
+				p Import assets into your javascript (if using Webpack).
+				+code.rounded.mb-5: :highlight(js)
+					import 'pushin/dist/pushin.css';
+
+				p If not using Webpack, you can import the CSS from node_modules.
+				+code.rounded.mb-5: :highlight(css)
+					@import 'node_modules/pushin/dist/pushin.css';
+		.row 
+			.col 
+				p Alternatively, you can use a CDN:
+				+code.rounded.mb-5: :highlight(html)
+					https://unpkg.com/pushin/dist/pushin.min.css
+					https://unpkg.com/pushin/dist/umd/pushin.min.js
+		.row.mt-5
+			.col 
+				h2 Insert required HTML structure
+				p At the most basic level, there are a few things you need to set up on your page in order for this to work properly.
+				p Use the following example snippet to create a "scene" for the pushin effect.
+				+code.rounded.mb-5: :highlight(html)
+					<div class="pushin">
+					  <div class="pushin-scene">
+					    <div class="pushin-layer">This is the first layer you'll see.</div>
+					    <div class="pushin-layer">
+					      This is a second layer, which will be positioned behind the first one.
+					    </div>
+					  </div>
+					</div>
+
+		.row.mt-5
+			.col 
+				h2 Initialize the effect
+				p Once you have your HTML set up, you can initialize the effect with #[code pushInStart()] which is exported to the global scope.
+				+code.rounded.mb-5: :highlight(js)
+					pushInStart();
+				p If using the global scope is not best for your project, you can alternatively call the #[code start()] method: 
+				+code.rounded.mb-5: :highlight(js)
+					import { PushIn } from 'pushin';
+ 
+					const container = document.querySelector('.pushin');
+					new PushIn(container).start();

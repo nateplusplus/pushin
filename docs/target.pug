@@ -1,0 +1,54 @@
+extends layout.pug
+
+block append head
+	title PushIn.js - Examples: Scrollable Div
+
+block append styles
+	style.
+		#demo {
+			margin: 60px auto;
+			max-width: 750px;
+			height: 350px;
+			max-height: 100vh;
+			background-color: #fafafa;
+			outline: 3px dotted #dedede;
+		}
+		.pushin-layer { padding: 0 3em; }
+
+block content
+	.container.my-5
+		.row
+			.col
+				h1.my-4 Constrain PushIn inside elements using the Target option
+				p The original concept of PushIn.js was focused on full-page animations. This approach leans heavily on the window scroll event, and each layer is fixed, meaning it is positioned relative to the viewport instead of being relatively positioned within the page content. This works great for full-page animations but it doesn't work well within the constraints of any sort of page layout.
+				p By providing a "target" element, you can now position the effect within a container on the page. Doing so will attach any scroll events to that target element, and constrain the effect to live within that container.
+		.row
+			.col
+				h2 Usage
+				p You can use this option with the global helper function or the class constructor.
+				p.fw-bold Option 1: Global helper function.
+				+code.rounded.mb-5: :highlight(js)
+					pushInStart({ target: '.container' });
+				p.fw-bold Option 2: Class constructor.
+				+code.rounded.mb-5: :highlight(js)
+					const element = document.querySelector('.pushin');
+					const pushIn = new PushIn(element, { target: '.container' });
+					pushIn.start();
+		.row 
+			.col 
+				h2 Working demo
+				p.mt-5 Below is an example of PushIn.js being applied to a scrollable div element.
+	#demo.mx-3.mx-md-auto
+	.pushin
+		.pushin-scene
+			.pushin-layer This example demonstrates using PushIn.js within a scrollable div.
+			.pushin-layer Optionally attach PushIn to any element.
+			.pushin-layer All event listeners will be added to the target element.
+
+block scripts
+	script( defer ).
+		document.addEventListener( 'DOMContentLoaded', function() {
+			pushInStart({
+				target: '#demo',
+			});
+		} );
