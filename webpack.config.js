@@ -14,15 +14,17 @@ module.exports = (env, { mode }) => {
     mode,
     target: 'browserslist',
     devServer: {
-      open: true,
+      open: '/pushin/',
       static: {
         directory: path.join(__dirname, 'docs'),
+        publicPath: '/pushin/',
       },
       port: 8080,
     },
     entry: './docs/main.ts',
     output: {
       path: path.resolve(__dirname, 'docs'),
+      publicPath: '/pushin/',
       filename: 'pushin.min.js',
     },
     resolve: {
