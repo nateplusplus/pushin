@@ -13,78 +13,69 @@ block content
 		.row 
 			.col
 				h2 PushIn Full HTML Layout
-				pre.rounded.mb-5
-					code.language-html
-						|&lt;div class="pushin"&gt;
-						|  &lt;div class="pushin-scene"&gt;
-						|    &lt;div class="pushin-composition"&gt;
-						|      &lt;div class="pushin-layer"&gt;layer 1&lt;/div&gt;
-						|      &lt;div class="pushin-layer"&gt;layer 2&lt;/div&gt;
-						|    &lt;/div&gt;
-						|  &lt;/div&gt;
-						|&lt;/div&gt;
+				+code.rounded.mb-5: :highlight(html)
+					<div class="pushin">
+					  <div class="pushin-scene">
+					    <div class="pushin-composition">
+					      <div class="pushin-layer">layer 1</div>
+					      <div class="pushin-layer">layer 2</div>
+					    </div>
+					  </div>
+					</div>
 	section.container-fluid.mb-5
 		.row 
 			.col
 				h2 JavaScript and HTML configuration
 				p For ultimate flexibility, PushIn can be configured in a couple ways: through the JavaScript API, and/or through data-attributes within the HTML. When using both in combination, the HTML attributes will take precedence.
 				h3 JavaScript API
-				p
-					| Pass in a configuration object to the effect contstructor, whether you are using 
-					code pushInStart() 
-					| or 
-					code new PushIn()
-					| .
+				p Pass in a configuration object to the effect contstructor, whether you are using #[code pushInStart()] or #[code new PushIn()].
 				p The example below demonstrates how you can configure PushIn using the JavaScript API.
-				pre.rounded.mb-5
-					code.language-javascript
-						|const config = {
-						|  target: document.querySelector('#my-target'),
-						|  scene: {
-						|    breakpoints: [768, 1440, 1920, 2560],
-						|    inpoints: [200, 300],
-						|    ratio: [1, 2],
-						|  },
-						|  layers: [
-						|    // Layer 1
-						|    {
-						|      inpoints: [100, 300],
-						|      outpoints: [300, 600],
-						|      speed: 25
-						|    },
-						|    // Layer 2...
-						|  ],
-						|};
-						|
-						|// Using global function
-						|pushInStart(config);
-						|
-						|// Using class constructor
-						|new PushIn(config);
+				+code.rounded.mb-5: :highlight(js)
+					const config = {
+					  target: document.querySelector('#my-target'),
+					  scene: {
+					    breakpoints: [768, 1440, 1920, 2560],
+					    inpoints: [200, 300],
+					    ratio: [1, 2],
+					  },
+					  layers: [
+					    // Layer 1
+					    {
+					      inpoints: [100, 300],
+					      outpoints: [300, 600],
+					      speed: 25
+					    },
+					    // Layer 2...
+					  ],
+					};
+					
+					// Using global function
+					pushInStart(config);
+					
+					// Using class constructor
+					new PushIn(config);
 				h3 HTML attributes
 				p Alternatively, use HTML data-attributes as needed.
-				p
-					strong NOTE: Any attributes added within the HTML markup will take precedence over configurations in the JavaScript API.
+				p: strong NOTE: Any attributes added within the HTML markup will take precedence over configurations in the JavaScript API.
 				p The example below demonstrates how you can use the HTML data-attributes to configure PushIn.
-				pre.rounded.mb-5
-					code.language-html
-						|&lt;div class="pushin" data-pushin-target="#my-target"&gt;
-						|  &lt;div class="pushin-scene"
-						|      data-pushin-breakpoints="768,1440,1920,2560"
-						|      data-pushin-inpoints="200,300"&gt;
-						|    &lt;div class="pushin-composition"
-						|        data-pushin-ratio="1,2"&gt;
-						|      &lt;!-- layer 1 --&gt;
-						|      &lt;div class="pushin-layer"
-						|        data-pushin-from="100,300"
-						|        data-pushin-to="300,600"
-						|        data-pushin-speed="25"&gt;
-						|        &lt;!-- content --&gt;
-						|      &lt;/div&gt;
-						|      &lt;!-- layer 2... --&gt;
-						|    &lt;/div&gt;
-						|  &lt;/div&gt;
-						|&lt;/div&gt;
+				+code.rounded.mb-5: :highlight(html)
+					<div class="pushin" data-pushin-target="#my-target">
+					  <div class="pushin-scene"
+					      data-pushin-breakpoints="768,1440,1920,2560"
+					      data-pushin-inpoints="200,300">
+					    <div class="pushin-composition"
+					        data-pushin-ratio="1,2">
+					      <!-- layer 1 -->
+					      <div class="pushin-layer"
+					        data-pushin-from="100,300"
+					        data-pushin-to="300,600"
+					        data-pushin-speed="25">
+					        <!-- content -->
+					      </div>
+					      <!-- layer 2... -->
+					    </div>
+					  </div>
+					</div>
 	section.container-fluid.my-5
 		.row 
 			.col
@@ -93,9 +84,7 @@ block content
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3
-					| pushin (top level) | 
-					code .pushin
+				h3 pushin (top level) | #[code .pushin]
 				.table-responsive
 					table.table
 						tr 
@@ -106,42 +95,28 @@ block content
 							th(scope="col") Description
 						tr
 							th(scope="row") debug 
-							td
-								code.text-muted none
+							td: code.text-muted none
 							td boolean 
-							td 
-								code false 
+							td: code false 
 							td Enables a tool to display the current scroll position which can help with animation timing.
 						tr
 							th(scope="row") selector 
-							td 
-								code N/A
+							td: code N/A
 							td string 
-							td 
-								code '.pushin' 
+							td: code '.pushin' 
 							td
-								p
-									| If you are using the global 
-									code pushInStart() 
-									| function to create multiple instances of PushIn on one page, and you need to supply specific configurations to each instance, use this option to target a specific element (or multiple elements) as the PushIn container(s).
-								p
-									| NOTE: If using the 
-									code new PushIn() 
-									| class constructor, you will pass an element in as the first parameter, so this option is unnecessary and will be ignored.
+								p If you are using the global #[code pushInStart()] function to create multiple instances of PushIn on one page, and you need to supply specific configurations to each instance, use this option to target a specific element (or multiple elements) as the PushIn container(s).
+								p NOTE: If using the #[code new PushIn()] class constructor, you will pass an element in as the first parameter, so this option is unnecessary and will be ignored.
 						tr
 							th(scope="row") target 
-							td 
-								code data-pushin-target
+							td: code data-pushin-target
 							td string 
-							td 
-								code undefined 
+							td: code undefined 
 							td JavaScript selector used to attach PushIn to an element on the page.
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3
-					| scene | 
-					code .pushin-scene
+				h3 scene | #[code .pushin-scene]
 				.table-responsive
 					table.table
 						tr 
@@ -152,42 +127,32 @@ block content
 							th(scope="col") Description
 						tr
 							th(scope="row") breakpoints 
-							td 
-								code data-pushin-breakpoints
+							td: code data-pushin-breakpoints
 							td string 
-							td 
-								code 0,768,1440,1920
+							td: code 0,768,1440,1920
 							td Provide a comma-separated list of numbers to configure appropriate responsive design breakpoints.
 						tr
 							th(scope="row") from 
-							td 
-								code data-pushin-from
+							td: code data-pushin-from
 							td string 
-							td 
-								code 0
+							td: code 0
 							td Comma-separated list of numbers representing the screen position at which the scene should begin animating.
 						tr
 							th(scope="row") layerDepth 
-							td 
-								code n/a
+							td: code n/a
 							td number 
-							td 
-								code 1000
+							td: code 1000
 							td When an inpoint or outpoint is not provided for a layer, pushIn will use this number to calculate how long the layer should animate when scrolling.
 						tr
 							th(scope="row") ratio 
-							td 
-								code data-pushin-ratio
+							td: code data-pushin-ratio
 							td string 
-							td 
-								code 1,2
+							td: code 1,2
 							td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3
-					| composition | 
-					code .pushin-composition
+				h3 composition | #[code .pushin-composition]
 				.table-responsive
 					table.table
 						tr 
@@ -198,18 +163,14 @@ block content
 							th(scope="col") Description
 						tr
 							th(scope="row") ratio 
-							td 
-								code data-pushin-ratio
+							td: code data-pushin-ratio
 							td string 
-							td 
-								code 1,2
+							td: code 1,2
 							td Set an aspect ratio for your scene to prevent element positions from drifting when screens resize.
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3
-					| layers | 
-					code .pushin-layer
+				h3 layers | #[code .pushin-layer]
 				.table-responsive
 					table.table
 						tr 
@@ -220,40 +181,29 @@ block content
 							th(scope="col") Description
 						tr
 							th(scope="row") inpoints 
-							td 
-								code data-pushin-from
+							td: code data-pushin-from
 							td string 
-							td 
-								code undefined
+							td: code undefined
 							td Comma-separated list of numbers representing the screen position at which the layer should begin animating.
 						tr
 							th(scope="row") outpoints 
-							td 
-								code data-pushin-to
+							td: code data-pushin-to
 							td string 
-							td 
-								code undefined
+							td: code undefined
 							td Comma-separated list of numbers representing the screen position at which the layer should stop animating.
 						tr
 							th(scope="row") speed 
-							td 
-								code data-pushin-speed
+							td: code data-pushin-speed
 							td number 
-							td 
-								code 8
+							td: code 8
 							td A number representing how fast or slow the layer should grow or shrink during scroll events.
 						tr
 							th(scope="row") transitions 
-							td 
-								code data-pushin-transitions
+							td: code data-pushin-transitions
 							td boolean 
-							td 
-								code true
+							td: code true
 							td
-								p
-									| Whether to fade in or out when the layer is not active. Setting this to 
-									code false 
-									| will turn off both start and end transitions.
+								p Whether to fade in or out when the layer is not active. Setting this to #[code false] will turn off both start and end transitions.
 								p
 									strong Note: 
 									| By default, the first layer does not fade in, and the last layer does not fade out.
@@ -262,26 +212,19 @@ block content
 							td 
 								code data-pushin-transition-start
 							td number 
-							td 
-								code 200
+							td: code 200
 							td
 								p Duration of the fade-in effect after the layer becomes active (in pixels).
 								p
 									strong Note: 
-									| Use 
-									code -1 
-									| to turn off the start transition only (does not affect end transition).
+									| Use #[code -1] to turn off the start transition only (does not affect end transition).
 						tr
 							th(scope="row") transitionEnd
-							td 
-								code data-pushin-transition-end
+							td: code data-pushin-transition-end
 							td number 
-							td 
-								code 200
+							td: code 200
 							td
 								p Duration of the fade-out effect before the layer becomes inactive (in pixels).
 								p
 									strong Note: 
-									| Use 
-									code -1 
-									| to turn off the end transition only (does not affect start transition).
+									| Use #[code -1] to turn off the end transition only (does not affect start transition).
