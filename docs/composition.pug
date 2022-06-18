@@ -23,25 +23,21 @@ block content
 		.row 
 			.col
 				h2 Getting started with Composition
-				p
-					| The easiest way to add Composition to your scene is by adding the 
-					code pushin-composition 
-					| class to a containing element that wraps all your pushin-layers. 
+				p The easiest way to add Composition to your scene is by adding the #[code pushin-composition] class to a containing element that wraps all your pushin-layers. 
 				p The following is an example of the pushin-composition class in action:
-				pre.rounded
-					code.language-html
-						|&lt;div class="pushin"&gt;
-						|  &lt;div class="pushin-scene"&gt;
-						|    &lt;div class="pushin-composition"&gt;
-						|      &lt;div class="pushin-layer" data-pushin-transitions="false" data-pushin-from="0" data-pushin-to="0" data-pushin-speed="18"&gt;
-						|        &lt;img src="cactus.svg" style="width: 8%; bottom:46%; left:30%;"&gt;
-						|      &lt;/div&gt;
-						|      &lt;div class="pushin-layer" data-pushin-transitions="false" data-pushin-from="0" data-pushin-to="0"&gt;
-						|        &lt;img src="monster.svg" style="width: 10%; bottom:47%; right:40%"&gt;
-						|      &lt;/div&gt;
-						|    &lt;/div&gt;
-						|  &lt;/div&gt;
-						|&lt;/div&gt;
+				+code.rounded: :highlight(html)
+					<div class="pushin">
+					  <div class="pushin-scene">
+					    <div class="pushin-composition">
+					      <div class="pushin-layer" data-pushin-transitions="false" data-pushin-from="0" data-pushin-to="0" data-pushin-speed="18">
+					        <img src="cactus.svg" style="width: 8%; bottom:46%; left:30%;">
+					      </div>
+					      <div class="pushin-layer" data-pushin-transitions="false" data-pushin-from="0" data-pushin-to="0">
+					        <img src="monster.svg" style="width: 10%; bottom:47%; right:40%">
+					      </div>
+					    </div>
+					  </div>
+					</div>
 				#composition-demo-1.my-5
 					.pushin 
 						.pushin-scene 
@@ -68,31 +64,29 @@ block content
 				h2 Customization
 				p You can change the aspect ratio of your composition by using an HTML attribute or the JavaScript API.
 				p.fw-bold Using HTML attributes
-				pre.rounded.mb-5
-					code.language-html
-						|&lt;div class="pushin-composition" data-pushin-ratio="16,9"&gt;
-						|  &lt;!-- Use a 16:9 composition --&gt;
-						| &lt;/div&gt;
+				+code.rounded.mb-5: :highlight(html)
+					<div class="pushin-composition" data-pushin-ratio="16,9">
+					  <!-- Use a 16:9 composition -->
+					</div>
 				p.fw-bold Using JavaScript API
-				pre.rounded.mb-5
-					code.language-javascript
-						| // Option 1: Global function
-						| pushInStart({
-						|   composition: {
-						|     ratio: [16, 9],
-						|   }
-						| });
-						|
-						| // Option 2: Class constructor
-						| const pushIn = new PushIn(
-						|   document.querySelector('.pushin'),
-						|   {
-						|     composition:{
-						|       ratio: [16, 9],
-						|     }
-						|   }
-						| );
-						| pushIn.start();
+				+code.rounded.mb-5: :highlight(js)
+					// Option 1: Global function
+					pushInStart({
+					  composition: {
+					    ratio: [16, 9],
+					  }
+					});
+
+					// Option 2: Class constructor
+					const pushIn = new PushIn(
+					  document.querySelector('.pushin'),
+					  {
+					    composition:{
+					      ratio: [16, 9],
+					    }
+					  }
+					);
+					pushIn.start();
 		.row.mb-5
 			.col
 				h2 Tips and Tricks
@@ -100,10 +94,7 @@ block content
 				ol 
 					li When working with graphics, build the entire composition in the aspect ratio you want it to be, and export the layers separately.
 					li SVG Graphics work best, since you will be scaling them quite a lot.
-					li
-						| For precise positioning, try using 
-						code position: absolute; 
-						| and use percentages to position your elements (rather than pixels). This will help your scene scale with the device size.
+					li For precise positioning, try using #[code position: absolute;] and use percentages to position your elements (rather than pixels). This will help your scene scale with the device size.
 block scripts
 	script( defer ).
 		document.addEventListener( 'DOMContentLoaded', function() {
