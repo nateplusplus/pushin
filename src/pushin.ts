@@ -17,6 +17,7 @@ export class PushIn {
   public cleanupFns: VoidFunction[] = [];
   public options: PushInOptions;
 
+  /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
     options = options ?? {};
 
@@ -35,6 +36,7 @@ export class PushIn {
   /**
    * Initialize the object to start everything up.
    */
+  /* istanbul ignore next */
   start(): void {
     this.setTarget();
 
@@ -129,6 +131,7 @@ export class PushIn {
   /**
    * Bind event listeners to watch for page load and user interaction.
    */
+  /* istanbul ignore next */
   bindEvents(): void {
     const scrollTarget = this.target ? this.target : window;
 
@@ -195,6 +198,7 @@ export class PushIn {
   /**
    * Animation effect, mimicking a camera dolly on the webpage.
    */
+  /* istanbul ignore next */
   private dolly(): void {
     cancelAnimationFrame(this.lastAnimationFrameId);
 
@@ -206,6 +210,7 @@ export class PushIn {
   /**
    * Show or hide layers and set their scale, depending on if active.
    */
+  /* istanbul ignore next */
   private toggleLayers(): void {
     this.scene.layers.forEach(layer => {
       layer.setLayerStyle();
@@ -248,6 +253,7 @@ export class PushIn {
    * Show a debugging tool appended to the frontend of the page.
    * Can be used to determine best "pushin-from" and "pushin-to" values.
    */
+  /* istanbul ignore next */
   private showDebugger(): void {
     this.pushinDebug = document.createElement('div');
     this.pushinDebug.classList.add('pushin-debug');
