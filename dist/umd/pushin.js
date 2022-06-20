@@ -1,4 +1,4 @@
-/* Pushin.js - v5.0.0
+/* Pushin.js - v5.0.1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -21,6 +21,7 @@ License: MIT */
     const PUSH_IN_DEFAULT_TRANSITION_LENGTH = 200;
 
     class PushInComposition {
+        /* istanbul ignore next */
         constructor(scene, options) {
             var _a;
             this.scene = scene;
@@ -230,6 +231,7 @@ License: MIT */
                 transitionEnd: this.getTransitionEnd(),
             };
         }
+        /* istanbul ignore next */
         getDepth() {
             return (this.getOutpoint(this.ref.outpoints) - this.getInpoint(this.ref.inpoints));
         }
@@ -356,6 +358,7 @@ License: MIT */
     }
 
     class PushInScene {
+        /* istanbul ignore next */
         constructor(pushin) {
             var _a, _b, _c;
             this.pushin = pushin;
@@ -482,6 +485,7 @@ License: MIT */
      * bind events to begin interacting with dom.
      */
     class PushIn {
+        /* istanbul ignore next */
         constructor(container, options) {
             var _a, _b, _c, _d, _e, _f;
             this.container = container;
@@ -501,6 +505,7 @@ License: MIT */
         /**
          * Initialize the object to start everything up.
          */
+        /* istanbul ignore next */
         start() {
             this.setTarget();
             this.scrollY = this.getScrollY();
@@ -580,6 +585,7 @@ License: MIT */
         /**
          * Bind event listeners to watch for page load and user interaction.
          */
+        /* istanbul ignore next */
         bindEvents() {
             const scrollTarget = this.target ? this.target : window;
             const onScroll = () => {
@@ -629,6 +635,7 @@ License: MIT */
         /**
          * Animation effect, mimicking a camera dolly on the webpage.
          */
+        /* istanbul ignore next */
         dolly() {
             cancelAnimationFrame(this.lastAnimationFrameId);
             this.lastAnimationFrameId = requestAnimationFrame(() => {
@@ -638,6 +645,7 @@ License: MIT */
         /**
          * Show or hide layers and set their scale, depending on if active.
          */
+        /* istanbul ignore next */
         toggleLayers() {
             this.scene.layers.forEach(layer => {
                 layer.setLayerStyle();
@@ -666,6 +674,7 @@ License: MIT */
          * Show a debugging tool appended to the frontend of the page.
          * Can be used to determine best "pushin-from" and "pushin-to" values.
          */
+        /* istanbul ignore next */
         showDebugger() {
             var _a;
             this.pushinDebug = document.createElement('div');

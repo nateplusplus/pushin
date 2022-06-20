@@ -16,5 +16,5 @@ export declare class PushInComposition {
     /**
      * Set the aspect ratio based setting.
      */
-    setRatio(): void;
+    private setRatio;
 }

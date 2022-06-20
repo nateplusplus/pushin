@@ -1,4 +1,4 @@
-/* Pushin.js - v5.0.0
+/* Pushin.js - v5.0.1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
@@ -15,6 +15,7 @@ const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
 const PUSH_IN_DEFAULT_TRANSITION_LENGTH = 200;
 
 class PushInComposition {
+    /* istanbul ignore next */
     constructor(scene, options) {
         var _a;
         this.scene = scene;
@@ -224,6 +225,7 @@ class PushInLayer {
             transitionEnd: this.getTransitionEnd(),
         };
     }
+    /* istanbul ignore next */
     getDepth() {
         return (this.getOutpoint(this.ref.outpoints) - this.getInpoint(this.ref.inpoints));
     }
@@ -350,6 +352,7 @@ class PushInLayer {
 }
 
 class PushInScene {
+    /* istanbul ignore next */
     constructor(pushin) {
         var _a, _b, _c;
         this.pushin = pushin;
@@ -476,6 +479,7 @@ class PushInScene {
  * bind events to begin interacting with dom.
  */
 class PushIn {
+    /* istanbul ignore next */
     constructor(container, options) {
         var _a, _b, _c, _d, _e, _f;
         this.container = container;
@@ -495,6 +499,7 @@ class PushIn {
     /**
      * Initialize the object to start everything up.
      */
+    /* istanbul ignore next */
     start() {
         this.setTarget();
         this.scrollY = this.getScrollY();
@@ -574,6 +579,7 @@ class PushIn {
     /**
      * Bind event listeners to watch for page load and user interaction.
      */
+    /* istanbul ignore next */
     bindEvents() {
         const scrollTarget = this.target ? this.target : window;
         const onScroll = () => {
@@ -623,6 +629,7 @@ class PushIn {
     /**
      * Animation effect, mimicking a camera dolly on the webpage.
      */
+    /* istanbul ignore next */
     dolly() {
         cancelAnimationFrame(this.lastAnimationFrameId);
         this.lastAnimationFrameId = requestAnimationFrame(() => {
@@ -632,6 +639,7 @@ class PushIn {
     /**
      * Show or hide layers and set their scale, depending on if active.
      */
+    /* istanbul ignore next */
     toggleLayers() {
         this.scene.layers.forEach(layer => {
             layer.setLayerStyle();
@@ -660,6 +668,7 @@ class PushIn {
      * Show a debugging tool appended to the frontend of the page.
      * Can be used to determine best "pushin-from" and "pushin-to" values.
      */
+    /* istanbul ignore next */
     showDebugger() {
         var _a;
         this.pushinDebug = document.createElement('div');
