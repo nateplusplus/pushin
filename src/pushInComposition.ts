@@ -4,6 +4,7 @@ import { CompositionOptions } from './types';
 export class PushInComposition {
   public container?: HTMLElement;
 
+  /* istanbul ignore next */
   constructor(public scene: PushInScene, private options: CompositionOptions) {
     this.options = options;
 
@@ -54,7 +55,7 @@ export class PushInComposition {
   /**
    * Set the aspect ratio based setting.
    */
-  setRatio(): void {
+  private setRatio(): void {
     if (this.options?.ratio) {
       const paddingTop =
         this.options!.ratio.reduce((prev, cur) => cur / prev) * 100;
