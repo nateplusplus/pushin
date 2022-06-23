@@ -83,7 +83,7 @@
     "lint-staged": "^13.0.2",
     "prettier": "^2.6.1",
     "prismjs": "^1.28.0",
-    "pug-plugin": "^2.7.4",
+    "pug-plugin": "^2.7.5",
     "rollup": "2.75.6",
     "rollup-plugin-copy": "3.4.0",
     "rollup-plugin-terser": "^7.0.2",
