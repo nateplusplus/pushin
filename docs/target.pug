@@ -27,14 +27,13 @@ block content
 				h2 Usage
 				p You can use this option with the global helper function or the class constructor.
 				p.fw-bold Option 1: Global helper function.
-				pre.rounded.language-javascript.mb-5
-					code pushInStart({ target: '.container' });
+				+code.rounded.mb-5: :highlight(js)
+					pushInStart({ target: '.container' });
 				p.fw-bold Option 2: Class constructor.
-				pre.rounded.language-javascript.mb-5
-					code.
-						const element = document.querySelector('.pushin');
-						const pushIn = new PushIn(element, { target: '.container' });
-						pushIn.start();
+				+code.rounded.mb-5: :highlight(js)
+					const element = document.querySelector('.pushin');
+					const pushIn = new PushIn(element, { target: '.container' });
+					pushIn.start();
 		.row 
 			.col 
 				h2 Working demo

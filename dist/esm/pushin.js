@@ -1,4 +1,4 @@
-/* Pushin.js - v4.1.3
+/* Pushin.js - v5.0.1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
@@ -12,6 +12,64 @@ const PUSH_IN_TO_DATA_ATTRIBUTE = 'pushinTo';
 const PUSH_IN_FROM_DATA_ATTRIBUTE = 'pushinFrom';
 const PUSH_IN_DEFAULT_BREAKPOINTS = [768, 1440, 1920];
 const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
+const PUSH_IN_DEFAULT_TRANSITION_LENGTH = 200;
+
+class PushInComposition {
+    /* istanbul ignore next */
+    constructor(scene, options) {
+        var _a;
+        this.scene = scene;
+        this.options = options;
+        this.options = options;
+        const container = this.scene.container.querySelector('.pushin-composition');
+        if (container) {
+            this.container = container;
+        }
+        else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.ratio) {
+            this.container = document.createElement('div');
+            this.container.classList.add('pushin-composition');
+            this.container.innerHTML = this.scene.container.innerHTML;
+            this.scene.container.innerHTML = '';
+            this.scene.container.appendChild(this.container);
+            this.scene.pushin.cleanupFns.push(() => {
+                this.scene.container.innerHTML = this.container.innerHTML;
+            });
+        }
+        if (this.container) {
+            this.getRatio();
+            this.setRatio();
+        }
+    }
+    /**
+     * Get the composition ratio based on
+     * what has been passed in through the JavaScript API
+     * and/or what has been passed in via HTML data-attributes.
+     *
+     * @return {number[] | undefined}
+     */
+    getRatio() {
+        var _a;
+        let ratio;
+        if (this.container.hasAttribute('data-pushin-ratio')) {
+            const value = this.container.dataset.pushinRatio;
+            ratio = value === null || value === void 0 ? void 0 : value.split(',').map(val => parseInt(val, 10));
+        }
+        else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.ratio) {
+            ratio = this.options.ratio;
+        }
+        return ratio;
+    }
+    /**
+     * Set the aspect ratio based setting.
+     */
+    setRatio() {
+        var _a;
+        if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.ratio) {
+            const paddingTop = this.options.ratio.reduce((prev, cur) => cur / prev) * 100;
+            this.container.style.paddingTop = `${paddingTop.toString()}%`;
+        }
+    }
+}
 
 class PushInLayer {
     constructor(element, index, scene, options) {
@@ -27,11 +85,67 @@ class PushInLayer {
         this.element.setAttribute('data-pushin-layer-index', this.index.toString());
         // Set tabindex so we can sync scrolling with screenreaders
         this.element.setAttribute('tabindex', '0');
-        this.params = {
-            inpoint: this.getInpoint(inpoints),
-            outpoint: this.getOutpoint(outpoints),
-            speed,
-        };
+        this.setLayerParams();
+    }
+    /**
+     * Get the transitions setting, either from the API or HTML attributes.
+     *
+     * @return {boolean}
+     */
+    getTransitions() {
+        var _a, _b;
+        let transitions = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : true;
+        if (this.element.hasAttribute('data-pushin-transitions')) {
+            const attr = this.element.dataset.pushinTransitions;
+            if (attr) {
+                transitions = attr !== 'false' && attr !== '0';
+            }
+        }
+        return transitions;
+    }
+    /**
+     * Get the amount of overlap between previous and current layer.
+     *
+     * @return {number}
+     */
+    getOverlap() {
+        let overlap = 0;
+        if (this.index > 0) {
+            const prevLayer = this.scene.layers[this.index - 1];
+            const prevTranEnd = prevLayer.params.transitionEnd;
+            const curTranStart = this.getTransitionStart();
+            const average = (curTranStart + prevTranEnd) / 2;
+            overlap = Math.min(average * 0.5, curTranStart);
+        }
+        return overlap;
+    }
+    /**
+     * Get the transitionStart setting, either from the API or HTML attributes.
+     *
+     * @returns number
+     */
+    getTransitionStart() {
+        var _a, _b;
+        let start = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitionStart) !== null && _b !== void 0 ? _b : PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+        if (this.element.hasAttribute('data-pushin-transition-start')) {
+            const attr = this.element.dataset.pushinTransitionStart;
+            start = parseInt(attr, 10);
+        }
+        return start;
+    }
+    /**
+     * Get the transitionEnd setting, either from the API or HTML attributes.
+     *
+     * @returns number
+     */
+    getTransitionEnd() {
+        var _a, _b;
+        let end = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitionEnd) !== null && _b !== void 0 ? _b : PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+        if (this.element.hasAttribute('data-pushin-transition-end')) {
+            const attr = this.element.dataset.pushinTransitionEnd;
+            end = parseInt(attr, 10);
+        }
+        return end;
     }
     /**
      * Get all inpoints for the layer.
@@ -51,7 +165,7 @@ class PushInLayer {
         else if (index > 0) {
             // Set default for middle layers if none provided
             const { outpoint } = this.scene.layers[index - 1].params;
-            inpoints = [outpoint - this.scene.speedDelta];
+            inpoints = [outpoint - this.getOverlap()];
         }
         return inpoints;
     }
@@ -77,7 +191,7 @@ class PushInLayer {
         var _a;
         let speed = null;
         if (element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]) {
-            speed = parseInt(element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE], 10);
+            speed = parseFloat(element.dataset[PUSH_IN_SPEED_DATA_ATTRIBUTE]);
             if (Number.isNaN(speed)) {
                 speed = DEFAULT_SPEED;
             }
@@ -94,17 +208,26 @@ class PushInLayer {
         this.element.style.zIndex = (total - this.index).toString();
     }
     /**
-     * Reset all the layer parameters.
+     * Set all the layer parameters.
      *
-     * This is used if the window is resized
-     * and things need to be recalculated.
+     * This is used during initalization and
+     * if the window is resized.
      */
-    resetLayerParams() {
+    setLayerParams() {
         this.params = {
+            depth: this.getDepth(),
             inpoint: this.getInpoint(this.ref.inpoints),
             outpoint: this.getOutpoint(this.ref.outpoints),
+            overlap: this.getOverlap(),
             speed: this.ref.speed,
+            transitions: this.getTransitions(),
+            transitionStart: this.getTransitionStart(),
+            transitionEnd: this.getTransitionEnd(),
         };
+    }
+    /* istanbul ignore next */
+    getDepth() {
+        return (this.getOutpoint(this.ref.outpoints) - this.getInpoint(this.ref.inpoints));
     }
     /**
      * Get the initial scale of the element at time of DOM load.
@@ -129,8 +252,19 @@ class PushInLayer {
     isActive() {
         const { inpoint } = this.params;
         const { outpoint } = this.params;
-        return (this.scene.pushin.scrollY >= inpoint &&
-            this.scene.pushin.scrollY <= outpoint);
+        let active = true;
+        if (this.params.transitions) {
+            const min = this.scene.pushin.scrollY >= inpoint;
+            const max = this.scene.pushin.scrollY <= outpoint;
+            active = min && max;
+            if (!active && this.params.transitionStart < 0 && !min) {
+                active = true;
+            }
+            else if (!active && this.params.transitionEnd < 0 && !max) {
+                active = true;
+            }
+        }
+        return active;
     }
     /**
      * Get the current inpoint for a layer,
@@ -187,18 +321,20 @@ class PushInLayer {
             opacity = 1;
         }
         else if (this.isActive()) {
-            this.setScale(this.element, this.getScaleValue(this));
-            let inpointDistance = Math.max(Math.min(this.scene.pushin.scrollY - inpoint, this.scene.transitionLength), 0) / this.scene.transitionLength;
-            // Set opacity to 1 if its the first layer and it is active (no fading in here)
-            if (isFirst) {
+            let inpointDistance = Math.max(Math.min(this.scene.pushin.scrollY - inpoint, this.params.transitionStart), 0) / this.params.transitionStart;
+            if (isFirst || this.params.transitionStart < 0) {
                 inpointDistance = 1;
             }
-            let outpointDistance = Math.max(Math.min(outpoint - this.scene.pushin.scrollY, this.scene.transitionLength), 0) / this.scene.transitionLength;
-            // Set opacity to 1 if its the last layer and it is active (no fading out)
-            if (isLast) {
+            let outpointDistance = Math.max(Math.min(outpoint - this.scene.pushin.scrollY, this.params.transitionEnd), 0) / this.params.transitionEnd;
+            if (isLast || this.params.transitionEnd < 0) {
                 outpointDistance = 1;
             }
-            opacity = Math.min(inpointDistance, outpointDistance);
+            opacity = this.params.transitions
+                ? Math.min(inpointDistance, outpointDistance)
+                : 1;
+        }
+        if (this.isActive()) {
+            this.setScale(this.element, this.getScaleValue(this));
         }
         this.element.style.opacity = opacity.toString();
     }
@@ -216,6 +352,7 @@ class PushInLayer {
 }
 
 class PushInScene {
+    /* istanbul ignore next */
     constructor(pushin) {
         var _a, _b, _c;
         this.pushin = pushin;
@@ -233,20 +370,39 @@ class PushInScene {
                 this.pushin.container.innerHTML = this.container.innerHTML;
             });
         }
-        this.options = pushin.sceneOptions;
-        this.speedDelta = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.speedDelta) || 100;
-        this.layerDepth = ((_b = this.options) === null || _b === void 0 ? void 0 : _b.layerDepth) || 1000;
-        this.transitionLength = ((_c = this.options) === null || _c === void 0 ? void 0 : _c.transitionLength) || 200;
+        this.options = pushin.options.scene;
+        this.layerDepth = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.layerDepth) || 1000;
         this.layers = [];
+        this.setSceneClasses();
+        const compositionOptions = {
+            ratio: (_c = (_b = pushin.options.composition) === null || _b === void 0 ? void 0 : _b.ratio) !== null && _c !== void 0 ? _c : undefined,
+        };
+        this.composition = new PushInComposition(this, compositionOptions);
         this.setBreakpoints();
         this.getLayers();
+    }
+    /**
+     * Set scene class names.
+     */
+    setSceneClasses() {
+        if (this.pushin.target) {
+            this.container.classList.add('pushin-scene--with-target');
+        }
+    }
+    resize() {
+        var _a;
+        const sizes = (_a = this.pushin.target) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect();
+        if (sizes) {
+            this.container.style.height = `${sizes.height}px`;
+            this.container.style.width = `${sizes.width}px`;
+        }
     }
     /**
      * Set breakpoints for responsive design settings.
      */
     setBreakpoints() {
-        var _a;
-        if (((_a = this.options) === null || _a === void 0 ? void 0 : _a.breakpoints.length) === 0) {
+        var _a, _b;
+        if (!((_a = this.options) === null || _a === void 0 ? void 0 : _a.breakpoints) || ((_b = this.options) === null || _b === void 0 ? void 0 : _b.breakpoints.length) === 0) {
             this.options.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
         }
         if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
@@ -281,9 +437,27 @@ class PushInScene {
             .findIndex(bp => bp <= window.innerWidth);
         return searchIndex === -1 ? 0 : breakpoints.length - 1 - searchIndex;
     }
+    /**
+     * Get the screen-top value of the container.
+     *
+     * If using a target, get the top of the
+     * container relative to the target's top.
+     *
+     * @returns {number}
+     */
     getTop() {
-        return this.container.getBoundingClientRect().top;
+        let { top } = this.container.getBoundingClientRect();
+        if (this.pushin.target) {
+            top -= this.pushin.target.getBoundingClientRect().top;
+        }
+        return top;
     }
+    /**
+     * Get the scene inpoints provided by the JavaScript API
+     * and/or the HTML data-attributes.
+     *
+     * @returns {number[]}
+     */
     getInpoints() {
         var _a, _b;
         let inpoints = [this.getTop()];
@@ -305,33 +479,38 @@ class PushInScene {
  * bind events to begin interacting with dom.
  */
 class PushIn {
+    /* istanbul ignore next */
     constructor(container, options) {
-        var _a;
+        var _a, _b, _c, _d, _e, _f;
         this.container = container;
         this.scrollY = 0;
-        this.layers = [];
         this.lastAnimationFrameId = -1;
         this.cleanupFns = [];
-        this.debug = (_a = options === null || options === void 0 ? void 0 : options.debug) !== null && _a !== void 0 ? _a : false;
-        this.sceneOptions = { breakpoints: [], inpoints: [] };
-        if (options === null || options === void 0 ? void 0 : options.scene) {
-            Object.assign(this.sceneOptions, options.scene);
-        }
-        if (options === null || options === void 0 ? void 0 : options.layers) {
-            Object.assign(this.sceneOptions, options.layers);
-        }
+        options = options !== null && options !== void 0 ? options : {};
+        this.options = {
+            debug: (_a = options === null || options === void 0 ? void 0 : options.debug) !== null && _a !== void 0 ? _a : false,
+            scene: (_b = options === null || options === void 0 ? void 0 : options.scene) !== null && _b !== void 0 ? _b : { breakpoints: [], inpoints: [] },
+            target: (_c = options === null || options === void 0 ? void 0 : options.target) !== null && _c !== void 0 ? _c : undefined,
+        };
+        this.options.scene.composition = (_d = options === null || options === void 0 ? void 0 : options.composition) !== null && _d !== void 0 ? _d : undefined;
+        this.options.scene.layers = (_e = options === null || options === void 0 ? void 0 : options.layers) !== null && _e !== void 0 ? _e : undefined;
+        this.options.debug = (_f = options === null || options === void 0 ? void 0 : options.debug) !== null && _f !== void 0 ? _f : false;
     }
     /**
      * Initialize the object to start everything up.
      */
+    /* istanbul ignore next */
     start() {
+        this.setTarget();
         this.scrollY = this.getScrollY();
-        if (this.debug) {
+        if (this.options.debug) {
             this.showDebugger();
         }
         if (this.container) {
             this.scene = new PushInScene(this);
             this.setScrollLength();
+            this.setTargetOverflow();
+            this.scene.resize();
             if (typeof window !== 'undefined') {
                 this.bindEvents();
             }
@@ -341,6 +520,25 @@ class PushIn {
         else {
             // eslint-disable-next-line no-console
             console.error('No container element provided to pushIn.js. Effect will not be applied.');
+        }
+    }
+    /**
+     * Set the target parameter and make sure
+     * pushin is always a child of that target.
+     *
+     * @param options
+     */
+    setTarget() {
+        if (this.options.target) {
+            this.target = document.querySelector(this.options.target);
+        }
+        if (this.container.hasAttribute('data-pushin-target')) {
+            const selector = this.container.dataset.pushinTarget;
+            this.target = document.querySelector(selector);
+        }
+        if (this.target && this.container.parentElement !== this.target) {
+            // Move pushin into the target container
+            this.target.appendChild(this.container);
         }
     }
     /**
@@ -359,12 +557,31 @@ class PushIn {
      * Otherwise default to 0.
      */
     getScrollY() {
-        return typeof window !== 'undefined' ? window.scrollY : 0;
+        let scrollY = 0;
+        if (this.target) {
+            scrollY = this.target.scrollTop;
+        }
+        else if (typeof window !== 'undefined') {
+            scrollY = window.scrollY;
+        }
+        return scrollY;
+    }
+    /**
+     * Set overflow-y and scroll-behavior styles
+     * on the provided target element.
+     */
+    setTargetOverflow() {
+        if (this.target) {
+            this.target.style.overflowY = 'scroll';
+            this.target.style.scrollBehavior = 'smooth';
+        }
     }
     /**
      * Bind event listeners to watch for page load and user interaction.
      */
+    /* istanbul ignore next */
     bindEvents() {
+        const scrollTarget = this.target ? this.target : window;
         const onScroll = () => {
             var _a;
             this.scrollY = this.getScrollY();
@@ -376,14 +593,15 @@ class PushIn {
                 }
             }
         };
-        window.addEventListener('scroll', onScroll);
-        this.cleanupFns.push(() => window.removeEventListener('scroll', onScroll));
+        scrollTarget.addEventListener('scroll', onScroll);
+        this.cleanupFns.push(() => scrollTarget.removeEventListener('scroll', onScroll));
         let resizeTimeout;
         const onResize = () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = window.setTimeout(() => {
-                this.scene.layers.forEach(layer => layer.resetLayerParams());
+                this.scene.layers.forEach(layer => layer.setLayerParams());
                 this.setScrollLength();
+                this.scene.resize();
                 this.toggleLayers();
             }, 300);
         };
@@ -396,7 +614,13 @@ class PushIn {
                 const index = parseInt(target.getAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE), 10);
                 const layer = this.scene.layers[index];
                 if (layer) {
-                    window.scrollTo(0, layer.params.inpoint + layer.scene.transitionLength);
+                    const scrollTo = layer.params.inpoint + layer.params.transitionStart;
+                    if (!this.target) {
+                        window.scrollTo(0, scrollTo);
+                    }
+                    else {
+                        this.target.scrollTop = scrollTo;
+                    }
                 }
             }
         };
@@ -405,6 +629,7 @@ class PushIn {
     /**
      * Animation effect, mimicking a camera dolly on the webpage.
      */
+    /* istanbul ignore next */
     dolly() {
         cancelAnimationFrame(this.lastAnimationFrameId);
         this.lastAnimationFrameId = requestAnimationFrame(() => {
@@ -414,6 +639,7 @@ class PushIn {
     /**
      * Show or hide layers and set their scale, depending on if active.
      */
+    /* istanbul ignore next */
     toggleLayers() {
         this.scene.layers.forEach(layer => {
             layer.setLayerStyle();
@@ -421,26 +647,30 @@ class PushIn {
         });
     }
     /**
-     * Set the default container height based on a few factors:
-     * 1. Number of layers present
-     * 2. The transition length between layers
-     * 3. The length of scrolling time during each layer
+     * Automatically set the container height based on the greatest outpoint.
      *
-     * If this calculation is smaller than the container's current height,
-     * the current height will be used instead.
+     * If the container has a height set already (e.g. if set by CSS),
+     * the larger of the two numbers will be used.
      */
     setScrollLength() {
         const containerHeight = getComputedStyle(this.container).height.replace('px', '');
-        const transitions = (this.scene.layers.length - 1) * this.scene.speedDelta;
-        const scrollLength = this.scene.layers.length *
-            (this.scene.layerDepth + this.scene.transitionLength);
-        this.container.style.height = `${Math.max(parseFloat(containerHeight), scrollLength - transitions)}px`;
+        let targetHeight = window.innerHeight;
+        if (this.target) {
+            targetHeight = parseInt(getComputedStyle(this.target).height.replace('px', ''), 10);
+        }
+        let maxOutpoint = 0;
+        this.scene.layers.forEach(layer => {
+            maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
+        });
+        this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint + targetHeight)}px`;
     }
     /**
      * Show a debugging tool appended to the frontend of the page.
      * Can be used to determine best "pushin-from" and "pushin-to" values.
      */
+    /* istanbul ignore next */
     showDebugger() {
+        var _a;
         this.pushinDebug = document.createElement('div');
         this.pushinDebug.classList.add('pushin-debug');
         const scrollTitle = document.createElement('p');
@@ -451,7 +681,8 @@ class PushIn {
         debuggerContent.innerText = `Scroll position: ${this.scrollY}px`;
         this.pushinDebug.appendChild(scrollTitle);
         this.pushinDebug.appendChild(debuggerContent);
-        document.body.appendChild(this.pushinDebug);
+        const target = (_a = this.target) !== null && _a !== void 0 ? _a : document.body;
+        target.appendChild(this.pushinDebug);
     }
 }
 
@@ -460,8 +691,10 @@ class PushIn {
  * matching the provided selector.
  */
 const pushInStart = (options) => {
+    var _a;
     const pushInOptions = options !== null && options !== void 0 ? options : {};
-    const elements = document.querySelectorAll('.pushin');
+    const selector = (_a = options === null || options === void 0 ? void 0 : options.selector) !== null && _a !== void 0 ? _a : '.pushin';
+    const elements = document.querySelectorAll(selector);
     const instances = [];
     for (const element of elements) {
         const instance = new PushIn(element, pushInOptions);

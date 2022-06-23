@@ -1,7 +1,7 @@
 {
   "name": "pushin",
   "description": "A javascript plugin to attach a 'dolly' or 'push-in' effect to a div element when user scrolls.",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "sideEffects": true,
   "module": "dist/esm/pushin.js",
   "main": "dist/umd/pushin.js",
@@ -82,7 +82,7 @@
     "jsdom": "^20.0.0",
     "lint-staged": "^12.3.7",
     "prettier": "^2.6.1",
-    "prismjs":"^1.28.0",
+    "prismjs": "^1.28.0",
     "pug-plugin": "^2.7.4",
     "rollup": "2.75.5",
     "rollup-plugin-copy": "3.4.0",

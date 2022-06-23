@@ -183,6 +183,7 @@ export class PushInLayer {
     };
   }
 
+  /* istanbul ignore next */
   private getDepth(): number {
     return (
       this.getOutpoint(this.ref.outpoints) - this.getInpoint(this.ref.inpoints)

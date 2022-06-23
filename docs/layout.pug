@@ -1,3 +1,6 @@
+//- here is the `+code` mixin used with `:highlight` filter for highlighting a code syntax directly in Pug
+include mixins.pug
+
 block variables
 doctype html
 html(lang="en-us")
@@ -5,13 +8,17 @@ html(lang="en-us")
 		block head
 			meta(charset='utf-8')
 			meta(name='viewport' content='width=device-width, initial-scale=1')
-			link(rel="icon" href="images/favicon.ico")
+			link(rel="icon" href="/pushin/images/favicon.ico")
 		block styles
 			link( href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" )
 			link( href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css" rel="stylesheet" )
 			script( src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" )
-			script( src="https://cdn.jsdelivr.net/npm/prismjs@v1/components/prism-core.min.js" )
-			script( src="https://cdn.jsdelivr.net/npm/prismjs@v1/plugins/autoloader/prism-autoloader.min.js" )
+
+			//- Using pug-plugin, the source of style must be loaded directly in Pug.
+			link( href=require("pushin/pushin.css") rel="stylesheet" )
+			//- Using pug-plugin, the source of script must be loaded directly in Pug.
+			script( src=require("./main.ts") defer )
+
 			style.
 				@media (min-width: 992px) {
 					#site-nav.offcanvas-lg {
@@ -25,8 +32,8 @@ html(lang="en-us")
 			.row
 				.navbar.bg-light.border-bottom.shadow-sm(style="z-index: 100;" class=(siteNavFullWidth ? '' : 'navbar-expand-lg'))
 					.container
-						a.navbar-brand(href="/")
-							img(src="/images/pushin-logo-banner.svg" style="height: 50px;")
+						a.navbar-brand(href="/pushin")
+							img(src="/pushin/images/pushin-logo-banner.svg" style="height: 50px;")
 						button.navbar-toggler(type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" class=(siteNavFullWidth ? '' : 'd-lg-none'))
 							span Menu
 		.container(class=(siteNavFullWidth ? 'mt-5' : ''))
@@ -39,22 +46,22 @@ html(lang="en-us")
 								ul.list-group.list-group-flush.pt-4
 									li.list-group-item.fw-bold Getting Started
 									li.list-group-item.ps-5
-											a(href='/') About 
+											a(href='/pushin') About 
 									li.list-group-item.ps-5
-											a(href='/installation') Installation
+											a(href='/pushin/installation') Installation
 									li.list-group-item.ps-5
-											a(href='/composition') Composition
+											a(href='/pushin/composition') Composition
 									li.list-group-item.ps-5
-										a(href='/target') Target
+										a(href='/pushin/target') Target
 									li.list-group-item.ps-5
-										a(href='/api') API Reference
+										a(href='/pushin/api') API Reference
 									li.list-group-item.fw-bold Examples
 									li.list-group-item.ps-5
-										a(href='/examples/simple') Simple (no configuration)
+										a(href='/pushin/examples/simple') Simple (no configuration)
 									li.list-group-item.ps-5
-										a(href='/examples/responsive') Responsive design
+										a(href='/pushin/examples/responsive') Responsive design
 									li.list-group-item.ps-5
-										a(href='/examples/cat') Building a scene with images
+										a(href='/pushin/examples/cat') Building a scene with images
 				main.col-12(class=(siteNavFullWidth ? '' : 'col-lg-8'))
 					block content
 		footer.position-fixed.bottom-0.start-0.d-flex.justify-content-end.w-100
