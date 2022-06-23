@@ -16,6 +16,7 @@ export class PushInScene {
   public options: SceneOptions;
   public composition?: PushInComposition;
 
+  /* istanbul ignore next */
   constructor(public pushin: PushIn) {
     const container =
       this.pushin.container.querySelector<HTMLElement>('.pushin-scene');
