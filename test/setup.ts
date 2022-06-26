@@ -2,7 +2,7 @@ import { DOMWindow, JSDOM } from 'jsdom';
 
 // `globalThis.window` refers to `typeof globalThis`, but `jsdom.DOMWindow` isn't assignable to `global.window`.
 const _global = global as unknown as Omit<typeof globalThis, 'window'> & {
-  window: DOMWindow;
+  window?: DOMWindow | undefined;
 };
 
 export function setupJSDOM(html: string) {
