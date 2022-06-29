@@ -1,4 +1,4 @@
-/* Pushin.js - v5.0.1
+/* Pushin.js - v5.0.2
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 const DEFAULT_SPEED = 8;
@@ -72,6 +72,7 @@ class PushInComposition {
 }
 
 class PushInLayer {
+    /* istanbul ignore next */
     constructor(element, index, scene, options) {
         this.element = element;
         this.index = index;
@@ -213,6 +214,7 @@ class PushInLayer {
      * This is used during initalization and
      * if the window is resized.
      */
+    /* istanbul ignore next */
     setLayerParams() {
         this.params = {
             depth: this.getDepth(),
@@ -270,6 +272,7 @@ class PushInLayer {
      * Get the current inpoint for a layer,
      * depending on window breakpoint.
      */
+    /* istanbul ignore next */
     getInpoint(inpoints) {
         const { breakpoints } = this.scene.options;
         return inpoints[this.scene.getBreakpointIndex(breakpoints)] || inpoints[0];
@@ -278,6 +281,7 @@ class PushInLayer {
      * Get the current outpoint for a layer,
      * depending on window breakpoint.
      */
+    /* istanbul ignore next */
     getOutpoint(outpoints) {
         const { breakpoints } = this.scene.options;
         return (outpoints[this.scene.getBreakpointIndex(breakpoints)] || outpoints[0]);
@@ -384,11 +388,15 @@ class PushInScene {
     /**
      * Set scene class names.
      */
+    /* istanbul ignore next */
     setSceneClasses() {
         if (this.pushin.target) {
             this.container.classList.add('pushin-scene--with-target');
         }
     }
+    /**
+     * Resize the PushIn container if using a target container.
+     */
     resize() {
         var _a;
         const sizes = (_a = this.pushin.target) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect();
