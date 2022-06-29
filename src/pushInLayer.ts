@@ -14,6 +14,7 @@ export class PushInLayer {
   private originalScale: number;
   private ref: LayerRef;
 
+  /* istanbul ignore next */
   constructor(
     private element: HTMLElement,
     private index: number,
@@ -170,6 +171,7 @@ export class PushInLayer {
    * This is used during initalization and
    * if the window is resized.
    */
+  /* istanbul ignore next */
   setLayerParams(): void {
     this.params = {
       depth: this.getDepth(),
@@ -237,6 +239,7 @@ export class PushInLayer {
    * Get the current inpoint for a layer,
    * depending on window breakpoint.
    */
+  /* istanbul ignore next */
   private getInpoint(inpoints: number[]): number {
     const { breakpoints } = this.scene.options;
     return inpoints[this.scene.getBreakpointIndex(breakpoints)] || inpoints[0];
@@ -246,6 +249,7 @@ export class PushInLayer {
    * Get the current outpoint for a layer,
    * depending on window breakpoint.
    */
+  /* istanbul ignore next */
   private getOutpoint(outpoints: number[]): number {
     const { breakpoints } = this.scene.options;
     return (
