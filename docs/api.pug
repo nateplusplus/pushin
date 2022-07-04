@@ -113,6 +113,12 @@ block content
 							td string 
 							td: code undefined 
 							td JavaScript selector used to attach PushIn to an element on the page.
+						tr
+							th(scope="row") scrollTarget 
+							td: code data-pushin-scroll-target
+							td string 
+							td: code target | window
+							td JavaScript selector used to bind scroll events. If "window" is provided, scroll events will be bound to the Window object, regardless of which element is the target.
 	section.container-fluid.my-5
 		.row 
 			.col
