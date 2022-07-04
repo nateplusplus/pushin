@@ -14,6 +14,9 @@ export declare class PushInScene {
      * Set scene class names.
      */
     private setSceneClasses;
+    /**
+     * Resize the PushIn container if using a target container.
+     */
     resize(): void;
     /**
      * Set breakpoints for responsive design settings.

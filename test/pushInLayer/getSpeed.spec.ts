@@ -1,6 +1,7 @@
 import { setupJSDOM } from '../setup';
 import { PushInLayer } from '../../src/pushInLayer';
 import { DEFAULT_SPEED } from '../../src/constants';
+import { layerOptions } from '../__mocks__/layers';
 
 describe('getSpeed', () => {
   let mockPushInLayer: PushInLayer;
@@ -23,20 +24,32 @@ describe('getSpeed', () => {
   });
 
   it('Should return 8 by default', () => {
-    const elem = document.querySelector<HTMLElement>('#layer-0');
+    const elem = <HTMLElement> document.querySelector('#layer-0');
     const result = mockPushInLayer['getSpeed'](elem);
     expect(result).toEqual(DEFAULT_SPEED);
   });
 
   it('Should return integer value from data-pushin-speed attribute', () => {
-    const elem = document.querySelector<HTMLElement>('#layer-1');
+    const elem = <HTMLElement> document.querySelector('#layer-1');
     const result = mockPushInLayer['getSpeed'](elem);
     expect(result).toEqual(50);
   });
 
   it('Should return default if NaN', () => {
-    const elem = document.querySelector<HTMLElement>('#layer-2');
+    const elem = <HTMLElement> document.querySelector('#layer-2');
     const result = mockPushInLayer['getSpeed'](elem);
     expect(result).toEqual(DEFAULT_SPEED);
+  });
+
+  it('Should use javascript API', () => {
+    const elem = <HTMLElement> document.querySelector('#layer-0');
+    const options = Object.apply(
+      {},
+      layerOptions
+    );
+    options.speed = 10;
+    mockPushInLayer['options'] = options;
+    const result = mockPushInLayer['getSpeed'](elem);
+    expect(result).toEqual(10);
   });
 });

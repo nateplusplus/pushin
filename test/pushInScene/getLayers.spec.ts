@@ -1,6 +1,9 @@
 import { setupJSDOM } from '../setup';
 import { PushInScene } from '../../src/pushInScene';
 import { PushInLayer } from '../../src/pushInLayer';
+import { layerOptions } from '../__mocks__/layers';
+import { sceneOptions } from '../__mocks__/scene';
+
 jest.mock('../../src/pushInLayer');
 
 describe('getLayers', () => {
@@ -24,7 +27,7 @@ describe('getLayers', () => {
         </html>`);
 
     mockPushInScene = Object.create(PushInScene.prototype);
-    mockPushInScene['container'] = document.querySelector<HTMLElement>('.pushin-scene');
+    mockPushInScene['container'] = <HTMLElement> document.querySelector('.pushin-scene');
     mockPushInScene['layers'] = [];
 
     layers = [ ...document.querySelectorAll<HTMLElement>('.pushin-layer')];
@@ -38,5 +41,21 @@ describe('getLayers', () => {
   it('Should create pushInLayer with correct arguments', () => {
     mockPushInScene['getLayers']();
     expect(PushInLayer).toHaveBeenCalledWith(layers[1], 1, mockPushInScene, {});
+  });
+
+  it('Should set layer options from the JavaScript API', () => {
+    const testLayerOptions =  Object.assign({}, layerOptions);
+    testLayerOptions.inpoints = [1000, 2000];
+
+    mockPushInScene['options'] = sceneOptions;
+    mockPushInScene['options'].layers = [
+      Object.assign({}, layerOptions),
+      testLayerOptions,
+      Object.assign({}, layerOptions),
+      Object.assign({}, layerOptions),
+    ];
+
+    mockPushInScene['getLayers']();
+    expect(PushInLayer).toHaveBeenNthCalledWith(2, layers[1], 1, mockPushInScene, testLayerOptions);
   });
 });

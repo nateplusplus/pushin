@@ -55,12 +55,16 @@ export class PushInScene {
   /**
    * Set scene class names.
    */
+  /* istanbul ignore next */
   private setSceneClasses(): void {
     if (this.pushin.target) {
       this.container.classList.add('pushin-scene--with-target');
     }
   }
 
+  /**
+   * Resize the PushIn container if using a target container.
+   */
   public resize() {
     const sizes = this.pushin.target?.getBoundingClientRect();
     if (sizes) {
