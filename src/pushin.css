@@ -24,6 +24,10 @@
   position: sticky;
 }
 
+.pushin-scene--scroll-target-window {
+  height: 100vh;
+}
+
 .pushin-composition {
   flex: 0 0 100%;
   padding-top: 201%;

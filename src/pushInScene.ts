@@ -60,16 +60,22 @@ export class PushInScene {
     if (this.pushin.target) {
       this.container.classList.add('pushin-scene--with-target');
     }
+
+    if (this.pushin.scrollTarget === 'window') {
+      this.container.classList.add('pushin-scene--scroll-target-window');
+    }
   }
 
   /**
    * Resize the PushIn container if using a target container.
    */
   public resize() {
-    const sizes = this.pushin.target?.getBoundingClientRect();
-    if (sizes) {
-      this.container.style.height = `${sizes.height}px`;
-      this.container.style.width = `${sizes.width}px`;
+    if (this.pushin.scrollTarget !== 'window') {
+      const sizes = this.pushin.target?.getBoundingClientRect();
+      if (sizes) {
+        this.container.style.height = `${sizes.height}px`;
+        this.container.style.width = `${sizes.width}px`;
+      }
     }
   }
 

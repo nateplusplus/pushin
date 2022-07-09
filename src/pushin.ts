@@ -16,7 +16,7 @@ export class PushIn {
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
   public options: PushInOptions;
-  private scrollTarget?: HTMLElement | string;
+  public scrollTarget?: HTMLElement | string;
 
   /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
@@ -163,7 +163,7 @@ export class PushIn {
    * on the provided target element.
    */
   private setTargetOverflow(): void {
-    if (this.target) {
+    if (this.target && this.scrollTarget !== 'window') {
       this.target.style.overflowY = 'scroll';
       this.target.style.scrollBehavior = 'smooth';
     }
