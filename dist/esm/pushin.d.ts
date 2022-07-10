@@ -15,11 +15,17 @@ export declare class PushIn {
     private lastAnimationFrameId;
     cleanupFns: VoidFunction[];
     options: PushInOptions;
+    scrollTarget?: HTMLElement | string;
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
      */
     start(): void;
+    /**
+     * Get scrollTarget option from data attribute
+     * or JavaScript API.
+     */
+    setScrollTarget(): void;
     /**
      * Set the target parameter and make sure
      * pushin is always a child of that target.

@@ -1,4 +1,4 @@
-/* Pushin.js - v5.0.2
+/* Pushin.js - v5.1.0
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -399,16 +399,21 @@ License: MIT */
             if (this.pushin.target) {
                 this.container.classList.add('pushin-scene--with-target');
             }
+            if (this.pushin.scrollTarget === 'window') {
+                this.container.classList.add('pushin-scene--scroll-target-window');
+            }
         }
         /**
          * Resize the PushIn container if using a target container.
          */
         resize() {
             var _a;
-            const sizes = (_a = this.pushin.target) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect();
-            if (sizes) {
-                this.container.style.height = `${sizes.height}px`;
-                this.container.style.width = `${sizes.width}px`;
+            if (this.pushin.scrollTarget !== 'window') {
+                const sizes = (_a = this.pushin.target) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect();
+                if (sizes) {
+                    this.container.style.height = `${sizes.height}px`;
+                    this.container.style.width = `${sizes.width}px`;
+                }
             }
         }
         /**
@@ -505,6 +510,7 @@ License: MIT */
                 debug: (_a = options === null || options === void 0 ? void 0 : options.debug) !== null && _a !== void 0 ? _a : false,
                 scene: (_b = options === null || options === void 0 ? void 0 : options.scene) !== null && _b !== void 0 ? _b : { breakpoints: [], inpoints: [] },
                 target: (_c = options === null || options === void 0 ? void 0 : options.target) !== null && _c !== void 0 ? _c : undefined,
+                scrollTarget: options === null || options === void 0 ? void 0 : options.scrollTarget,
             };
             this.options.scene.composition = (_d = options === null || options === void 0 ? void 0 : options.composition) !== null && _d !== void 0 ? _d : undefined;
             this.options.scene.layers = (_e = options === null || options === void 0 ? void 0 : options.layers) !== null && _e !== void 0 ? _e : undefined;
@@ -515,12 +521,13 @@ License: MIT */
          */
         /* istanbul ignore next */
         start() {
-            this.setTarget();
-            this.scrollY = this.getScrollY();
-            if (this.options.debug) {
-                this.showDebugger();
-            }
             if (this.container) {
+                this.setTarget();
+                this.setScrollTarget();
+                this.scrollY = this.getScrollY();
+                if (this.options.debug) {
+                    this.showDebugger();
+                }
                 this.scene = new PushInScene(this);
                 this.setScrollLength();
                 this.setTargetOverflow();
@@ -535,6 +542,37 @@ License: MIT */
                 // eslint-disable-next-line no-console
                 console.error('No container element provided to pushIn.js. Effect will not be applied.');
             }
+        }
+        /**
+         * Get scrollTarget option from data attribute
+         * or JavaScript API.
+         */
+        setScrollTarget() {
+            let scrollTarget;
+            let value;
+            if (this.container.hasAttribute('data-pushin-scroll-target')) {
+                value = this.container.dataset.pushinScrollTarget;
+            }
+            else if (this.options.scrollTarget) {
+                value = this.options.scrollTarget;
+            }
+            if (value) {
+                if (value === 'window') {
+                    scrollTarget = value;
+                }
+                else {
+                    scrollTarget = document.querySelector(value);
+                }
+            }
+            if (!scrollTarget) {
+                if (this.target) {
+                    scrollTarget = this.target;
+                }
+                else {
+                    scrollTarget = 'window';
+                }
+            }
+            this.scrollTarget = scrollTarget;
         }
         /**
          * Set the target parameter and make sure
@@ -572,11 +610,14 @@ License: MIT */
          */
         getScrollY() {
             let scrollY = 0;
-            if (this.target) {
-                scrollY = this.target.scrollTop;
-            }
-            else if (typeof window !== 'undefined') {
+            if (this.scrollTarget === 'window' && typeof window !== 'undefined') {
                 scrollY = window.scrollY;
+            }
+            else {
+                const target = this.scrollTarget;
+                if (target) {
+                    scrollY = target.scrollTop;
+                }
             }
             return scrollY;
         }
@@ -585,7 +626,7 @@ License: MIT */
          * on the provided target element.
          */
         setTargetOverflow() {
-            if (this.target) {
+            if (this.target && this.scrollTarget !== 'window') {
                 this.target.style.overflowY = 'scroll';
                 this.target.style.scrollBehavior = 'smooth';
             }
@@ -595,7 +636,7 @@ License: MIT */
          */
         /* istanbul ignore next */
         bindEvents() {
-            const scrollTarget = this.target ? this.target : window;
+            const scrollTarget = this.scrollTarget === 'window' ? window : this.scrollTarget;
             const onScroll = () => {
                 var _a;
                 this.scrollY = this.getScrollY();
@@ -629,11 +670,12 @@ License: MIT */
                     const layer = this.scene.layers[index];
                     if (layer) {
                         const scrollTo = layer.params.inpoint + layer.params.transitionStart;
-                        if (!this.target) {
+                        if (this.scrollTarget === 'window') {
                             window.scrollTo(0, scrollTo);
                         }
                         else {
-                            this.target.scrollTop = scrollTo;
+                            const container = scrollTarget;
+                            container.scrollTop = scrollTo;
                         }
                     }
                 }

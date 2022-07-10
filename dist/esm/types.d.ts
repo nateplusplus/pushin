@@ -24,6 +24,7 @@ export interface PushInOptions {
     scene?: SceneOptions;
     selector?: string;
     target?: string;
+    scrollTarget?: string;
 }
 export interface PushInLayer {
     element: HTMLElement;
