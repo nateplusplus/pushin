@@ -16,6 +16,7 @@ export class PushIn {
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
   public options: PushInOptions;
+  public scrollTarget?: HTMLElement | string;
 
   /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
@@ -25,6 +26,7 @@ export class PushIn {
       debug: options?.debug ?? false,
       scene: options?.scene ?? { breakpoints: [], inpoints: [] },
       target: options?.target ?? undefined,
+      scrollTarget: options?.scrollTarget,
     };
 
     this.options.scene!.composition = options?.composition ?? undefined;
@@ -38,15 +40,16 @@ export class PushIn {
    */
   /* istanbul ignore next */
   start(): void {
-    this.setTarget();
-
-    this.scrollY = this.getScrollY();
-
-    if (this.options.debug) {
-      this.showDebugger();
-    }
-
     if (this.container) {
+      this.setTarget();
+      this.setScrollTarget();
+
+      this.scrollY = this.getScrollY();
+
+      if (this.options.debug) {
+        this.showDebugger();
+      }
+
       this.scene = new PushInScene(this);
 
       this.setScrollLength();
@@ -65,6 +68,39 @@ export class PushIn {
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
     }
+  }
+
+  /**
+   * Get scrollTarget option from data attribute
+   * or JavaScript API.
+   */
+  setScrollTarget(): void {
+    let scrollTarget;
+
+    let value;
+    if (this.container.hasAttribute('data-pushin-scroll-target')) {
+      value = <string>this.container!.dataset!.pushinScrollTarget;
+    } else if (this.options.scrollTarget) {
+      value = this.options!.scrollTarget;
+    }
+
+    if (value) {
+      if (value === 'window') {
+        scrollTarget = value;
+      } else {
+        scrollTarget = document.querySelector(<string>value);
+      }
+    }
+
+    if (!scrollTarget) {
+      if (this.target) {
+        scrollTarget = this.target;
+      } else {
+        scrollTarget = 'window';
+      }
+    }
+
+    this.scrollTarget = <HTMLElement | string>scrollTarget;
   }
 
   /**
@@ -108,10 +144,14 @@ export class PushIn {
    */
   private getScrollY(): number {
     let scrollY = 0;
-    if (this.target) {
-      scrollY = this.target.scrollTop;
-    } else if (typeof window !== 'undefined') {
+
+    if (this.scrollTarget === 'window' && typeof window !== 'undefined') {
       scrollY = window.scrollY;
+    } else {
+      const target = <HTMLElement>this.scrollTarget;
+      if (target) {
+        scrollY = target.scrollTop;
+      }
     }
 
     return scrollY;
@@ -122,7 +162,7 @@ export class PushIn {
    * on the provided target element.
    */
   private setTargetOverflow(): void {
-    if (this.target) {
+    if (this.target && this.scrollTarget !== 'window') {
       this.target.style.overflowY = 'scroll';
       this.target.style.scrollBehavior = 'smooth';
     }
@@ -133,7 +173,8 @@ export class PushIn {
    */
   /* istanbul ignore next */
   bindEvents(): void {
-    const scrollTarget = this.target ? this.target : window;
+    const scrollTarget =
+      this.scrollTarget === 'window' ? window : <HTMLElement>this.scrollTarget;
 
     const onScroll = () => {
       this.scrollY = this.getScrollY();
@@ -150,6 +191,7 @@ export class PushIn {
         }
       }
     };
+
     scrollTarget.addEventListener('scroll', onScroll);
     this.cleanupFns.push(() =>
       scrollTarget.removeEventListener('scroll', onScroll)
@@ -184,10 +226,11 @@ export class PushIn {
         if (layer) {
           const scrollTo = layer.params.inpoint + layer.params.transitionStart;
 
-          if (!this.target) {
+          if (this.scrollTarget === 'window') {
             window.scrollTo(0, scrollTo);
           } else {
-            this.target.scrollTop = scrollTo;
+            const container = <HTMLElement>scrollTarget;
+            container.scrollTop = scrollTo;
           }
         }
       }
