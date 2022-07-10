@@ -79,8 +79,7 @@ export class PushIn {
 
     let value;
     if (this.container.hasAttribute('data-pushin-scroll-target')) {
-      const selector = <string>this.container!.dataset!.pushinScrollTarget;
-      value = document.querySelector(selector);
+      value = <string>this.container!.dataset!.pushinScrollTarget;
     } else if (this.options.scrollTarget) {
       value = this.options!.scrollTarget;
     }
