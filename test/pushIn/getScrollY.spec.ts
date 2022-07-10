@@ -15,6 +15,7 @@ describe('getScrollY', () => {
   });
 
   it('Should return 0 by default', () => {
+    // @ts-ignore: test requires breaking expected type
     global.window = undefined;
     const result = mockPushIn['getScrollY']();
     expect(result).toEqual(0);
@@ -22,11 +23,14 @@ describe('getScrollY', () => {
 
   it('Should return scrollTop of target', () => {
     mockPushIn['target'] = <HTMLElement>{ scrollTop: 15 };
+    mockPushIn['scrollTarget'] = mockPushIn['target'];
     const result = mockPushIn['getScrollY']();
     expect(result).toEqual(15);
   });
 
   it('Should return scrollY property of window', () => {
+    mockPushIn['scrollTarget'] = 'window';
+
     window.scrollY = 20;
     const result = mockPushIn['getScrollY']();
     expect(result).toEqual(20);
