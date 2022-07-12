@@ -94,7 +94,7 @@ pushInStart();
 
 To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
 
-See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushin/responsive.html)
+See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushin/examples/responsive/)
 
 ```js
 import 'pushin';
@@ -134,17 +134,11 @@ export default function PushInComponent() {
 }
 ```
 
-### 5. Scene configuration
+### 5. Configuration
 
-The "scene" is the container element for all layers. There are some scene configurations you can customize for your unique project, which will affect all layers.
+There are several plugin configurations you can use to customize for your unique project.
 
-**Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available scene configurations.**
-
-### 6. Layer configuration and animation timing
-
-By default, all layers will push in at once. You can configure each layer to enter and exit the frame at specific times by using the following data parameters:
-
-**Refer to [docs/html-attributes](docs/html-attributes.md) for a detailed breakdown of available layer configurations.**
+**Refer to [https://nateplusplus.github.io/pushin/api](https://nateplusplus.github.io/pushin/api) for a detailed breakdown of all available configurations.**
 
 ## SSR
 
