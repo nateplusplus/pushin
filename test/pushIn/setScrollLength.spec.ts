@@ -12,7 +12,7 @@ describe('setScrollLength', () => {
     setupJSDOM(`
         <!DOCTYPE html>
             <body>
-                <div class="target" style="height:1000px;">
+                <div class="target">
                   <div class="pushin" style="height:5000px;"></div>
                 </div>
             </body>
@@ -55,6 +55,7 @@ describe('setScrollLength', () => {
         container,
         scene: mockScene,
         target: document.querySelector('.target'),
+        targetHeight: 1000,
       }
     );
   });
