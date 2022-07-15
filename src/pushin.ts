@@ -17,6 +17,7 @@ export class PushIn {
   public cleanupFns: VoidFunction[] = [];
   public options: PushInOptions;
   public scrollTarget?: HTMLElement | string;
+  private targetHeight: number;
 
   /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
@@ -32,6 +33,8 @@ export class PushIn {
     this.options.scene!.composition = options?.composition ?? undefined;
     this.options.scene!.layers = options?.layers ?? undefined;
 
+    // Defaults
+    this.targetHeight = 0;
     this.options.debug = options?.debug ?? false;
   }
 
@@ -43,6 +46,7 @@ export class PushIn {
     if (this.container) {
       this.setTarget();
       this.setScrollTarget();
+      this.setTargetHeight();
 
       this.scrollY = this.getScrollY();
 
@@ -67,6 +71,23 @@ export class PushIn {
       console.error(
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
+    }
+  }
+
+  /**
+   * Set the target height on initialization.
+   *
+   * This will be used to calculate scroll length.
+   *
+   * @see setScrollLength
+   */
+  setTargetHeight() {
+    this.targetHeight = window.innerHeight;
+    if (this.target) {
+      const computedHeight = getComputedStyle(this.target).height;
+
+      // Remove px and convert to number
+      this.targetHeight = +computedHeight.replace('px', '');
     }
   }
 
@@ -273,14 +294,6 @@ export class PushIn {
       ''
     );
 
-    let targetHeight = window.innerHeight;
-    if (this.target) {
-      targetHeight = parseInt(
-        getComputedStyle(this.target).height.replace('px', ''),
-        10
-      );
-    }
-
     let maxOutpoint = 0;
     this.scene.layers.forEach(layer => {
       maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
@@ -288,7 +301,7 @@ export class PushIn {
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),
-      maxOutpoint + targetHeight
+      maxOutpoint + this.targetHeight
     )}px`;
   }
 
