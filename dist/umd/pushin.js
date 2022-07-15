@@ -1,4 +1,4 @@
-/* Pushin.js - v5.1.0
+/* Pushin.js - v5.1.1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -514,6 +514,8 @@ License: MIT */
             };
             this.options.scene.composition = (_d = options === null || options === void 0 ? void 0 : options.composition) !== null && _d !== void 0 ? _d : undefined;
             this.options.scene.layers = (_e = options === null || options === void 0 ? void 0 : options.layers) !== null && _e !== void 0 ? _e : undefined;
+            // Defaults
+            this.targetHeight = 0;
             this.options.debug = (_f = options === null || options === void 0 ? void 0 : options.debug) !== null && _f !== void 0 ? _f : false;
         }
         /**
@@ -524,6 +526,7 @@ License: MIT */
             if (this.container) {
                 this.setTarget();
                 this.setScrollTarget();
+                this.setTargetHeight();
                 this.scrollY = this.getScrollY();
                 if (this.options.debug) {
                     this.showDebugger();
@@ -541,6 +544,21 @@ License: MIT */
             else {
                 // eslint-disable-next-line no-console
                 console.error('No container element provided to pushIn.js. Effect will not be applied.');
+            }
+        }
+        /**
+         * Set the target height on initialization.
+         *
+         * This will be used to calculate scroll length.
+         *
+         * @see setScrollLength
+         */
+        setTargetHeight() {
+            this.targetHeight = window.innerHeight;
+            if (this.target) {
+                const computedHeight = getComputedStyle(this.target).height;
+                // Remove px and convert to number
+                this.targetHeight = +computedHeight.replace('px', '');
             }
         }
         /**
@@ -710,15 +728,11 @@ License: MIT */
          */
         setScrollLength() {
             const containerHeight = getComputedStyle(this.container).height.replace('px', '');
-            let targetHeight = window.innerHeight;
-            if (this.target) {
-                targetHeight = parseInt(getComputedStyle(this.target).height.replace('px', ''), 10);
-            }
             let maxOutpoint = 0;
             this.scene.layers.forEach(layer => {
                 maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
             });
-            this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint + targetHeight)}px`;
+            this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint + this.targetHeight)}px`;
         }
         /**
          * Show a debugging tool appended to the frontend of the page.

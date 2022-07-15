@@ -16,11 +16,20 @@ export declare class PushIn {
     cleanupFns: VoidFunction[];
     options: PushInOptions;
     scrollTarget?: HTMLElement | string;
+    private targetHeight;
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
      */
     start(): void;
+    /**
+     * Set the target height on initialization.
+     *
+     * This will be used to calculate scroll length.
+     *
+     * @see setScrollLength
+     */
+    setTargetHeight(): void;
     /**
      * Get scrollTarget option from data attribute
      * or JavaScript API.
