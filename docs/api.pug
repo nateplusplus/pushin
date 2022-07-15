@@ -9,7 +9,7 @@ block content
 			h1.my-4 PushIn API Reference
 			div
 				p For more information, questions, bug reporting or feature requests, checkout the <a href="https://github.com/nateplusplus/pushin" target="_blank">project on GitHub</a>.
-	section.container-fluid.mb-5
+	section.container-fluid.mb-5#html
 		.row 
 			.col
 				h2 PushIn Full HTML Layout
@@ -22,12 +22,12 @@ block content
 					    </div>
 					  </div>
 					</div>
-	section.container-fluid.mb-5
+	section.container-fluid.mb-5#config
 		.row 
 			.col
 				h2 JavaScript and HTML configuration
 				p For ultimate flexibility, PushIn can be configured in a couple ways: through the JavaScript API, and/or through data-attributes within the HTML. When using both in combination, the HTML attributes will take precedence.
-				h3 JavaScript API
+				h3#config-js JavaScript API
 				p Pass in a configuration object to the effect contstructor, whether you are using #[code pushInStart()] or #[code new PushIn()].
 				p The example below demonstrates how you can configure PushIn using the JavaScript API.
 				+code.rounded.mb-5: :highlight(js)
@@ -54,7 +54,7 @@ block content
 					
 					// Using class constructor
 					new PushIn(config);
-				h3 HTML attributes
+				h3#config-html HTML attributes
 				p Alternatively, use HTML data-attributes as needed.
 				p: strong NOTE: Any attributes added within the HTML markup will take precedence over configurations in the JavaScript API.
 				p The example below demonstrates how you can use the HTML data-attributes to configure PushIn.
@@ -76,7 +76,7 @@ block content
 					    </div>
 					  </div>
 					</div>
-	section.container-fluid.my-5
+	section.container-fluid.my-5#modules
 		.row 
 			.col
 				h2 Modules
@@ -84,7 +84,7 @@ block content
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3 pushin (top level) | #[code .pushin]
+				h3#module-pushin pushin (top level) | #[code .pushin]
 				.table-responsive
 					table.table
 						tr 
@@ -122,7 +122,7 @@ block content
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3 scene | #[code .pushin-scene]
+				h3#module-scene scene | #[code .pushin-scene]
 				.table-responsive
 					table.table
 						tr 
@@ -158,7 +158,7 @@ block content
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3 composition | #[code .pushin-composition]
+				h3#module-composition composition | #[code .pushin-composition]
 				.table-responsive
 					table.table
 						tr 
@@ -176,7 +176,7 @@ block content
 	section.container-fluid.my-5
 		.row 
 			.col
-				h3 layers | #[code .pushin-layer]
+				h3#module-layers layers | #[code .pushin-layer]
 				.table-responsive
 					table.table
 						tr 
