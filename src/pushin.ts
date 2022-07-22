@@ -1,6 +1,7 @@
 import { PushInScene } from './pushInScene';
 import { PushInOptions } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
+import PushInBase from './pushInBase';
 
 /**
  * PushIn object
@@ -8,7 +9,7 @@ import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-export class PushIn {
+export class PushIn extends PushInBase {
   public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
   public target?: HTMLElement | null;
@@ -21,6 +22,7 @@ export class PushIn {
 
   /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
+    super();
     options = options ?? {};
 
     this.options = {
