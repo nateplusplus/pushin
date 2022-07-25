@@ -98,14 +98,8 @@ export class PushIn extends PushInBase {
    * or JavaScript API.
    */
   setScrollTarget(): void {
+    const value = this.getOption('scrollTarget', this.options);
     let scrollTarget;
-
-    let value;
-    if (this.container.hasAttribute('data-pushin-scroll-target')) {
-      value = <string>this.container!.dataset!.pushinScrollTarget;
-    } else if (this.options.scrollTarget) {
-      value = this.options!.scrollTarget;
-    }
 
     if (value) {
       if (value === 'window') {
@@ -133,13 +127,10 @@ export class PushIn extends PushInBase {
    * @param options
    */
   setTarget(): void {
-    if (this.options.target) {
-      this.target = document.querySelector(this.options!.target);
-    }
+    const value = <string>this.getOption('target', this.options);
 
-    if (this.container.hasAttribute('data-pushin-target')) {
-      const selector = <string>this.container!.dataset!.pushinTarget;
-      this.target = document.querySelector(selector);
+    if (value) {
+      this.target = document.querySelector(value);
     }
 
     if (this.target && this.container.parentElement !== this.target) {

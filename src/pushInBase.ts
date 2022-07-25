@@ -1,3 +1,26 @@
-export default class PushInBase {
-  // TODO: Add stuff...
+export default abstract class PushInBase {
+  public container!: HTMLElement;
+
+  /**
+   * Get the value for an option from either HTML markup or the JavaScript API
+   */
+  getOption(name: string, options: any): string | number | boolean | undefined {
+    let value;
+    const attribute = this.getAttributeName(name);
+    if (this.container.hasAttribute(attribute)) {
+      value = <string>this.container!.dataset!.pushinScrollTarget;
+    } else if (options[name]) {
+      value = options[name];
+    }
+
+    return value;
+  }
+
+  getAttributeName(name: string) {
+    const kebabName = name.replace(
+      /[A-Z]+(?![a-z])|[A-Z]/g,
+      (char, idx) => (idx ? '-' : '') + char.toLowerCase()
+    );
+    return `data-pushin-${kebabName}`;
+  }
 }
