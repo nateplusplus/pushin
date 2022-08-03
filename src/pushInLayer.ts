@@ -6,10 +6,11 @@ import {
   PUSH_IN_DEFAULT_TRANSITION_LENGTH,
 } from './constants';
 import { PushInScene } from './pushInScene';
+import PushInBase from './pushInBase';
 
 import { LayerOptions, LayerRef, LayerParams } from './types';
 
-export class PushInLayer {
+export class PushInLayer extends PushInBase {
   public params!: LayerParams;
   private originalScale: number;
   private ref: LayerRef;
@@ -21,6 +22,7 @@ export class PushInLayer {
     public scene: PushInScene,
     private options: LayerOptions | null
   ) {
+    super();
     const inpoints = this.getInpoints(this.element, this.index);
     const outpoints = this.getOutpoints(this.element, inpoints[0]);
     const speed = this.getSpeed(this.element);
