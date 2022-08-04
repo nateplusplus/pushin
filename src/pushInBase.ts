@@ -11,7 +11,7 @@ export default abstract class PushInBase {
     let value;
     const attribute = this.getAttributeName(name);
     if (this.container.hasAttribute(attribute)) {
-      value = <string>this.container!.dataset!.pushinScrollTarget;
+      value = <string>this.container!.getAttribute(attribute);
       const array = value.split(',');
       if (array.length > 1) {
         value = array;
