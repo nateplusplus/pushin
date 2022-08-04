@@ -81,12 +81,16 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionStart(): number {
-    let start =
-      this.options?.transitionStart ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-    if (this.element.hasAttribute('data-pushin-transition-start')) {
-      const attr = <string>this.element!.dataset!.pushinTransitionStart;
-      start = parseInt(attr, 10);
+    let start = <string | number>(
+      this.getOption('transitionStart', this.options)
+    );
+
+    if (!start || (typeof start === 'string' && start === '')) {
+      start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    } else if (typeof start === 'string') {
+      start = parseInt(start, 10);
     }
+
     return start;
   }
 
@@ -96,11 +100,14 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionEnd(): number {
-    let end = this.options?.transitionEnd ?? PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-    if (this.element.hasAttribute('data-pushin-transition-end')) {
-      const attr = <string>this.element!.dataset!.pushinTransitionEnd;
-      end = parseInt(attr, 10);
+    let end = <string | number>this.getOption('transitionEnd', this.options);
+
+    if (!end || (typeof end === 'string' && end === '')) {
+      end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    } else if (typeof end === 'string') {
+      end = parseInt(end, 10);
     }
+
     return end;
   }
 
