@@ -1,4 +1,4 @@
-/* Pushin.js - v5.1.1
+/* Pushin.js - v5.1.2
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
