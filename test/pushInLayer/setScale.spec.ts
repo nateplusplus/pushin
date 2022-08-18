@@ -13,8 +13,9 @@ describe('setScale', () => {
 
   it('should set element scale value', () => {
     const mockPushInLayer = Object.create(PushInLayer.prototype);
-    const element = document.querySelector<HTMLElement>('.foo');
-    mockPushInLayer['setScale'](element, 10);
+    const element = <HTMLElement>document.querySelector('.foo');
+    mockPushInLayer.container = element;
+    mockPushInLayer['setScale'](10);
     const result = element.style.transform;
     expect(result).toEqual('scale(10)');
   });

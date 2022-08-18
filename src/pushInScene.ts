@@ -6,11 +6,11 @@ import {
 import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
+import PushInBase from './pushInBase';
 
 import { LayerOptions, SceneOptions } from './types';
 
-export class PushInScene {
-  public container: HTMLElement;
+export class PushInScene extends PushInBase {
   public layers: PushInLayer[];
   public layerDepth: number;
   public options: SceneOptions;
@@ -18,6 +18,8 @@ export class PushInScene {
 
   /* istanbul ignore next */
   constructor(public pushin: PushIn) {
+    super();
+
     const container =
       this.pushin.container.querySelector<HTMLElement>('.pushin-scene');
 

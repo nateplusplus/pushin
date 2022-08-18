@@ -1,6 +1,7 @@
 import { PushInScene } from './pushInScene';
 import { PushInOptions } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
+import PushInBase from './pushInBase';
 
 /**
  * PushIn object
@@ -8,7 +9,7 @@ import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-export class PushIn {
+export class PushIn extends PushInBase {
   public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
   public target?: HTMLElement | null;
@@ -21,6 +22,7 @@ export class PushIn {
 
   /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
+    super();
     options = options ?? {};
 
     this.options = {
@@ -96,14 +98,8 @@ export class PushIn {
    * or JavaScript API.
    */
   setScrollTarget(): void {
+    const value = this.getStringOption('scrollTarget');
     let scrollTarget;
-
-    let value;
-    if (this.container.hasAttribute('data-pushin-scroll-target')) {
-      value = <string>this.container!.dataset!.pushinScrollTarget;
-    } else if (this.options.scrollTarget) {
-      value = this.options!.scrollTarget;
-    }
 
     if (value) {
       if (value === 'window') {
@@ -131,13 +127,10 @@ export class PushIn {
    * @param options
    */
   setTarget(): void {
-    if (this.options.target) {
-      this.target = document.querySelector(this.options!.target);
-    }
+    const value = <string>this.getStringOption('target');
 
-    if (this.container.hasAttribute('data-pushin-target')) {
-      const selector = <string>this.container!.dataset!.pushinTarget;
-      this.target = document.querySelector(selector);
+    if (value) {
+      this.target = document.querySelector(value);
     }
 
     if (this.target && this.container.parentElement !== this.target) {

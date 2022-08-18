@@ -1,11 +1,11 @@
 import { PushInScene } from './pushInScene';
 import { CompositionOptions } from './types';
+import PushInBase from './pushInBase';
 
-export class PushInComposition {
-  public container?: HTMLElement;
-
+export class PushInComposition extends PushInBase {
   /* istanbul ignore next */
-  constructor(public scene: PushInScene, private options: CompositionOptions) {
+  constructor(public scene: PushInScene, public options: CompositionOptions) {
+    super();
     this.options = options;
 
     const container = this.scene.container.querySelector<HTMLElement>(
@@ -27,38 +27,23 @@ export class PushInComposition {
     }
 
     if (this.container) {
-      this.getRatio();
       this.setRatio();
     }
-  }
-
-  /**
-   * Get the composition ratio based on
-   * what has been passed in through the JavaScript API
-   * and/or what has been passed in via HTML data-attributes.
-   *
-   * @return {number[] | undefined}
-   */
-  private getRatio(): number[] | undefined {
-    let ratio;
-
-    if (this.container!.hasAttribute('data-pushin-ratio')) {
-      const value = this.container!.dataset.pushinRatio;
-      ratio = value?.split(',').map(val => parseInt(val, 10));
-    } else if (this.options?.ratio) {
-      ratio = this.options.ratio;
-    }
-
-    return ratio;
   }
 
   /**
    * Set the aspect ratio based setting.
    */
   private setRatio(): void {
-    if (this.options?.ratio) {
-      const paddingTop =
-        this.options!.ratio.reduce((prev, cur) => cur / prev) * 100;
+    let ratio = this.getNumberOption('ratio');
+
+    if (typeof ratio === 'number') {
+      // fail-safe if an array was not provided
+      ratio = [ratio, ratio];
+    }
+
+    if (ratio) {
+      const paddingTop = ratio.reduce((prev, cur) => cur / prev) * 100;
       this.container!.style.paddingTop = `${paddingTop.toString()}%`;
     }
   }
