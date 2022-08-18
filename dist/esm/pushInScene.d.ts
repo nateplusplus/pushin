@@ -1,10 +1,10 @@
 import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
+import PushInBase from './pushInBase';
 import { SceneOptions } from './types';
-export declare class PushInScene {
+export declare class PushInScene extends PushInBase {
     pushin: PushIn;
-    container: HTMLElement;
     layers: PushInLayer[];
     layerDepth: number;
     options: SceneOptions;

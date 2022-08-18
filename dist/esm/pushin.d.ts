@@ -1,12 +1,13 @@
 import { PushInScene } from './pushInScene';
 import { PushInOptions } from './types';
+import PushInBase from './pushInBase';
 /**
  * PushIn object
  *
  * Once new object is created, it will initialize itself and
  * bind events to begin interacting with dom.
  */
-export declare class PushIn {
+export declare class PushIn extends PushInBase {
     container: HTMLElement;
     scene: PushInScene;
     private pushinDebug?;

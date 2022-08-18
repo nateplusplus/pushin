@@ -27,7 +27,7 @@ export interface PushInOptions {
     scrollTarget?: string;
 }
 export interface PushInLayer {
-    element: HTMLElement;
+    container: HTMLElement;
     index: number;
     originalScale: number;
 }

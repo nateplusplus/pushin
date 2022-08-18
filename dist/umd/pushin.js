@@ -1,4 +1,4 @@
-/* Pushin.js - v5.1.2
+/* Pushin.js - v5.2.0
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -20,10 +20,90 @@ License: MIT */
     const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
     const PUSH_IN_DEFAULT_TRANSITION_LENGTH = 200;
 
-    class PushInComposition {
+    class PushInBase {
+        /**
+         * Get the value for an option from either HTML markup or the JavaScript API.
+         * Return a string or array of strings.
+         */
+        getStringOption(name) {
+            let option;
+            const attribute = this.getAttributeName(name);
+            if (this.container.hasAttribute(attribute)) {
+                option = this.container.getAttribute(attribute);
+            }
+            else if (typeof this.options[name] === 'string') {
+                option = this.options[name];
+            }
+            else if (typeof this.options[name] === 'number') {
+                // fail-safe in case numbers are passed in
+                option = this.options[name].toString();
+            }
+            else if (this.options[name]) {
+                const type = Object.prototype.toString.call(this.options[name]);
+                if (type === '[object Array]') {
+                    option = this.options[name];
+                }
+            }
+            else {
+                option = '';
+            }
+            // If the string contains commas, convert it into an array
+            if (typeof option === 'string' && option.includes(',')) {
+                option = option.split(',');
+            }
+            return option;
+        }
+        /**
+         * Get the value for an option from either HTML markup or the JavaScript API.
+         * Returns a number or array of numbers.
+         * If nothing found, returns null.
+         */
+        getNumberOption(name) {
+            let option = null;
+            const attribute = this.getAttributeName(name);
+            if (this.container.hasAttribute(attribute)) {
+                option = this.container.getAttribute(attribute);
+            }
+            else if (this.options[name]) {
+                option = this.options[name];
+            }
+            if (typeof option === 'string') {
+                option = option.split(',').map(val => parseFloat(val));
+                option = option.length > 1 ? option : option[0];
+            }
+            return option;
+        }
+        /**
+         * Get the value for an option from either HTML markup or the JavaScript API.
+         * Returns a boolean or array of booleans.
+         * If nothing found, returns null.
+         */
+        getBoolOption(name) {
+            let option = null;
+            const attribute = this.getAttributeName(name);
+            if (this.container.hasAttribute(attribute)) {
+                option = this.container.getAttribute(attribute);
+            }
+            else if (this.options[name]) {
+                option = this.options[name];
+            }
+            if (typeof option === 'string') {
+                option = option.split(',').map(val => (val === 'false' ? false : !!val));
+                option = option.length > 1 ? option : option[0];
+            }
+            return option;
+        }
+        getAttributeName(name) {
+            const kebabName = name.replace(/[A-Z]+(?![a-z])|[A-Z]/g, (char, idx) => (idx ? '-' : '') + char.toLowerCase());
+            return `data-pushin-${kebabName}`;
+        }
+    }
+
+    class PushInComposition extends PushInBase {
         /* istanbul ignore next */
         constructor(scene, options) {
             var _a;
+            super();
             this.scene = scene;
             this.options = options;
             this.options = options;
@@ -42,56 +122,41 @@ License: MIT */
                 });
             }
             if (this.container) {
-                this.getRatio();
                 this.setRatio();
             }
-        }
-        /**
-         * Get the composition ratio based on
-         * what has been passed in through the JavaScript API
-         * and/or what has been passed in via HTML data-attributes.
-         *
-         * @return {number[] | undefined}
-         */
-        getRatio() {
-            var _a;
-            let ratio;
-            if (this.container.hasAttribute('data-pushin-ratio')) {
-                const value = this.container.dataset.pushinRatio;
-                ratio = value === null || value === void 0 ? void 0 : value.split(',').map(val => parseInt(val, 10));
-            }
-            else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.ratio) {
-                ratio = this.options.ratio;
-            }
-            return ratio;
         }
         /**
          * Set the aspect ratio based setting.
          */
         setRatio() {
-            var _a;
-            if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.ratio) {
-                const paddingTop = this.options.ratio.reduce((prev, cur) => cur / prev) * 100;
+            let ratio = this.getNumberOption('ratio');
+            if (typeof ratio === 'number') {
+                // fail-safe if an array was not provided
+                ratio = [ratio, ratio];
+            }
+            if (ratio) {
+                const paddingTop = ratio.reduce((prev, cur) => cur / prev) * 100;
                 this.container.style.paddingTop = `${paddingTop.toString()}%`;
             }
         }
     }
 
-    class PushInLayer {
+    class PushInLayer extends PushInBase {
         /* istanbul ignore next */
-        constructor(element, index, scene, options) {
-            this.element = element;
+        constructor(container, index, scene, options) {
+            super();
+            this.container = container;
             this.index = index;
             this.scene = scene;
             this.options = options;
-            const inpoints = this.getInpoints(this.element, this.index);
-            const outpoints = this.getOutpoints(this.element, inpoints[0]);
-            const speed = this.getSpeed(this.element);
-            this.originalScale = this.getElementScaleX(element);
+            const inpoints = this.getInpoints(this.container, this.index);
+            const outpoints = this.getOutpoints(this.container, inpoints[0]);
+            const speed = this.getSpeed(this.container);
+            this.originalScale = this.getElementScaleX(this.container);
             this.ref = { inpoints, outpoints, speed };
-            this.element.setAttribute('data-pushin-layer-index', this.index.toString());
+            this.container.setAttribute('data-pushin-layer-index', this.index.toString());
             // Set tabindex so we can sync scrolling with screenreaders
-            this.element.setAttribute('tabindex', '0');
+            this.container.setAttribute('tabindex', '0');
             this.setLayerParams();
         }
         /**
@@ -102,8 +167,8 @@ License: MIT */
         getTransitions() {
             var _a, _b;
             let transitions = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : true;
-            if (this.element.hasAttribute('data-pushin-transitions')) {
-                const attr = this.element.dataset.pushinTransitions;
+            if (this.container.hasAttribute('data-pushin-transitions')) {
+                const attr = this.container.dataset.pushinTransitions;
                 if (attr) {
                     transitions = attr !== 'false' && attr !== '0';
                 }
@@ -132,13 +197,13 @@ License: MIT */
          * @returns number
          */
         getTransitionStart() {
-            var _a, _b;
-            let start = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitionStart) !== null && _b !== void 0 ? _b : PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-            if (this.element.hasAttribute('data-pushin-transition-start')) {
-                const attr = this.element.dataset.pushinTransitionStart;
-                start = parseInt(attr, 10);
+            let option = this.getNumberOption('transitionStart');
+            if (option !== null && typeof option !== 'number') {
+                // not yet compatible with breakpoints. Fall back to first value only.
+                [option] = option;
             }
-            return start;
+            const start = option;
+            return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
         }
         /**
          * Get the transitionEnd setting, either from the API or HTML attributes.
@@ -146,13 +211,13 @@ License: MIT */
          * @returns number
          */
         getTransitionEnd() {
-            var _a, _b;
-            let end = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitionEnd) !== null && _b !== void 0 ? _b : PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-            if (this.element.hasAttribute('data-pushin-transition-end')) {
-                const attr = this.element.dataset.pushinTransitionEnd;
-                end = parseInt(attr, 10);
+            let option = this.getNumberOption('transitionEnd');
+            if (option !== null && typeof option !== 'number') {
+                // not yet compatible with breakpoints. Fall back to first value only.
+                [option] = option;
             }
-            return end;
+            const end = option;
+            return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
         }
         /**
          * Get all inpoints for the layer.
@@ -212,7 +277,7 @@ License: MIT */
          * Set the z-index of each layer so they overlap correctly.
          */
         setZIndex(total) {
-            this.element.style.zIndex = (total - this.index).toString();
+            this.container.style.zIndex = (total - this.index).toString();
         }
         /**
          * Set all the layer parameters.
@@ -304,7 +369,8 @@ License: MIT */
         /**
          * Set element scale.
          */
-        setScale({ style }, value) {
+        setScale(value) {
+            const { style } = this.container;
             const scaleString = `scale(${value})`;
             style.webkitTransform = scaleString;
             style.mozTransform = scaleString;
@@ -344,27 +410,28 @@ License: MIT */
                     : 1;
             }
             if (this.isActive()) {
-                this.setScale(this.element, this.getScaleValue(this));
+                this.setScale(this.getScaleValue(this));
             }
-            this.element.style.opacity = opacity.toString();
+            this.container.style.opacity = opacity.toString();
         }
         /**
          * Set a css class depending on current opacity.
          */
         setLayerVisibility() {
-            if (parseFloat(this.element.style.opacity) > 0.1) {
-                this.element.classList.add('pushin-layer--visible');
+            if (parseFloat(this.container.style.opacity) > 0.1) {
+                this.container.classList.add('pushin-layer--visible');
             }
             else {
-                this.element.classList.remove('pushin-layer--visible');
+                this.container.classList.remove('pushin-layer--visible');
             }
         }
     }
 
-    class PushInScene {
+    class PushInScene extends PushInBase {
         /* istanbul ignore next */
         constructor(pushin) {
             var _a, _b, _c;
+            super();
             this.pushin = pushin;
             const container = this.pushin.container.querySelector('.pushin-scene');
             if (container) {
@@ -497,10 +564,11 @@ License: MIT */
      * Once new object is created, it will initialize itself and
      * bind events to begin interacting with dom.
      */
-    class PushIn {
+    class PushIn extends PushInBase {
         /* istanbul ignore next */
         constructor(container, options) {
             var _a, _b, _c, _d, _e, _f;
+            super();
             this.container = container;
             this.scrollY = 0;
             this.lastAnimationFrameId = -1;
@@ -566,14 +634,8 @@ License: MIT */
          * or JavaScript API.
          */
         setScrollTarget() {
+            const value = this.getStringOption('scrollTarget');
             let scrollTarget;
-            let value;
-            if (this.container.hasAttribute('data-pushin-scroll-target')) {
-                value = this.container.dataset.pushinScrollTarget;
-            }
-            else if (this.options.scrollTarget) {
-                value = this.options.scrollTarget;
-            }
             if (value) {
                 if (value === 'window') {
                     scrollTarget = value;
@@ -599,12 +661,9 @@ License: MIT */
          * @param options
          */
         setTarget() {
-            if (this.options.target) {
-                this.target = document.querySelector(this.options.target);
-            }
-            if (this.container.hasAttribute('data-pushin-target')) {
-                const selector = this.container.dataset.pushinTarget;
-                this.target = document.querySelector(selector);
+            const value = this.getStringOption('target');
+            if (value) {
+                this.target = document.querySelector(value);
             }
             if (this.target && this.container.parentElement !== this.target) {
                 // Move pushin into the target container

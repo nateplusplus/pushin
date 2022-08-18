@@ -1,18 +1,10 @@
 import { PushInScene } from './pushInScene';
 import { CompositionOptions } from './types';
-export declare class PushInComposition {
+import PushInBase from './pushInBase';
+export declare class PushInComposition extends PushInBase {
     scene: PushInScene;
-    private options;
-    container?: HTMLElement;
+    options: CompositionOptions;
     constructor(scene: PushInScene, options: CompositionOptions);
-    /**
-     * Get the composition ratio based on
-     * what has been passed in through the JavaScript API
-     * and/or what has been passed in via HTML data-attributes.
-     *
-     * @return {number[] | undefined}
-     */
-    private getRatio;
     /**
      * Set the aspect ratio based setting.
      */

@@ -1,14 +1,15 @@
 import { PushInScene } from './pushInScene';
+import PushInBase from './pushInBase';
 import { LayerOptions, LayerParams } from './types';
-export declare class PushInLayer {
-    private element;
+export declare class PushInLayer extends PushInBase {
+    container: HTMLElement;
     private index;
     scene: PushInScene;
-    private options;
+    options: LayerOptions;
     params: LayerParams;
     private originalScale;
     private ref;
-    constructor(element: HTMLElement, index: number, scene: PushInScene, options: LayerOptions | null);
+    constructor(container: HTMLElement, index: number, scene: PushInScene, options: LayerOptions);
     /**
      * Get the transitions setting, either from the API or HTML attributes.
      *
