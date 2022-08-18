@@ -17,23 +17,26 @@ export class PushInLayer extends PushInBase {
 
   /* istanbul ignore next */
   constructor(
-    private element: HTMLElement,
+    public container: HTMLElement,
     private index: number,
     public scene: PushInScene,
-    private options: LayerOptions | null
+    public options: LayerOptions
   ) {
     super();
-    const inpoints = this.getInpoints(this.element, this.index);
-    const outpoints = this.getOutpoints(this.element, inpoints[0]);
-    const speed = this.getSpeed(this.element);
+    const inpoints = this.getInpoints(this.container, this.index);
+    const outpoints = this.getOutpoints(this.container, inpoints[0]);
+    const speed = this.getSpeed(this.container);
 
-    this.originalScale = this.getElementScaleX(element);
+    this.originalScale = this.getElementScaleX(this.container);
     this.ref = { inpoints, outpoints, speed };
 
-    this.element.setAttribute('data-pushin-layer-index', this.index.toString());
+    this.container.setAttribute(
+      'data-pushin-layer-index',
+      this.index.toString()
+    );
 
     // Set tabindex so we can sync scrolling with screenreaders
-    this.element.setAttribute('tabindex', '0');
+    this.container.setAttribute('tabindex', '0');
 
     this.setLayerParams();
   }
@@ -45,8 +48,8 @@ export class PushInLayer extends PushInBase {
    */
   private getTransitions(): boolean {
     let transitions = this.options?.transitions ?? true;
-    if (this.element.hasAttribute('data-pushin-transitions')) {
-      const attr = this.element!.dataset!.pushinTransitions;
+    if (this.container.hasAttribute('data-pushin-transitions')) {
+      const attr = this.container!.dataset!.pushinTransitions;
       if (attr) {
         transitions = attr !== 'false' && attr !== '0';
       }
@@ -81,17 +84,16 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionStart(): number {
-    let start = <string | number>(
-      this.getOption('transitionStart', this.options)
-    );
+    let option = this.getNumberOption('transitionStart');
 
-    if (!start || (typeof start === 'string' && start === '')) {
-      start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-    } else if (typeof start === 'string') {
-      start = parseInt(start, 10);
+    if (option !== null && typeof option !== 'number') {
+      // not yet compatible with breakpoints. Fall back to first value only.
+      [option] = option;
     }
 
-    return start;
+    const start = option as number | null;
+
+    return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
   }
 
   /**
@@ -100,15 +102,16 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionEnd(): number {
-    let end = <string | number>this.getOption('transitionEnd', this.options);
+    let option = this.getNumberOption('transitionEnd');
 
-    if (!end || (typeof end === 'string' && end === '')) {
-      end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
-    } else if (typeof end === 'string') {
-      end = parseInt(end, 10);
+    if (option !== null && typeof option !== 'number') {
+      // not yet compatible with breakpoints. Fall back to first value only.
+      [option] = option;
     }
 
-    return end;
+    const end = option as number | null;
+
+    return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
   }
 
   /**
@@ -171,7 +174,7 @@ export class PushInLayer extends PushInBase {
    * Set the z-index of each layer so they overlap correctly.
    */
   setZIndex(total: number): void {
-    this.element.style.zIndex = (total - this.index).toString();
+    this.container.style.zIndex = (total - this.index).toString();
   }
 
   /**
@@ -280,7 +283,8 @@ export class PushInLayer extends PushInBase {
   /**
    * Set element scale.
    */
-  private setScale({ style }: HTMLElement, value: number): void {
+  private setScale(value: number): void {
+    const { style } = this.container;
     const scaleString = `scale(${value})`;
     style.webkitTransform = scaleString;
     (style as unknown as { mozTransform: string }).mozTransform = scaleString;
@@ -339,20 +343,20 @@ export class PushInLayer extends PushInBase {
     }
 
     if (this.isActive()) {
-      this.setScale(this.element, this.getScaleValue(this));
+      this.setScale(this.getScaleValue(this));
     }
 
-    this.element.style.opacity = opacity.toString();
+    this.container.style.opacity = opacity.toString();
   }
 
   /**
    * Set a css class depending on current opacity.
    */
   setLayerVisibility() {
-    if (parseFloat(this.element.style.opacity) > 0.1) {
-      this.element.classList.add('pushin-layer--visible');
+    if (parseFloat(this.container.style.opacity) > 0.1) {
+      this.container.classList.add('pushin-layer--visible');
     } else {
-      this.element.classList.remove('pushin-layer--visible');
+      this.container.classList.remove('pushin-layer--visible');
     }
   }
 }

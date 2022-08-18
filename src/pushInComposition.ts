@@ -4,7 +4,7 @@ import PushInBase from './pushInBase';
 
 export class PushInComposition extends PushInBase {
   /* istanbul ignore next */
-  constructor(public scene: PushInScene, private options: CompositionOptions) {
+  constructor(public scene: PushInScene, public options: CompositionOptions) {
     super();
     this.options = options;
 
@@ -35,7 +35,13 @@ export class PushInComposition extends PushInBase {
    * Set the aspect ratio based setting.
    */
   private setRatio(): void {
-    const ratio = <number[]>this.getOption('ratio', this.options);
+    let ratio = this.getNumberOption('ratio');
+
+    if (typeof ratio === 'number') {
+      // fail-safe if an array was not provided
+      ratio = [ratio, ratio];
+    }
+
     if (ratio) {
       const paddingTop = ratio.reduce((prev, cur) => cur / prev) * 100;
       this.container!.style.paddingTop = `${paddingTop.toString()}%`;

@@ -98,7 +98,7 @@ export class PushIn extends PushInBase {
    * or JavaScript API.
    */
   setScrollTarget(): void {
-    const value = this.getOption('scrollTarget', this.options);
+    const value = this.getStringOption('scrollTarget');
     let scrollTarget;
 
     if (value) {
@@ -127,7 +127,7 @@ export class PushIn extends PushInBase {
    * @param options
    */
   setTarget(): void {
-    const value = <string>this.getOption('target', this.options);
+    const value = <string>this.getStringOption('target');
 
     if (value) {
       this.target = document.querySelector(value);

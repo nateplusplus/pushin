@@ -6,81 +6,75 @@ export default abstract class PushInBase {
   };
 
   /**
-   * Get the value for an option from either HTML markup or the JavaScript API
+   * Get the value for an option from either HTML markup or the JavaScript API.
+   * Return a string or array of strings.
    */
-  getOption(
-    name: string,
-    options: any
-  ): string | string[] | number | number[] | boolean | undefined {
-    let value;
+  getStringOption(name: string): string | string[] {
+    let option;
     const attribute = this.getAttributeName(name);
     if (this.container.hasAttribute(attribute)) {
-      value = <string>this.container!.getAttribute(attribute);
-      const array = value.split(',');
-      if (array.length > 1) {
-        value = array;
-      }
-    } else if (options[name]) {
-      value = options[name];
-    }
-
-    return value;
-  }
-
-  /**
-   * Get the value for an option from either HTML markup or the JavaScript API
-   */
-  getStringOption(name: string): string {
-    let value;
-    const attribute = this.getAttributeName(name);
-    if (this.container.hasAttribute(attribute)) {
-      value = <string>this.container!.getAttribute(attribute);
+      option = <string>this.container.getAttribute(attribute);
     } else if (typeof this.options[name] === 'string') {
-      value = this.options[name];
+      option = this.options[name];
     } else if (typeof this.options[name] === 'number') {
       // fail-safe in case numbers are passed in
-      value = this.options[name].toString();
-    }
-
-    return value;
-  }
-
-  /**
-   * Get the value for an option from either HTML markup or the JavaScript API
-   */
-  getStringArrayOption(name: string): string[] | [] {
-    let option = [] as string[];
-    const attribute = this.getAttributeName(name);
-    if (this.container.hasAttribute(attribute)) {
-      const value = <string>this.container!.getAttribute(attribute);
-      option = value.split(',');
+      option = this.options[name].toString();
     } else if (this.options[name]) {
       const type = Object.prototype.toString.call(this.options[name]);
       if (type === '[object Array]') {
         option = <string[]>this.options[name];
-      } else if (typeof this.options[name] === 'string') {
-        // if a single string is passed in, return it in an array
-        option = [this.options[name]];
       }
+    } else {
+      option = '';
+    }
+
+    // If the string contains commas, convert it into an array
+    if (typeof option === 'string' && option.includes(',')) {
+      option = option.split(',');
     }
 
     return option;
   }
 
   /**
-   * Get the value for an option from either HTML markup or the JavaScript API
+   * Get the value for an option from either HTML markup or the JavaScript API.
+   * Returns a number or array of numbers.
+   * If nothing found, returns null.
    */
-  getNumberOption(name: string): number | null {
+  getNumberOption(name: string): number | number[] | null {
     let option = null;
     const attribute = this.getAttributeName(name);
     if (this.container.hasAttribute(attribute)) {
-      const value = <string>this.container!.getAttribute(attribute);
-      option = parseFloat(value);
-    } else if (typeof this.options[name] === 'number') {
+      option = <string>this.container.getAttribute(attribute);
+    } else if (this.options[name]) {
       option = this.options[name];
-    } else if (typeof this.options[name] === 'string') {
-      // fail-safe in case strings are passed in
-      option = parseFloat(this.options[name]);
+    }
+
+    if (typeof option === 'string') {
+      option = option.split(',').map(val => parseFloat(val));
+      option = option.length > 1 ? option : option[0];
+    }
+
+    return option;
+  }
+
+  /**
+   * Get the value for an option from either HTML markup or the JavaScript API.
+   * Returns a boolean or array of booleans.
+   * If nothing found, returns null.
+   */
+  getBoolOption(name: string): boolean | boolean[] | null {
+    let option = null;
+    const attribute = this.getAttributeName(name);
+    if (this.container.hasAttribute(attribute)) {
+      option = <string>this.container.getAttribute(attribute);
+    } else if (this.options[name]) {
+      option = this.options[name];
+    }
+
+    if (typeof option === 'string') {
+      option = option.split(',').map(val => (val === 'false' ? false : !!val));
+      option = option.length > 1 ? option : option[0];
     }
 
     return option;
