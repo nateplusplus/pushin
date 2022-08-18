@@ -19,13 +19,13 @@ describe('setZIndex', () => {
         </html>`);
 
     mockPushInLayer = Object.create(PushInLayer.prototype);
-    mockPushInLayer['element'] = document.querySelector('#layer-1');
+    mockPushInLayer['container'] = <HTMLElement>document.querySelector('#layer-1');
     mockPushInLayer['index'] = 1;
   });
 
   it('Should return the difference between the total number of layers and the current layer index', () => {
     mockPushInLayer['setZIndex'](3);
-    const result = mockPushInLayer['element'].style.zIndex;
+    const result = mockPushInLayer['container'].style.zIndex;
     expect(result).toEqual('2');
   });
 });

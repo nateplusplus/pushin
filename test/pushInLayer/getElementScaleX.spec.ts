@@ -14,9 +14,9 @@ describe('getElementScaleX', () => {
           </body>
       </html>`);
 
-    element = document.querySelector<HTMLElement>('.foo');
+    element = <HTMLElement>document.querySelector('.foo');
     mockPushInLayer = Object.create(PushInLayer.prototype);
-    mockPushInLayer['element'] = element;
+    mockPushInLayer['container'] = element;
   });
 
   it('Should return default element scale if never altered', () => {
