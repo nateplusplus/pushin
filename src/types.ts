@@ -31,7 +31,7 @@ export interface PushInOptions {
 }
 
 export interface PushInLayer {
-  element: HTMLElement;
+  container: HTMLElement;
   index: number;
   originalScale: number;
 }

@@ -38,7 +38,7 @@ describe('setLayerStyle', () => {
     Object.assign(
       mockPushInLayer,
       {
-        element: document.querySelector<HTMLElement>('.pushin-layer'),
+        container: document.querySelector<HTMLElement>('.pushin-layer'),
         index: 0,
         'params': mockPushinParams,
         'scene': mockScene,
