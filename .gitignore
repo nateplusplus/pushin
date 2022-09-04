@@ -16,3 +16,5 @@ coverage
 /docs/examples
 /docs/installation
 /docs/api
+/docs/target
+/docs/composition
