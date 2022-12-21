@@ -140,21 +140,6 @@ There are several plugin configurations you can use to customize for your unique
 
 **Refer to [https://nateplusplus.github.io/pushin/api](https://nateplusplus.github.io/pushin/api) for a detailed breakdown of all available configurations.**
 
-## SSR
-
-This effect is heavily reliant on window events, which will not be available in a server-side rendered environment. You will need to bind the window events once the DOM has loaded on the client side. To do this, run the `bindEvents()` method.
-
-```js
-// Start up the effect server-side
-const pushIn = new PushIn();
-pushIn.start();
-
-//...
-
-// Bind events client-side
-pushin.bindEvents();
-```
-
 ## Contributing
 
 We've setup separate documentation for contributors: [CONTRIBUTING.md](CONTRIBUTING.md)
