@@ -58,7 +58,7 @@
   "bugs": {
     "url": "https://github.com/nateplusplus/pushin/issues"
   },
-  "homepage": "http://nateplusplus.github.io/pushin/",
+  "homepage": "https://pushinjs.com",
   "devDependencies": {
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",

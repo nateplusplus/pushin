@@ -10,7 +10,7 @@
 
 PushIn.js is a lightweight parallax effect, built with JavaScript, that simulates an interactive dolly-in or push-in animation on a webpage.
 
-Check out the [live demo](http://nateplusplus.github.io/pushin/) for a working example.
+Check out the [live demo](http://pushinjs.com/) for a working example.
 
 ## Compatibility
 
@@ -94,7 +94,7 @@ pushInStart();
 
 To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
 
-See a working demo of this tool here: [Responsive design](http://nateplusplus.github.io/pushin/examples/responsive/)
+See a working demo of this tool here: [Responsive design](https://pushinjs.com/examples/responsive)
 
 ```js
 import 'pushin';
@@ -138,7 +138,7 @@ export default function PushInComponent() {
 
 There are several plugin configurations you can use to customize for your unique project.
 
-**Refer to [https://nateplusplus.github.io/pushin/api](https://nateplusplus.github.io/pushin/api) for a detailed breakdown of all available configurations.**
+**Refer to [https://pushinjs.com/api](https://pushinjs.com/api) for a detailed breakdown of all available configurations.**
 
 ## Contributing
 
