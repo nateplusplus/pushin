@@ -8,13 +8,3 @@ lt.log
 coverage
 .eslintcache
 .cache
-
-#docs
-/docs/index.html
-/docs/pushin.min.css
-/docs/pushin.min.js
-/docs/examples
-/docs/installation
-/docs/api
-/docs/target
-/docs/composition
