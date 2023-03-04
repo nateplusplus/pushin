@@ -30,7 +30,9 @@
     "test": "jest --run-in-band",
     "prepack": "clean-package",
     "postpack": "clean-package restore",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "clean-package": {
     "remove": [
@@ -64,9 +66,18 @@
     "@babel/preset-env": "^7.16.11",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-typescript": "^8.3.1",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/react": "^6.5.16",
+    "@storybook/testing-library": "^0.0.13",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
+    "babel-loader": "^8.3.0",
     "clean-css": "^5.3.0",
     "clean-package": "^2.1.1",
     "cross-env": "^7.0.3",
@@ -80,6 +91,8 @@
     "jsdom": "^20.0.0",
     "lint-staged": "^13.0.3",
     "prettier": "^2.6.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rollup": "2.79.1",
     "rollup-plugin-copy": "3.4.0",
     "rollup-plugin-terser": "^7.0.2",
