@@ -5,7 +5,7 @@ import { Target } from './Target';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'Example/Target',
+  title: 'PushIn/Target',
   component: Target,
   argTypes: {
     scrollTarget: { control: 'text' },
