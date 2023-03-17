@@ -31,17 +31,17 @@ License: MIT */
             if (this.container.hasAttribute(attribute)) {
                 option = this.container.getAttribute(attribute);
             }
-            else if (typeof this.options[name] === 'string') {
-                option = this.options[name];
+            else if (typeof this.settings[name] === 'string') {
+                option = this.settings[name];
             }
-            else if (typeof this.options[name] === 'number') {
+            else if (typeof this.settings[name] === 'number') {
                 // fail-safe in case numbers are passed in
-                option = this.options[name].toString();
+                option = this.settings[name].toString();
             }
-            else if (this.options[name]) {
-                const type = Object.prototype.toString.call(this.options[name]);
+            else if (this.settings[name]) {
+                const type = Object.prototype.toString.call(this.settings[name]);
                 if (type === '[object Array]') {
-                    option = this.options[name];
+                    option = this.settings[name];
                 }
             }
             else {
@@ -64,8 +64,8 @@ License: MIT */
             if (this.container.hasAttribute(attribute)) {
                 option = this.container.getAttribute(attribute);
             }
-            else if (this.options[name]) {
-                option = this.options[name];
+            else if (this.settings[name]) {
+                option = this.settings[name];
             }
             if (typeof option === 'string') {
                 option = option.split(',').map(val => parseFloat(val));
@@ -84,8 +84,8 @@ License: MIT */
             if (this.container.hasAttribute(attribute)) {
                 option = this.container.getAttribute(attribute);
             }
-            else if (this.options[name]) {
-                option = this.options[name];
+            else if (this.settings[name]) {
+                option = this.settings[name];
             }
             if (typeof option === 'string') {
                 option = option.split(',').map(val => (val === 'false' ? false : !!val));
@@ -106,12 +106,12 @@ License: MIT */
             super();
             this.scene = scene;
             this.options = options;
-            this.options = options;
+            this.settings = options;
             const container = this.scene.container.querySelector('.pushin-composition');
             if (container) {
                 this.container = container;
             }
-            else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.ratio) {
+            else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.ratio) {
                 this.container = document.createElement('div');
                 this.container.classList.add('pushin-composition');
                 this.container.innerHTML = this.scene.container.innerHTML;
@@ -148,7 +148,7 @@ License: MIT */
             this.container = container;
             this.index = index;
             this.scene = scene;
-            this.options = options;
+            this.settings = options;
             const inpoints = this.getInpoints(this.container, this.index);
             const outpoints = this.getOutpoints(this.container, inpoints[0]);
             const speed = this.getSpeed(this.container);
@@ -166,7 +166,7 @@ License: MIT */
          */
         getTransitions() {
             var _a, _b;
-            let transitions = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : true;
+            let transitions = (_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : true;
             if (this.container.hasAttribute('data-pushin-transitions')) {
                 const attr = this.container.dataset.pushinTransitions;
                 if (attr) {
@@ -228,8 +228,8 @@ License: MIT */
             if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
                 inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE].split(',').map(inpoint => parseInt(inpoint.trim(), 10));
             }
-            else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.inpoints) {
-                inpoints = this.options.inpoints;
+            else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) {
+                inpoints = this.settings.inpoints;
             }
             else if (index === 0) {
                 inpoints = this.scene.getInpoints();
@@ -251,8 +251,8 @@ License: MIT */
                 const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE].split(',');
                 outpoints = values.map(value => parseInt(value.trim(), 10));
             }
-            else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.outpoints) {
-                outpoints = this.options.outpoints;
+            else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.outpoints) {
+                outpoints = this.settings.outpoints;
             }
             return outpoints;
         }
@@ -268,8 +268,8 @@ License: MIT */
                     speed = DEFAULT_SPEED;
                 }
             }
-            else if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.speed) {
-                speed = this.options.speed;
+            else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.speed) {
+                speed = this.settings.speed;
             }
             return speed || DEFAULT_SPEED;
         }
@@ -345,7 +345,7 @@ License: MIT */
          */
         /* istanbul ignore next */
         getInpoint(inpoints) {
-            const { breakpoints } = this.scene.options;
+            const { breakpoints } = this.scene.settings;
             return inpoints[this.scene.getBreakpointIndex(breakpoints)] || inpoints[0];
         }
         /**
@@ -354,7 +354,7 @@ License: MIT */
          */
         /* istanbul ignore next */
         getOutpoint(outpoints) {
-            const { breakpoints } = this.scene.options;
+            const { breakpoints } = this.scene.settings;
             return (outpoints[this.scene.getBreakpointIndex(breakpoints)] || outpoints[0]);
         }
         /**
@@ -447,12 +447,12 @@ License: MIT */
                     this.pushin.container.innerHTML = this.container.innerHTML;
                 });
             }
-            this.options = pushin.options.scene;
-            this.layerDepth = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.layerDepth) || 1000;
+            this.settings = pushin.settings.scene;
+            this.layerDepth = ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.layerDepth) || 1000;
             this.layers = [];
             this.setSceneClasses();
             const compositionOptions = {
-                ratio: (_c = (_b = pushin.options.composition) === null || _b === void 0 ? void 0 : _b.ratio) !== null && _c !== void 0 ? _c : undefined,
+                ratio: (_c = (_b = pushin.settings.composition) === null || _b === void 0 ? void 0 : _b.ratio) !== null && _c !== void 0 ? _c : undefined,
             };
             this.composition = new PushInComposition(this, compositionOptions);
             this.setBreakpoints();
@@ -488,14 +488,15 @@ License: MIT */
          */
         setBreakpoints() {
             var _a, _b;
-            if (!((_a = this.options) === null || _a === void 0 ? void 0 : _a.breakpoints) || ((_b = this.options) === null || _b === void 0 ? void 0 : _b.breakpoints.length) === 0) {
-                this.options.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
+            if (!((_a = this.settings) === null || _a === void 0 ? void 0 : _a.breakpoints) ||
+                ((_b = this.settings) === null || _b === void 0 ? void 0 : _b.breakpoints.length) === 0) {
+                this.settings.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
             }
             if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-                this.options.breakpoints = this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE].split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
+                this.settings.breakpoints = this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE].split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
             }
             // Always include break point 0 for anything under first breakpoint
-            this.options.breakpoints.unshift(0);
+            this.settings.breakpoints.unshift(0);
         }
         /**
          * Find all layers on the page and store them with their parameters
@@ -506,8 +507,8 @@ License: MIT */
             for (let index = 0; index < layers.length; index++) {
                 const element = layers[index];
                 let options = {};
-                if (((_a = this.options) === null || _a === void 0 ? void 0 : _a.layers) && this.options.layers.length > index) {
-                    options = this.options.layers[index];
+                if (((_a = this.settings) === null || _a === void 0 ? void 0 : _a.layers) && this.settings.layers.length > index) {
+                    options = this.settings.layers[index];
                 }
                 const layer = new PushInLayer(element, index, this, options);
                 this.layers.push(layer);
@@ -551,8 +552,8 @@ License: MIT */
                 const pushInFrom = (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]);
                 inpoints.push(parseInt(pushInFrom, 10));
             }
-            else if (((_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.inpoints) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-                inpoints = this.options.inpoints;
+            else if (((_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+                inpoints = this.settings.inpoints;
             }
             return inpoints;
         }
@@ -574,17 +575,17 @@ License: MIT */
             this.lastAnimationFrameId = -1;
             this.cleanupFns = [];
             options = options !== null && options !== void 0 ? options : {};
-            this.options = {
+            this.settings = {
                 debug: (_a = options === null || options === void 0 ? void 0 : options.debug) !== null && _a !== void 0 ? _a : false,
                 scene: (_b = options === null || options === void 0 ? void 0 : options.scene) !== null && _b !== void 0 ? _b : { breakpoints: [], inpoints: [] },
                 target: (_c = options === null || options === void 0 ? void 0 : options.target) !== null && _c !== void 0 ? _c : undefined,
                 scrollTarget: options === null || options === void 0 ? void 0 : options.scrollTarget,
             };
-            this.options.scene.composition = (_d = options === null || options === void 0 ? void 0 : options.composition) !== null && _d !== void 0 ? _d : undefined;
-            this.options.scene.layers = (_e = options === null || options === void 0 ? void 0 : options.layers) !== null && _e !== void 0 ? _e : undefined;
+            this.settings.scene.composition = (_d = options === null || options === void 0 ? void 0 : options.composition) !== null && _d !== void 0 ? _d : undefined;
+            this.settings.scene.layers = (_e = options === null || options === void 0 ? void 0 : options.layers) !== null && _e !== void 0 ? _e : undefined;
             // Defaults
             this.targetHeight = 0;
-            this.options.debug = (_f = options === null || options === void 0 ? void 0 : options.debug) !== null && _f !== void 0 ? _f : false;
+            this.settings.debug = (_f = options === null || options === void 0 ? void 0 : options.debug) !== null && _f !== void 0 ? _f : false;
         }
         /**
          * Initialize the object to start everything up.
@@ -592,16 +593,13 @@ License: MIT */
         /* istanbul ignore next */
         start() {
             if (this.container) {
-                this.setTarget();
-                this.setScrollTarget();
-                this.setTargetHeight();
-                this.scrollY = this.getScrollY();
-                if (this.options.debug) {
+                if (this.settings.debug) {
                     this.showDebugger();
                 }
+                this.setTarget();
+                this.scrollY = this.getScrollY();
                 this.scene = new PushInScene(this);
                 this.setScrollLength();
-                this.setTargetOverflow();
                 this.scene.resize();
                 if (typeof window !== 'undefined') {
                     this.bindEvents();
@@ -613,6 +611,15 @@ License: MIT */
                 // eslint-disable-next-line no-console
                 console.error('No container element provided to pushIn.js. Effect will not be applied.');
             }
+        }
+        /**
+         * Set up the target element for this effect, and where to listen for scrolling.
+         */
+        setTarget() {
+            this.setTargetElement();
+            this.setScrollTarget();
+            this.setTargetHeight();
+            this.setTargetOverflow();
         }
         /**
          * Set the target height on initialization.
@@ -660,7 +667,7 @@ License: MIT */
          *
          * @param options
          */
-        setTarget() {
+        setTargetElement() {
             const value = this.getStringOption('target');
             if (value) {
                 this.target = document.querySelector(value);

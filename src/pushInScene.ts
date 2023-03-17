@@ -8,12 +8,12 @@ import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 import PushInBase from './pushInBase';
 
-import { LayerOptions, SceneOptions } from './types';
+import { LayerOptions, SceneSettings } from './types';
 
 export class PushInScene extends PushInBase {
   public layers: PushInLayer[];
   public layerDepth: number;
-  public options: SceneOptions;
+  public settings: SceneSettings;
   public composition?: PushInComposition;
 
   /* istanbul ignore next */
@@ -37,16 +37,16 @@ export class PushInScene extends PushInBase {
       });
     }
 
-    this.options = pushin.options.scene!;
+    this.settings = pushin.settings.scene!;
 
-    this.layerDepth = this.options?.layerDepth || 1000;
+    this.layerDepth = this.settings?.layerDepth || 1000;
 
     this.layers = [];
 
     this.setSceneClasses();
 
     const compositionOptions = {
-      ratio: pushin.options.composition?.ratio ?? undefined,
+      ratio: pushin.settings.composition?.ratio ?? undefined,
     };
     this.composition = new PushInComposition(this, compositionOptions);
 
@@ -85,18 +85,21 @@ export class PushInScene extends PushInBase {
    * Set breakpoints for responsive design settings.
    */
   private setBreakpoints(): void {
-    if (!this.options?.breakpoints || this.options?.breakpoints.length === 0) {
-      this.options.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
+    if (
+      !this.settings?.breakpoints ||
+      this.settings?.breakpoints.length === 0
+    ) {
+      this.settings.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
     }
 
     if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-      this.options!.breakpoints = this.container.dataset[
+      this.settings!.breakpoints = this.container.dataset[
         PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE
       ]!.split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
     }
 
     // Always include break point 0 for anything under first breakpoint
-    this.options!.breakpoints.unshift(0);
+    this.settings!.breakpoints.unshift(0);
   }
 
   /**
@@ -110,8 +113,8 @@ export class PushInScene extends PushInBase {
     for (let index = 0; index < layers.length; index++) {
       const element = <HTMLElement>layers[index];
       let options = <LayerOptions>{};
-      if (this.options?.layers && this.options.layers.length > index) {
-        options = this!.options.layers[index];
+      if (this.settings?.layers && this.settings.layers.length > index) {
+        options = this!.settings.layers[index];
       }
 
       const layer = new PushInLayer(element, index, this, options);
@@ -161,8 +164,8 @@ export class PushInScene extends PushInBase {
         this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
       );
       inpoints.push(parseInt(pushInFrom, 10));
-    } else if (this.options?.inpoints?.length > 0) {
-      inpoints = this.options.inpoints;
+    } else if (this.settings?.inpoints?.length > 0) {
+      inpoints = this.settings.inpoints;
     }
 
     return inpoints;

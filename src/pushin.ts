@@ -1,5 +1,5 @@
 import { PushInScene } from './pushInScene';
-import { PushInOptions } from './types';
+import { PushInOptions, PushInSettings } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 import PushInBase from './pushInBase';
 
@@ -16,7 +16,7 @@ export class PushIn extends PushInBase {
   public scrollY = 0;
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
-  public options: PushInOptions;
+  public settings: PushInSettings;
   public scrollTarget?: HTMLElement | string;
   private targetHeight: number;
 
@@ -25,19 +25,19 @@ export class PushIn extends PushInBase {
     super();
     options = options ?? {};
 
-    this.options = {
+    this.settings = {
       debug: options?.debug ?? false,
       scene: options?.scene ?? { breakpoints: [], inpoints: [] },
       target: options?.target ?? undefined,
       scrollTarget: options?.scrollTarget,
     };
 
-    this.options.scene!.composition = options?.composition ?? undefined;
-    this.options.scene!.layers = options?.layers ?? undefined;
+    this.settings.scene!.composition = options?.composition ?? undefined;
+    this.settings.scene!.layers = options?.layers ?? undefined;
 
     // Defaults
     this.targetHeight = 0;
-    this.options.debug = options?.debug ?? false;
+    this.settings.debug = options?.debug ?? false;
   }
 
   /**
@@ -46,20 +46,17 @@ export class PushIn extends PushInBase {
   /* istanbul ignore next */
   start(): void {
     if (this.container) {
-      this.setTarget();
-      this.setScrollTarget();
-      this.setTargetHeight();
-
-      this.scrollY = this.getScrollY();
-
-      if (this.options.debug) {
+      if (this.settings.debug) {
         this.showDebugger();
       }
+
+      this.setTarget();
+
+      this.scrollY = this.getScrollY();
 
       this.scene = new PushInScene(this);
 
       this.setScrollLength();
-      this.setTargetOverflow();
       this.scene.resize();
 
       if (typeof window !== 'undefined') {
@@ -74,6 +71,16 @@ export class PushIn extends PushInBase {
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
     }
+  }
+
+  /**
+   * Set up the target element for this effect, and where to listen for scrolling.
+   */
+  setTarget() {
+    this.setTargetElement();
+    this.setScrollTarget();
+    this.setTargetHeight();
+    this.setTargetOverflow();
   }
 
   /**
@@ -126,7 +133,7 @@ export class PushIn extends PushInBase {
    *
    * @param options
    */
-  setTarget(): void {
+  setTargetElement(): void {
     const value = <string>this.getStringOption('target');
 
     if (value) {

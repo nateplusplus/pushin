@@ -1,5 +1,5 @@
 import { PushInScene } from './pushInScene';
-import { PushInOptions } from './types';
+import { PushInOptions, PushInSettings } from './types';
 import PushInBase from './pushInBase';
 /**
  * PushIn object
@@ -15,7 +15,7 @@ export declare class PushIn extends PushInBase {
     scrollY: number;
     private lastAnimationFrameId;
     cleanupFns: VoidFunction[];
-    options: PushInOptions;
+    settings: PushInSettings;
     scrollTarget?: HTMLElement | string;
     private targetHeight;
     constructor(container: HTMLElement, options?: PushInOptions);
@@ -23,6 +23,10 @@ export declare class PushIn extends PushInBase {
      * Initialize the object to start everything up.
      */
     start(): void;
+    /**
+     * Set up the target element for this effect, and where to listen for scrolling.
+     */
+    setTarget(): void;
     /**
      * Set the target height on initialization.
      *
@@ -42,7 +46,7 @@ export declare class PushIn extends PushInBase {
      *
      * @param options
      */
-    setTarget(): void;
+    setTargetElement(): void;
     /**
      * Does all necessary cleanups by removing event listeners.
      */

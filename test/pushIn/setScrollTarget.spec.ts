@@ -20,7 +20,7 @@ describe('setScrollTarget', () => {
       mockPushIn,
       {
         container: document.querySelector('.pushin'),
-        options: {},
+        settings: {},
       }
     );
   });
@@ -32,14 +32,13 @@ describe('setScrollTarget', () => {
 
   it('Should return scrollTarget from HTML Attribute', () => {
     document.querySelector('.pushin')?.setAttribute('data-pushin-scroll-target', '#target');
-    // mockPushIn.options.scrollTarget = '#target';
     mockPushIn['setScrollTarget']();
     const expected = document.querySelector('#target');
     expect(mockPushIn['scrollTarget']).toEqual(expected);
   });
 
   it('Should return scrollTarget from JavasScript API', () => {
-    mockPushIn.options.scrollTarget = '#target';
+    mockPushIn.settings.scrollTarget = '#target';
     mockPushIn['setScrollTarget']();
     const expected = document.querySelector('#target');
     expect(mockPushIn['scrollTarget']).toEqual(expected);

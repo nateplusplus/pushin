@@ -6,7 +6,7 @@ export class PushInComposition extends PushInBase {
   /* istanbul ignore next */
   constructor(public scene: PushInScene, public options: CompositionOptions) {
     super();
-    this.options = options;
+    this.settings = options;
 
     const container = this.scene.container.querySelector<HTMLElement>(
       '.pushin-composition'
@@ -14,7 +14,7 @@ export class PushInComposition extends PushInBase {
 
     if (container) {
       this.container = container;
-    } else if (this.options?.ratio) {
+    } else if (this.settings?.ratio) {
       this.container = document.createElement('div');
       this.container.classList.add('pushin-composition');
 

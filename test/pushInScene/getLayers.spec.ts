@@ -43,12 +43,12 @@ describe('getLayers', () => {
     expect(PushInLayer).toHaveBeenCalledWith(layers[1], 1, mockPushInScene, {});
   });
 
-  it('Should set layer options from the JavaScript API', () => {
+  it('Should set layer settings from the JavaScript API', () => {
     const testLayerOptions =  Object.assign({}, layerOptions);
     testLayerOptions.inpoints = [1000, 2000];
 
-    mockPushInScene['options'] = sceneOptions;
-    mockPushInScene['options'].layers = [
+    mockPushInScene['settings'] = sceneOptions;
+    mockPushInScene['settings'].layers = [
       Object.assign({}, layerOptions),
       testLayerOptions,
       Object.assign({}, layerOptions),

@@ -1,6 +1,6 @@
 export default abstract class PushInBase {
     container: HTMLElement;
-    options: {
+    settings: {
         [key: string]: any;
     };
     /**
