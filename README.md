@@ -14,131 +14,15 @@ Check out the [live demo](http://pushinjs.com/) for a working example.
 
 ## Compatibility
 
-PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/).
 
-## Getting started
+## Installation
 
-### 1. Install pushin with NPM or a CDN
+PushIn is available via NPM or a CDN. Follow the detailed instructions in the documentation site: https://pushinjs.com/installation.
 
-If you're using npm, you can install the package by running:
+## Configuration
 
-```
-npm install --save pushin
-```
-
-Import assets into your javascript (if using Webpack) or directly into your CSS files.
-
-```js
-// webpack
-import 'pushin/dist/pushin.css';
-```
-
-~ _or_ ~
-
-```css
-/* css */
-@import 'node_modules/pushin/dist/pushin.css';
-```
-
-**Alternatively, you can use the CDN:**
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/pushin/dist/pushin.min.css" />
-<script
-  type="text/javascript"
-  src="https://unpkg.com/pushin/dist/umd/pushin.min.js"
-></script>
-```
-
-### 2. Required HTML structure
-
-At the most basic level, there are a few things you need to set up on your page in order for this to work properly.
-
-Use the following example snippet to create a "scene" for the pushin effect.
-
-**Example:**
-
-```html
-<div class="pushin">
-  <div class="pushin-scene">
-    <div class="pushin-layer">This is the first layer you'll see.</div>
-    <div class="pushin-layer">
-      This is a second layer, which will be positioned behind the first one.
-    </div>
-  </div>
-</div>
-```
-
-Each div with the class `pushin-layer` can hold the content that you want to grow or shrink when scrolling.
-
-### 3. Initialize the effect
-
-Once you have your HTML set up, there are two ways to initialize the effect:
-
-- call `new PushIn().start()`:
-
-```js
-import { PushIn } from 'pushin';
-
-const container = document.querySelector('.pushin');
-new PushIn(container).start();
-```
-
-- call `pushInStart()` function (which is exported onto the global scope):
-
-```js
-import 'pushin';
-
-pushInStart();
-```
-
-To assist in setting up your effect, you can use the debug tool to easily deterimine where you want effects to begin and end when scrolling down your page. To enable this feature, simply pass a config object with `debug: true` into the helper function.
-
-See a working demo of this tool here: [Responsive design](https://pushinjs.com/examples/responsive)
-
-```js
-import 'pushin';
-
-// initialize push-in effect
-pushInStart({ debug: true });
-```
-
-### 4. Destroying the effect
-
-The `PushIn` has a `destroy()` method that may be called to do all cleanups once the view is destroyed. For instance, this is how you would want to do this in React:
-
-```jsx
-import React, { useLayoutEffect, useRef } from 'react';
-import { PushIn } from 'pushin';
-
-export default function PushInComponent() {
-  const pushInContainer = useRef();
-
-  useLayoutEffect(() => {
-    const pushIn = new PushIn(pushInContainer.current);
-    pushIn.start();
-
-    return () => pushIn.destroy();
-  });
-
-  return (
-    <div className="pushin" ref={pushInContainer}>
-      <div className="pushin-scene">
-        <div className="pushin-layer">This is the first layer you'll see.</div>
-        <div className="pushin-layer">
-          This is a second layer, which will be positioned behind the first one.
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
-### 5. Configuration
-
-There are several plugin configurations you can use to customize for your unique project.
-
-**Refer to [https://pushinjs.com/api](https://pushinjs.com/api) for a detailed breakdown of all available configurations.**
+There are several plugin configurations you can use to customize for your unique project. Refer to [https://pushinjs.com/api](https://pushinjs.com/api) for a detailed breakdown of all available configurations.
 
 ## Contributing
 
