@@ -2,6 +2,7 @@ import { setupJSDOM } from '../setup';
 import { PushIn } from '../../src/pushin';
 import { PushInLayer } from '../../src/pushInLayer';
 import { PushInScene } from '../../src/pushInScene';
+import { PushInTarget } from '../../src/pushInTarget';
 import { layerParams } from '../__mocks__/layers';
 
 describe('setScrollLength', () => {
@@ -48,14 +49,22 @@ describe('setScrollLength', () => {
     mockScene.layers[0].params = Object.create(layerParams);
     mockScene.layers[0].params.overlap = 0;
 
+    const mockTarget = Object.create(PushInTarget.prototype);
+    Object.assign(
+      mockTarget,
+      {
+        container: document.querySelector('.target'),
+        height: 1000
+      }
+    );
+
     mockPushIn = Object.create(PushIn.prototype);
     Object.assign(
       mockPushIn,
       {
         container,
         scene: mockScene,
-        target: document.querySelector('.target'),
-        targetHeight: 1000,
+        target: mockTarget
       }
     );
   });

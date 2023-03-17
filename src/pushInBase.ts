@@ -1,5 +1,5 @@
 export default abstract class PushInBase {
-  public container!: HTMLElement;
+  public container?: HTMLElement | null;
   public settings!: {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     [key: string]: any;
@@ -9,11 +9,11 @@ export default abstract class PushInBase {
    * Get the value for an option from either HTML markup or the JavaScript API.
    * Return a string or array of strings.
    */
-  getStringOption(name: string): string | string[] {
+  getStringOption(name: string, container = this.container): string | string[] {
     let option;
     const attribute = this.getAttributeName(name);
-    if (this.container.hasAttribute(attribute)) {
-      option = <string>this.container.getAttribute(attribute);
+    if (container?.hasAttribute(attribute)) {
+      option = <string>container.getAttribute(attribute);
     } else if (typeof this.settings[name] === 'string') {
       option = this.settings[name];
     } else if (typeof this.settings[name] === 'number') {
@@ -41,11 +41,14 @@ export default abstract class PushInBase {
    * Returns a number or array of numbers.
    * If nothing found, returns null.
    */
-  getNumberOption(name: string): number | number[] | null {
+  getNumberOption(
+    name: string,
+    container = this.container
+  ): number | number[] | null {
     let option = null;
     const attribute = this.getAttributeName(name);
-    if (this.container.hasAttribute(attribute)) {
-      option = <string>this.container.getAttribute(attribute);
+    if (container?.hasAttribute(attribute)) {
+      option = <string>container.getAttribute(attribute);
     } else if (this.settings[name]) {
       option = this.settings[name];
     }
@@ -63,11 +66,14 @@ export default abstract class PushInBase {
    * Returns a boolean or array of booleans.
    * If nothing found, returns null.
    */
-  getBoolOption(name: string): boolean | boolean[] | null {
+  getBoolOption(
+    name: string,
+    container = this.container
+  ): boolean | boolean[] | null {
     let option = null;
     const attribute = this.getAttributeName(name);
-    if (this.container.hasAttribute(attribute)) {
-      option = <string>this.container.getAttribute(attribute);
+    if (container?.hasAttribute(attribute)) {
+      option = <string>container.getAttribute(attribute);
     } else if (this.settings[name]) {
       option = this.settings[name];
     }

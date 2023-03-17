@@ -63,7 +63,7 @@ export class PushInScene extends PushInBase {
       this.container.classList.add('pushin-scene--with-target');
     }
 
-    if (this.pushin.scrollTarget === 'window') {
+    if (this.pushin.target!.scrollTarget === 'window') {
       this.container.classList.add('pushin-scene--scroll-target-window');
     }
   }
@@ -72,8 +72,8 @@ export class PushInScene extends PushInBase {
    * Resize the PushIn container if using a target container.
    */
   public resize() {
-    if (this.pushin.scrollTarget !== 'window') {
-      const sizes = this.pushin.target?.getBoundingClientRect();
+    if (this.pushin.target!.scrollTarget !== 'window') {
+      const sizes = this.pushin.target!.container?.getBoundingClientRect();
       if (sizes) {
         this.container.style.height = `${sizes.height}px`;
         this.container.style.width = `${sizes.width}px`;
@@ -144,8 +144,8 @@ export class PushInScene extends PushInBase {
    */
   getTop(): number {
     let { top } = this.container.getBoundingClientRect();
-    if (this.pushin.target) {
-      top -= this.pushin.target.getBoundingClientRect().top;
+    if (this.pushin.target!.container) {
+      top -= this.pushin.target!.container.getBoundingClientRect().top;
     }
     return top;
   }

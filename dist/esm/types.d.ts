@@ -43,6 +43,10 @@ export interface PushInSettings {
     target?: string;
     scrollTarget?: string;
 }
+export interface TargetSettings {
+    container?: string;
+    scrollTarget?: string;
+}
 export interface PushInLayer {
     container: HTMLElement;
     index: number;
