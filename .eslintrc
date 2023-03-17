@@ -27,6 +27,15 @@
     "import/no-unresolved": "off",
     "no-restricted-syntax": "off",
     "lines-between-class-members": "off",
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "stories/**/*",
+          "**/*.spec.js"
+        ]
+      }
+    ]
   }
 }
