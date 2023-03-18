@@ -5,6 +5,8 @@ export declare class PushInComposition extends PushInBase {
     scene: PushInScene;
     options: CompositionOptions;
     constructor(scene: PushInScene, options: CompositionOptions);
+    start(): void;
+    setContainer(): void;
     /**
      * Set the aspect ratio based setting.
      */

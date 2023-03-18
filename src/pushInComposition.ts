@@ -7,7 +7,17 @@ export class PushInComposition extends PushInBase {
   constructor(public scene: PushInScene, public options: CompositionOptions) {
     super();
     this.settings = options;
+  }
 
+  public start(): void {
+    this.setContainer();
+
+    if (this.container) {
+      this.setRatio();
+    }
+  }
+
+  public setContainer(): void {
     const container = this.scene.container!.querySelector<HTMLElement>(
       '.pushin-composition'
     );
@@ -24,10 +34,6 @@ export class PushInComposition extends PushInBase {
       this.scene.pushin.cleanupFns.push(() => {
         this.scene.container!.innerHTML = this!.container!.innerHTML;
       });
-    }
-
-    if (this.container) {
-      this.setRatio();
     }
   }
 

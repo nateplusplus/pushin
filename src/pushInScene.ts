@@ -26,7 +26,7 @@ export class PushInScene extends PushInBase {
   }
 
   /* istanbul ignore next */
-  start() {
+  start(): void {
     this.setContainer();
     this.setSceneClasses();
     this.setComposition();
@@ -37,7 +37,7 @@ export class PushInScene extends PushInBase {
   /**
    * If there is not a pushin-scene element, create one.
    */
-  setContainer() {
+  setContainer(): void {
     const container =
       this.pushin.container.querySelector<HTMLElement>('.pushin-scene');
 
@@ -59,11 +59,12 @@ export class PushInScene extends PushInBase {
   /**
    * Setup composition for the scene.
    */
-  setComposition() {
+  setComposition(): void {
     const compositionOptions = {
       ratio: this.pushin.settings.composition?.ratio ?? undefined,
     };
     this.composition = new PushInComposition(this, compositionOptions);
+    this.composition.start();
   }
 
   /**
@@ -139,6 +140,7 @@ export class PushInScene extends PushInBase {
    * Get the array index of the current window breakpoint.
    */
   getBreakpointIndex(breakpoints: number[]): number {
+    // Find the largest breakpoint that is less-than or equal to the window width.
     const searchIndex = breakpoints
       .reverse()
       .findIndex(bp => bp <= window.innerWidth);

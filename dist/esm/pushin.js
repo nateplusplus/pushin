@@ -96,11 +96,19 @@ class PushInBase {
 class PushInComposition extends PushInBase {
     /* istanbul ignore next */
     constructor(scene, options) {
-        var _a;
         super();
         this.scene = scene;
         this.options = options;
         this.settings = options;
+    }
+    start() {
+        this.setContainer();
+        if (this.container) {
+            this.setRatio();
+        }
+    }
+    setContainer() {
+        var _a;
         const container = this.scene.container.querySelector('.pushin-composition');
         if (container) {
             this.container = container;
@@ -114,9 +122,6 @@ class PushInComposition extends PushInBase {
             this.scene.pushin.cleanupFns.push(() => {
                 this.scene.container.innerHTML = this.container.innerHTML;
             });
-        }
-        if (this.container) {
-            this.setRatio();
         }
     }
     /**
@@ -467,6 +472,7 @@ class PushInScene extends PushInBase {
             ratio: (_b = (_a = this.pushin.settings.composition) === null || _a === void 0 ? void 0 : _a.ratio) !== null && _b !== void 0 ? _b : undefined,
         };
         this.composition = new PushInComposition(this, compositionOptions);
+        this.composition.start();
     }
     /**
      * Set scene class names.
@@ -528,6 +534,7 @@ class PushInScene extends PushInBase {
      * Get the array index of the current window breakpoint.
      */
     getBreakpointIndex(breakpoints) {
+        // Find the largest breakpoint that is less-than or equal to the window width.
         const searchIndex = breakpoints
             .reverse()
             .findIndex(bp => bp <= window.innerWidth);
