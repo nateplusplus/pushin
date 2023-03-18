@@ -20,6 +20,24 @@ export class PushInScene extends PushInBase {
   constructor(public pushin: PushIn) {
     super();
 
+    this.settings = pushin.settings.scene!;
+    this.layerDepth = this.settings?.layerDepth || 1000;
+    this.layers = [];
+  }
+
+  /* istanbul ignore next */
+  start() {
+    this.setContainer();
+    this.setSceneClasses();
+    this.setComposition();
+    this.setBreakpoints();
+    this.getLayers();
+  }
+
+  /**
+   * If there is not a pushin-scene element, create one.
+   */
+  setContainer() {
     const container =
       this.pushin.container.querySelector<HTMLElement>('.pushin-scene');
 
@@ -33,25 +51,19 @@ export class PushInScene extends PushInBase {
       this.pushin.container.innerHTML = '';
       this.pushin.container.appendChild(this.container);
       this.pushin.cleanupFns.push(() => {
-        this.pushin.container.innerHTML = this.container.innerHTML;
+        this.pushin.container.innerHTML = this.container!.innerHTML;
       });
     }
+  }
 
-    this.settings = pushin.settings.scene!;
-
-    this.layerDepth = this.settings?.layerDepth || 1000;
-
-    this.layers = [];
-
-    this.setSceneClasses();
-
+  /**
+   * Setup composition for the scene.
+   */
+  setComposition() {
     const compositionOptions = {
-      ratio: pushin.settings.composition?.ratio ?? undefined,
+      ratio: this.pushin.settings.composition?.ratio ?? undefined,
     };
     this.composition = new PushInComposition(this, compositionOptions);
-
-    this.setBreakpoints();
-    this.getLayers();
   }
 
   /**
@@ -60,11 +72,11 @@ export class PushInScene extends PushInBase {
   /* istanbul ignore next */
   private setSceneClasses(): void {
     if (this.pushin.target) {
-      this.container.classList.add('pushin-scene--with-target');
+      this.container!.classList.add('pushin-scene--with-target');
     }
 
     if (this.pushin.target!.scrollTarget === 'window') {
-      this.container.classList.add('pushin-scene--scroll-target-window');
+      this.container!.classList.add('pushin-scene--scroll-target-window');
     }
   }
 
@@ -75,8 +87,8 @@ export class PushInScene extends PushInBase {
     if (this.pushin.target!.scrollTarget !== 'window') {
       const sizes = this.pushin.target!.container?.getBoundingClientRect();
       if (sizes) {
-        this.container.style.height = `${sizes.height}px`;
-        this.container.style.width = `${sizes.width}px`;
+        this.container!.style.height = `${sizes.height}px`;
+        this.container!.style.width = `${sizes.width}px`;
       }
     }
   }
@@ -92,8 +104,8 @@ export class PushInScene extends PushInBase {
       this.settings.breakpoints = [...PUSH_IN_DEFAULT_BREAKPOINTS];
     }
 
-    if (this.container.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
-      this.settings!.breakpoints = this.container.dataset[
+    if (this.container!.dataset[PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE]) {
+      this.settings!.breakpoints = this.container!.dataset[
         PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE
       ]!.split(',').map(breakpoint => parseInt(breakpoint.trim(), 10));
     }
@@ -107,7 +119,7 @@ export class PushInScene extends PushInBase {
    */
   private getLayers(): void {
     const layers = Array.from(
-      this.container.getElementsByClassName('pushin-layer')
+      this.container!.getElementsByClassName('pushin-layer')
     );
 
     for (let index = 0; index < layers.length; index++) {
@@ -143,7 +155,7 @@ export class PushInScene extends PushInBase {
    * @returns {number}
    */
   getTop(): number {
-    let { top } = this.container.getBoundingClientRect();
+    let { top } = this.container!.getBoundingClientRect();
     if (this.pushin.target!.container) {
       top -= this.pushin.target!.container.getBoundingClientRect().top;
     }
@@ -159,9 +171,9 @@ export class PushInScene extends PushInBase {
   getInpoints(): number[] {
     let inpoints = <number[]>[this.getTop()];
 
-    if (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
+    if (this.container!.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       const pushInFrom = <string>(
-        this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
+        this.container!.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
       );
       inpoints.push(parseInt(pushInFrom, 10));
     } else if (this.settings?.inpoints?.length > 0) {

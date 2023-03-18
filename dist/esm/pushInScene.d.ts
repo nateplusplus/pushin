@@ -10,6 +10,15 @@ export declare class PushInScene extends PushInBase {
     settings: SceneSettings;
     composition?: PushInComposition;
     constructor(pushin: PushIn);
+    start(): void;
+    /**
+     * If there is not a pushin-scene element, create one.
+     */
+    setContainer(): void;
+    /**
+     * Setup composition for the scene.
+     */
+    setComposition(): void;
     /**
      * Set scene class names.
      */

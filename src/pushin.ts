@@ -53,6 +53,7 @@ export class PushIn extends PushInBase {
       this.scrollY = this.getScrollY();
 
       this.scene = new PushInScene(this);
+      this.scene.start();
 
       this.setScrollLength();
       this.scene.resize();
@@ -78,7 +79,7 @@ export class PushIn extends PushInBase {
     const options: TargetSettings = {};
 
     if (this.settings.target) {
-      options.container = this.settings.target;
+      options.target = this.settings.target;
     }
 
     if (this.settings.scrollTarget) {
@@ -86,7 +87,7 @@ export class PushIn extends PushInBase {
     }
 
     this.target = new PushInTarget(this, options);
-    this.target.init();
+    this.target.start();
   }
 
   /**

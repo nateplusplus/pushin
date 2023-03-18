@@ -8,7 +8,7 @@ export declare class PushInTarget extends PushInBase {
     scrollTarget: HTMLElement | string;
     height: number;
     constructor(pushin: PushIn, settings: TargetSettings);
-    init(): void;
+    start(): void;
     /**
      * Set the target parameter and make sure
      * pushin is always a child of that target.

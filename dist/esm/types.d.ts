@@ -44,7 +44,7 @@ export interface PushInSettings {
     scrollTarget?: string;
 }
 export interface TargetSettings {
-    container?: string;
+    target?: string;
     scrollTarget?: string;
 }
 export interface PushInLayer {

@@ -17,7 +17,7 @@ export class PushInTarget extends PushInBase {
     this.height = 0;
   }
 
-  init() {
+  start() {
     this.setTargetElement();
     this.setScrollTarget();
     this.setTargetHeight();

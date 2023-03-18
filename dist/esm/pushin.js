@@ -424,9 +424,25 @@ class PushInLayer extends PushInBase {
 class PushInScene extends PushInBase {
     /* istanbul ignore next */
     constructor(pushin) {
-        var _a, _b, _c;
+        var _a;
         super();
         this.pushin = pushin;
+        this.settings = pushin.settings.scene;
+        this.layerDepth = ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.layerDepth) || 1000;
+        this.layers = [];
+    }
+    /* istanbul ignore next */
+    start() {
+        this.setContainer();
+        this.setSceneClasses();
+        this.setComposition();
+        this.setBreakpoints();
+        this.getLayers();
+    }
+    /**
+     * If there is not a pushin-scene element, create one.
+     */
+    setContainer() {
         const container = this.pushin.container.querySelector('.pushin-scene');
         if (container) {
             this.container = container;
@@ -441,16 +457,16 @@ class PushInScene extends PushInBase {
                 this.pushin.container.innerHTML = this.container.innerHTML;
             });
         }
-        this.settings = pushin.settings.scene;
-        this.layerDepth = ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.layerDepth) || 1000;
-        this.layers = [];
-        this.setSceneClasses();
+    }
+    /**
+     * Setup composition for the scene.
+     */
+    setComposition() {
+        var _a, _b;
         const compositionOptions = {
-            ratio: (_c = (_b = pushin.settings.composition) === null || _b === void 0 ? void 0 : _b.ratio) !== null && _c !== void 0 ? _c : undefined,
+            ratio: (_b = (_a = this.pushin.settings.composition) === null || _a === void 0 ? void 0 : _a.ratio) !== null && _b !== void 0 ? _b : undefined,
         };
         this.composition = new PushInComposition(this, compositionOptions);
-        this.setBreakpoints();
-        this.getLayers();
     }
     /**
      * Set scene class names.
@@ -564,7 +580,7 @@ class PushInTarget extends PushInBase {
         this.scrollTarget = 'window';
         this.height = 0;
     }
-    init() {
+    start() {
         this.setTargetElement();
         this.setScrollTarget();
         this.setTargetHeight();
@@ -678,6 +694,7 @@ class PushIn extends PushInBase {
             this.setTarget();
             this.scrollY = this.getScrollY();
             this.scene = new PushInScene(this);
+            this.scene.start();
             this.setScrollLength();
             this.scene.resize();
             if (typeof window !== 'undefined') {
@@ -697,13 +714,13 @@ class PushIn extends PushInBase {
     setTarget() {
         const options = {};
         if (this.settings.target) {
-            options.container = this.settings.target;
+            options.target = this.settings.target;
         }
         if (this.settings.scrollTarget) {
             options.scrollTarget = this.settings.scrollTarget;
         }
         this.target = new PushInTarget(this, options);
-        this.target.init();
+        this.target.start();
     }
     /**
      * Does all necessary cleanups by removing event listeners.

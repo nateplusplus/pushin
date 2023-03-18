@@ -50,7 +50,7 @@ export interface PushInSettings {
 }
 
 export interface TargetSettings {
-  container?: string;
+  target?: string;
   scrollTarget?: string;
 }
 
