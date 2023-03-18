@@ -512,18 +512,17 @@ class PushInScene extends PushInBase {
      * Find all layers on the page and store them with their parameters
      */
     getLayers() {
-        var _a;
         const layers = Array.from(this.container.getElementsByClassName('pushin-layer'));
-        for (let index = 0; index < layers.length; index++) {
-            const element = layers[index];
+        layers.forEach((element, index) => {
+            var _a;
             let options = {};
-            if (((_a = this.settings) === null || _a === void 0 ? void 0 : _a.layers) && this.settings.layers.length > index) {
+            if (((_a = this === null || this === void 0 ? void 0 : this.settings) === null || _a === void 0 ? void 0 : _a.layers) && this.settings.layers[index]) {
                 options = this.settings.layers[index];
             }
             const layer = new PushInLayer(element, index, this, options);
             this.layers.push(layer);
             layer.setZIndex(layers.length);
-        }
+        });
     }
     /**
      * Get the array index of the current window breakpoint.

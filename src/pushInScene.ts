@@ -122,18 +122,17 @@ export class PushInScene extends PushInBase {
       this.container!.getElementsByClassName('pushin-layer')
     );
 
-    for (let index = 0; index < layers.length; index++) {
-      const element = <HTMLElement>layers[index];
+    layers.forEach((element: Element, index) => {
       let options = <LayerOptions>{};
-      if (this.settings?.layers && this.settings.layers.length > index) {
-        options = this!.settings.layers[index];
+      if (this?.settings?.layers && this.settings.layers[index]) {
+        options = this.settings.layers[index];
       }
 
-      const layer = new PushInLayer(element, index, this, options);
+      const layer = new PushInLayer(<HTMLElement>element, index, this, options);
       this.layers.push(layer);
 
       layer.setZIndex(layers.length);
-    }
+    });
   }
 
   /**
