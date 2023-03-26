@@ -1,6 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
-import './pushin.css';
 
 type PushInArgs = {
   target: string;

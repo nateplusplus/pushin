@@ -1,6 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
-import './pushin.css';
 
 export const Text = ({ layer1, layer2, layer3, layer4 }) => {
   const pushInContainer = useRef();
