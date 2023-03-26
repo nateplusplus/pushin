@@ -7,11 +7,20 @@ export interface LayerOptions {
   transitionEnd?: number;
 }
 
+export interface LayerSettings {
+  inpoints: number[];
+  outpoints: number[];
+  speed: number;
+  transitions?: boolean;
+  transitionStart?: number;
+  transitionEnd?: number;
+}
+
 export interface CompositionOptions {
   ratio?: number[];
 }
 
-export interface SceneOptions {
+export interface SceneSettings {
   layerDepth?: number;
   breakpoints: number[];
   inpoints: number[];
@@ -24,8 +33,23 @@ export interface PushInOptions {
   composition?: CompositionOptions;
   debug?: boolean;
   layers?: LayerOptions[];
-  scene?: SceneOptions;
+  scene?: SceneSettings;
   selector?: string;
+  target?: string;
+  scrollTarget?: string;
+}
+
+export interface PushInSettings {
+  composition?: CompositionOptions;
+  debug?: boolean;
+  layers?: LayerOptions[];
+  scene?: SceneSettings;
+  selector?: string;
+  target?: string;
+  scrollTarget?: string;
+}
+
+export interface TargetSettings {
   target?: string;
   scrollTarget?: string;
 }

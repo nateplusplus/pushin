@@ -1,6 +1,7 @@
 import { setupJSDOM } from '../setup';
 import { PushIn } from '../../src/pushin';
 import { PushInScene } from '../../src/pushInScene';
+import { PushInTarget } from '../../src/pushInTarget';
 
 describe('resize', () => {
   let mockPushInScene;
@@ -20,12 +21,21 @@ describe('resize', () => {
 
     sceneContainer = document.querySelector('.pushin-scene');
 
+    const mockPushInTarget = Object.create(PushInTarget.prototype);
+    Object.assign(
+      mockPushInTarget,
+      {
+        container: document.getElementById('target'),
+        scrollTarget: 'window'
+      }
+    );
+
     const mockPushIn = Object.create(PushIn.prototype);
     Object.assign(
       mockPushIn,
       {
         container: document.querySelector('.pushin'),
-        scrollTarget: 'window',
+        target: mockPushInTarget,
       }
     );
 
@@ -39,32 +49,15 @@ describe('resize', () => {
     );
   });
 
-  it('Should not adjust container size by default', () => {
-    mockPushInScene['resize']();
-    const result = sceneContainer.style.height;
-    expect(result).toEqual('');
-  });
-
-  it('Should not adjust container size if there is no target', () => {
-    mockPushInScene['pushin']['scrollTarget'] = document.getElementById('target');
-
-    mockPushInScene['resize']();
-    const result = sceneContainer.style.height;
-    expect(result).toEqual('');
-  });
-
-  it('Should not adjust container size if scrollTarget is "window"', () => {
-    mockPushInScene['pushin']['scrollTarget'] = 'window';
-    mockPushInScene['pushin']['target'] = document.getElementById('target');
-
+  it('Should not adjust container size by default (scrollTarget = "window"', () => {
     mockPushInScene['resize']();
     const result = sceneContainer.style.height;
     expect(result).toEqual('');
   });
 
   it('Should should set width and height of scene to match the target container', () => {
-    mockPushInScene['pushin']['target'] = document.getElementById('target');
-    mockPushInScene['pushin']['target']['getBoundingClientRect'] = () => {
+    mockPushInScene['pushin']['target']['scrollTarget'] = document.getElementById('target');
+    mockPushInScene['pushin']['target']['container']['getBoundingClientRect'] = () => {
       return {
         width: 100,
         height: 200,

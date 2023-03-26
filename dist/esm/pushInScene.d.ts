@@ -2,14 +2,23 @@ import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 import PushInBase from './pushInBase';
-import { SceneOptions } from './types';
+import { SceneSettings } from './types';
 export declare class PushInScene extends PushInBase {
     pushin: PushIn;
     layers: PushInLayer[];
     layerDepth: number;
-    options: SceneOptions;
+    settings: SceneSettings;
     composition?: PushInComposition;
     constructor(pushin: PushIn);
+    start(): void;
+    /**
+     * If there is not a pushin-scene element, create one.
+     */
+    setContainer(): void;
+    /**
+     * Setup composition for the scene.
+     */
+    setComposition(): void;
     /**
      * Set scene class names.
      */

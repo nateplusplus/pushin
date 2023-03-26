@@ -8,21 +8,24 @@ import {
 import { PushInScene } from './pushInScene';
 import PushInBase from './pushInBase';
 
-import { LayerOptions, LayerRef, LayerParams } from './types';
+import { LayerOptions, LayerSettings, LayerRef, LayerParams } from './types';
 
 export class PushInLayer extends PushInBase {
   public params!: LayerParams;
   private originalScale: number;
   private ref: LayerRef;
+  public settings: LayerSettings;
 
   /* istanbul ignore next */
   constructor(
     public container: HTMLElement,
     private index: number,
     public scene: PushInScene,
-    public options: LayerOptions
+    options: LayerOptions
   ) {
     super();
+    this.settings = options;
+
     const inpoints = this.getInpoints(this.container, this.index);
     const outpoints = this.getOutpoints(this.container, inpoints[0]);
     const speed = this.getSpeed(this.container);
@@ -47,7 +50,7 @@ export class PushInLayer extends PushInBase {
    * @return {boolean}
    */
   private getTransitions(): boolean {
-    let transitions = this.options?.transitions ?? true;
+    let transitions = this.settings?.transitions ?? true;
     if (this.container.hasAttribute('data-pushin-transitions')) {
       const attr = this.container!.dataset!.pushinTransitions;
       if (attr) {
@@ -123,8 +126,8 @@ export class PushInLayer extends PushInBase {
       inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(',').map(
         inpoint => parseInt(inpoint.trim(), 10)
       );
-    } else if (this.options?.inpoints) {
-      inpoints = this.options.inpoints;
+    } else if (this.settings?.inpoints) {
+      inpoints = this.settings.inpoints;
     } else if (index === 0) {
       inpoints = this.scene.getInpoints();
     } else if (index > 0) {
@@ -145,8 +148,8 @@ export class PushInLayer extends PushInBase {
     if (element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]) {
       const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]!.split(',');
       outpoints = values.map(value => parseInt(value.trim(), 10));
-    } else if (this.options?.outpoints) {
-      outpoints = this.options.outpoints;
+    } else if (this.settings?.outpoints) {
+      outpoints = this.settings.outpoints;
     }
 
     return outpoints;
@@ -163,8 +166,8 @@ export class PushInLayer extends PushInBase {
       if (Number.isNaN(speed)) {
         speed = DEFAULT_SPEED;
       }
-    } else if (this.options?.speed) {
-      speed = this.options.speed;
+    } else if (this.settings?.speed) {
+      speed = this.settings.speed;
     }
 
     return speed || DEFAULT_SPEED;
@@ -253,7 +256,7 @@ export class PushInLayer extends PushInBase {
    */
   /* istanbul ignore next */
   private getInpoint(inpoints: number[]): number {
-    const { breakpoints } = this.scene.options;
+    const { breakpoints } = this.scene.settings;
     return inpoints[this.scene.getBreakpointIndex(breakpoints)] || inpoints[0];
   }
 
@@ -263,7 +266,7 @@ export class PushInLayer extends PushInBase {
    */
   /* istanbul ignore next */
   private getOutpoint(outpoints: number[]): number {
-    const { breakpoints } = this.scene.options;
+    const { breakpoints } = this.scene.settings;
     return (
       outpoints[this.scene.getBreakpointIndex(breakpoints)] || outpoints[0]
     );
