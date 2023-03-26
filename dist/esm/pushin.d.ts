@@ -56,6 +56,7 @@ export declare class PushIn extends PushInBase {
      * the larger of the two numbers will be used.
      */
     private setScrollLength;
+    loadStyles(): void;
     /**
      * Show a debugging tool appended to the frontend of the page.
      * Can be used to determine best "pushin-from" and "pushin-to" values.

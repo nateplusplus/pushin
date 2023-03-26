@@ -661,6 +661,8 @@ class PushInTarget extends PushInBase {
     }
 }
 
+const pushInStyles = `.pushin {position: relative;}.pushin-scene {display: flex;align-items: center;position: fixed;left: 0;top: 0;width: 100%;height: 100vh;}.pushin-scene--with-target {top: 0;left: auto;height: auto;width: auto;pointer-events: none;overflow: hidden;position: sticky;}.pushin-scene--scroll-target-window {height: 100vh;}.pushin-composition {flex: 0 0 100%;padding-top: 201%;position: relative;}.pushin-layer {display: flex;align-items: center;flex-direction: column;justify-content: center;opacity: 0;pointer-events: none;position: absolute;top: 0;right: 0;bottom: 0;left: 0;}.pushin-layer--visible * {pointer-events: auto;}.pushin-debug {background-color: white;border: 0;border-bottom: 1px;box-shadow: -2px 8px 19px 2px rgba(0, 0, 0, 0.26);padding: 1em;position: fixed;top: 0;width: 100%;-webkit-box-shadow: -2px 8px 19px 2px rgba(0, 0, 0, 0.26);z-index: 10;}@media (min-width: 768px) {.pushin-debug {border: 1px solid black;border-radius: 15px 0 0 15px;border-right: 0;right: 0;top: 50px;width: 250px;}}.pushin-debug__title {font-weight: bold;}`;
+
 /**
  * PushIn object
  *
@@ -697,6 +699,7 @@ class PushIn extends PushInBase {
             if (this.settings.debug) {
                 this.showDebugger();
             }
+            this.loadStyles();
             this.setTarget();
             this.scrollY = this.getScrollY();
             this.scene = new PushInScene(this);
@@ -843,6 +846,18 @@ class PushIn extends PushInBase {
             maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
         });
         this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint + this.target.height)}px`;
+    }
+    loadStyles() {
+        const stylesheet = document.querySelector('style#pushin-styles');
+        if (!stylesheet) {
+            const sheet = document.createElement('style');
+            sheet.id = 'pushin-styles';
+            sheet.appendChild(document.createTextNode(pushInStyles));
+            document.head.appendChild(sheet);
+            this.cleanupFns.push(() => {
+                document.head.removeChild(sheet);
+            });
+        }
     }
     /**
      * Show a debugging tool appended to the frontend of the page.

@@ -3,6 +3,7 @@ import { PushInTarget } from './pushInTarget';
 import { PushInOptions, PushInSettings, TargetSettings } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 import PushInBase from './pushInBase';
+import pushInStyles from './pushInStyles';
 
 /**
  * PushIn object
@@ -47,6 +48,8 @@ export class PushIn extends PushInBase {
       if (this.settings.debug) {
         this.showDebugger();
       }
+
+      this.loadStyles();
 
       this.setTarget();
 
@@ -239,6 +242,22 @@ export class PushIn extends PushInBase {
       parseFloat(containerHeight),
       maxOutpoint + this.target!.height
     )}px`;
+  }
+
+  loadStyles(): void {
+    const stylesheet = document.querySelector('style#pushin-styles');
+
+    if (!stylesheet) {
+      const sheet = document.createElement('style');
+      sheet.id = 'pushin-styles';
+
+      sheet.appendChild(document.createTextNode(pushInStyles));
+      document.head.appendChild(sheet);
+
+      this.cleanupFns.push(() => {
+        document.head.removeChild(sheet);
+      });
+    }
   }
 
   /**
