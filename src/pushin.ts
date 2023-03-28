@@ -30,6 +30,7 @@ export class PushIn extends PushInBase {
       scene: options?.scene ?? { breakpoints: [], inpoints: [] },
       target: options?.target ?? undefined,
       scrollTarget: options?.scrollTarget,
+      mode: options?.mode ?? 'sequential',
     };
 
     this.settings.scene!.composition = options?.composition ?? undefined;

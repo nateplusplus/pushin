@@ -128,7 +128,7 @@ export class PushInLayer extends PushInBase {
       );
     } else if (this.settings?.inpoints) {
       inpoints = this.settings.inpoints;
-    } else if (index === 0) {
+    } else if (index === 0 || this.scene.getMode() === 'continuous') {
       inpoints = this.scene.getInpoints();
     } else if (index > 0) {
       // Set default for middle layers if none provided
