@@ -1,11 +1,14 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
 
-export const Modes = ({ mode }) => {
+export const Modes = ({ mode, layers }) => {
   const pushInContainer = useRef();
 
   useLayoutEffect(() => {
-    const pushIn = new PushIn(pushInContainer.current, { mode });
+    const pushIn = new PushIn(pushInContainer.current, {
+      mode,
+      layers,
+    });
     pushIn.start();
 
     return () => pushIn.destroy();
@@ -15,7 +18,14 @@ export const Modes = ({ mode }) => {
     <div className="pushin" ref={pushInContainer}>
       <div className="pushin-scene">
         <div key="layer1" className="pushin-layer">
-          <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</span>
+          <span
+            style={{
+              position: 'absolute',
+              top: mode === 'sequential' ? 'initial' : '35%',
+            }}
+          >
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+          </span>
         </div>
         <div key="layer2" className="pushin-layer">
           <span>
@@ -23,7 +33,12 @@ export const Modes = ({ mode }) => {
           </span>
         </div>
         <div key="layer3" className="pushin-layer">
-          <span>
+          <span
+            style={{
+              position: 'absolute',
+              top: mode === 'sequential' ? 'initial' : '60%',
+            }}
+          >
             Reprehenderit nisi perspiciatis facilis sint repudiandae totam
             praesentium dignissimos consequuntur tenetur.
           </span>

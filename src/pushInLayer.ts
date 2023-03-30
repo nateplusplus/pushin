@@ -50,7 +50,8 @@ export class PushInLayer extends PushInBase {
    * @return {boolean}
    */
   private getTransitions(): boolean {
-    let transitions = this.settings?.transitions ?? true;
+    let transitions =
+      this.settings?.transitions ?? this.scene.getMode() === 'sequential';
     if (this.container.hasAttribute('data-pushin-transitions')) {
       const attr = this.container!.dataset!.pushinTransitions;
       if (attr) {
@@ -135,6 +136,7 @@ export class PushInLayer extends PushInBase {
       const { outpoint } = this.scene.layers[index - 1].params;
       inpoints = [outpoint - this.getOverlap()];
     }
+    console.log(inpoints);
 
     return inpoints;
   }

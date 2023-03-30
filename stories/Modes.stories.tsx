@@ -20,9 +20,28 @@ export const SequentialMode = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 SequentialMode.args = {
   mode: 'sequential',
+  layers: [],
 };
 
 export const ContinuousMode = Template.bind({});
 ContinuousMode.args = {
   mode: 'continuous',
+  layers: [],
+};
+
+export const ContinuousWithTransitions = Template.bind({});
+ContinuousMode.args = {
+  mode: 'continuous',
+  layers: [
+    {
+      transitions: false,
+    },
+    {
+      transitions: true,
+    },
+    {
+      transitions: true,
+      inpoints: [100],
+    },
+  ],
 };

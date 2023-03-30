@@ -165,7 +165,7 @@ class PushInLayer extends PushInBase {
      */
     getTransitions() {
         var _a, _b;
-        let transitions = (_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : true;
+        let transitions = (_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : this.scene.getMode() === 'sequential';
         if (this.container.hasAttribute('data-pushin-transitions')) {
             const attr = this.container.dataset.pushinTransitions;
             if (attr) {
@@ -238,6 +238,7 @@ class PushInLayer extends PushInBase {
             const { outpoint } = this.scene.layers[index - 1].params;
             inpoints = [outpoint - this.getOverlap()];
         }
+        console.log(inpoints);
         return inpoints;
     }
     /**
@@ -703,6 +704,7 @@ class PushIn extends PushInBase {
             if (this.settings.debug) {
                 this.showDebugger();
             }
+            this.setMode();
             this.loadStyles();
             this.setTarget();
             this.scrollY = this.getScrollY();
@@ -720,6 +722,15 @@ class PushIn extends PushInBase {
             // eslint-disable-next-line no-console
             console.error('No container element provided to pushIn.js. Effect will not be applied.');
         }
+    }
+    /**
+     * Set the mode.
+     *
+     * @returns {string}    The mode setting, or "sequential" by default.
+     */
+    setMode() {
+        const mode = this.getStringOption('mode');
+        this.mode = mode !== '' ? mode : 'sequential';
     }
     /**
      * Set up the target element for this effect, and where to listen for scrolling.
