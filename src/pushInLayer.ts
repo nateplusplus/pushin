@@ -136,7 +136,6 @@ export class PushInLayer extends PushInBase {
       const { outpoint } = this.scene.layers[index - 1].params;
       inpoints = [outpoint - this.getOverlap()];
     }
-    console.log(inpoints);
 
     return inpoints;
   }

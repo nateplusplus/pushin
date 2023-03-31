@@ -238,7 +238,6 @@ class PushInLayer extends PushInBase {
             const { outpoint } = this.scene.layers[index - 1].params;
             inpoints = [outpoint - this.getOverlap()];
         }
-        console.log(inpoints);
         return inpoints;
     }
     /**
@@ -575,7 +574,7 @@ class PushInScene extends PushInBase {
         return inpoints;
     }
     getMode() {
-        return this.pushin.settings.mode;
+        return this.pushin.mode;
     }
 }
 

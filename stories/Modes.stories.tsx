@@ -30,11 +30,11 @@ ContinuousMode.args = {
 };
 
 export const ContinuousWithTransitions = Template.bind({});
-ContinuousMode.args = {
+ContinuousWithTransitions.args = {
   mode: 'continuous',
   layers: [
     {
-      transitions: false,
+      transitions: true,
     },
     {
       transitions: true,
@@ -44,4 +44,11 @@ ContinuousMode.args = {
       inpoints: [100],
     },
   ],
+};
+
+export const SetModeByAttribute = Template.bind({});
+SetModeByAttribute.args = {
+  mode: '',
+  layers: [],
+  modeAttr: 'continuous',
 };

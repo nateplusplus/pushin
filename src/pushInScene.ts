@@ -185,6 +185,6 @@ export class PushInScene extends PushInBase {
   }
 
   getMode() {
-    return this.pushin.settings.mode;
+    return this.pushin.mode;
   }
 }

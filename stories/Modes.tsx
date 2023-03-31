@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
 
-export const Modes = ({ mode, layers }) => {
+export const Modes = ({ mode, layers, modeAttr = '' }) => {
   const pushInContainer = useRef();
 
   useLayoutEffect(() => {
@@ -14,8 +14,13 @@ export const Modes = ({ mode, layers }) => {
     return () => pushIn.destroy();
   });
 
+  const pushInAttr = {};
+  if (modeAttr !== '') {
+    pushInAttr['data-pushin-mode'] = modeAttr;
+  }
+
   return (
-    <div className="pushin" ref={pushInContainer}>
+    <div className="pushin" ref={pushInContainer} {...pushInAttr}>
       <div className="pushin-scene">
         <div key="layer1" className="pushin-layer">
           <span
