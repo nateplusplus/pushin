@@ -17,11 +17,18 @@ export declare class PushIn extends PushInBase {
     private lastAnimationFrameId;
     cleanupFns: VoidFunction[];
     settings: PushInSettings;
+    mode: string;
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
      */
     start(): void;
+    /**
+     * Set the mode.
+     *
+     * @returns {string}    The mode setting, or "sequential" by default.
+     */
+    setMode(): void;
     /**
      * Set up the target element for this effect, and where to listen for scrolling.
      */

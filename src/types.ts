@@ -37,6 +37,7 @@ export interface PushInOptions {
   selector?: string;
   target?: string;
   scrollTarget?: string;
+  mode?: string;
 }
 
 export interface PushInSettings {
@@ -47,6 +48,7 @@ export interface PushInSettings {
   selector?: string;
   target?: string;
   scrollTarget?: string;
+  mode: string;
 }
 
 export interface TargetSettings {

@@ -19,6 +19,7 @@ export class PushIn extends PushInBase {
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
   public settings: PushInSettings;
+  public mode!: string;
 
   /* istanbul ignore next */
   constructor(public container: HTMLElement, options?: PushInOptions) {
@@ -30,6 +31,7 @@ export class PushIn extends PushInBase {
       scene: options?.scene ?? { breakpoints: [], inpoints: [] },
       target: options?.target ?? undefined,
       scrollTarget: options?.scrollTarget,
+      mode: options?.mode ?? 'sequential',
     };
 
     this.settings.scene!.composition = options?.composition ?? undefined;
@@ -49,10 +51,9 @@ export class PushIn extends PushInBase {
         this.showDebugger();
       }
 
+      this.setMode();
       this.loadStyles();
-
       this.setTarget();
-
       this.scrollY = this.getScrollY();
 
       this.scene = new PushInScene(this);
@@ -73,6 +74,16 @@ export class PushIn extends PushInBase {
         'No container element provided to pushIn.js. Effect will not be applied.'
       );
     }
+  }
+
+  /**
+   * Set the mode.
+   *
+   * @returns {string}    The mode setting, or "sequential" by default.
+   */
+  setMode() {
+    const mode = <string>this.getStringOption('mode');
+    this.mode = mode !== '' ? mode : 'sequential';
   }
 
   /**
@@ -280,8 +291,11 @@ export class PushIn extends PushInBase {
     this.pushinDebug.appendChild(scrollTitle);
     this.pushinDebug.appendChild(debuggerContent);
 
-    const target = this.target!.container ?? document.body;
+    const target = this.target?.container ?? document.body;
 
     target.appendChild(this.pushinDebug);
+
+    // Remove debugger when unmounted.
+    this.cleanupFns.push(() => this.pushinDebug?.remove());
   }
 }

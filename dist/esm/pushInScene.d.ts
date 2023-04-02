@@ -55,4 +55,5 @@ export declare class PushInScene extends PushInBase {
      * @returns {number[]}
      */
     getInpoints(): number[];
+    getMode(): string;
 }

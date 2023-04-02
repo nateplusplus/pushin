@@ -45,7 +45,7 @@ describe('getInpoints', () => {
           mockLayer,
           mockLayer,
         ],
-
+        getMode: () => 'sequential',
       }
     );
 

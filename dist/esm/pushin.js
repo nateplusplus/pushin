@@ -165,7 +165,7 @@ class PushInLayer extends PushInBase {
      */
     getTransitions() {
         var _a, _b;
-        let transitions = (_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : true;
+        let transitions = (_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.transitions) !== null && _b !== void 0 ? _b : this.scene.getMode() === 'sequential';
         if (this.container.hasAttribute('data-pushin-transitions')) {
             const attr = this.container.dataset.pushinTransitions;
             if (attr) {
@@ -230,7 +230,7 @@ class PushInLayer extends PushInBase {
         else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) {
             inpoints = this.settings.inpoints;
         }
-        else if (index === 0) {
+        else if (index === 0 || this.scene.getMode() === 'continuous') {
             inpoints = this.scene.getInpoints();
         }
         else if (index > 0) {
@@ -573,6 +573,9 @@ class PushInScene extends PushInBase {
         }
         return inpoints;
     }
+    getMode() {
+        return this.pushin.mode;
+    }
 }
 
 class PushInTarget extends PushInBase {
@@ -672,7 +675,7 @@ const pushInStyles = `.pushin {position: relative;}.pushin-scene {display: flex;
 class PushIn extends PushInBase {
     /* istanbul ignore next */
     constructor(container, options) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         super();
         this.container = container;
         this.scrollY = 0;
@@ -684,11 +687,12 @@ class PushIn extends PushInBase {
             scene: (_b = options === null || options === void 0 ? void 0 : options.scene) !== null && _b !== void 0 ? _b : { breakpoints: [], inpoints: [] },
             target: (_c = options === null || options === void 0 ? void 0 : options.target) !== null && _c !== void 0 ? _c : undefined,
             scrollTarget: options === null || options === void 0 ? void 0 : options.scrollTarget,
+            mode: (_d = options === null || options === void 0 ? void 0 : options.mode) !== null && _d !== void 0 ? _d : 'sequential',
         };
-        this.settings.scene.composition = (_d = options === null || options === void 0 ? void 0 : options.composition) !== null && _d !== void 0 ? _d : undefined;
-        this.settings.scene.layers = (_e = options === null || options === void 0 ? void 0 : options.layers) !== null && _e !== void 0 ? _e : undefined;
+        this.settings.scene.composition = (_e = options === null || options === void 0 ? void 0 : options.composition) !== null && _e !== void 0 ? _e : undefined;
+        this.settings.scene.layers = (_f = options === null || options === void 0 ? void 0 : options.layers) !== null && _f !== void 0 ? _f : undefined;
         // Defaults
-        this.settings.debug = (_f = options === null || options === void 0 ? void 0 : options.debug) !== null && _f !== void 0 ? _f : false;
+        this.settings.debug = (_g = options === null || options === void 0 ? void 0 : options.debug) !== null && _g !== void 0 ? _g : false;
     }
     /**
      * Initialize the object to start everything up.
@@ -699,6 +703,7 @@ class PushIn extends PushInBase {
             if (this.settings.debug) {
                 this.showDebugger();
             }
+            this.setMode();
             this.loadStyles();
             this.setTarget();
             this.scrollY = this.getScrollY();
@@ -716,6 +721,15 @@ class PushIn extends PushInBase {
             // eslint-disable-next-line no-console
             console.error('No container element provided to pushIn.js. Effect will not be applied.');
         }
+    }
+    /**
+     * Set the mode.
+     *
+     * @returns {string}    The mode setting, or "sequential" by default.
+     */
+    setMode() {
+        const mode = this.getStringOption('mode');
+        this.mode = mode !== '' ? mode : 'sequential';
     }
     /**
      * Set up the target element for this effect, and where to listen for scrolling.
@@ -865,7 +879,7 @@ class PushIn extends PushInBase {
      */
     /* istanbul ignore next */
     showDebugger() {
-        var _a;
+        var _a, _b;
         this.pushinDebug = document.createElement('div');
         this.pushinDebug.classList.add('pushin-debug');
         const scrollTitle = document.createElement('p');
@@ -876,8 +890,10 @@ class PushIn extends PushInBase {
         debuggerContent.innerText = `Scroll position: ${this.scrollY}px`;
         this.pushinDebug.appendChild(scrollTitle);
         this.pushinDebug.appendChild(debuggerContent);
-        const target = (_a = this.target.container) !== null && _a !== void 0 ? _a : document.body;
+        const target = (_b = (_a = this.target) === null || _a === void 0 ? void 0 : _a.container) !== null && _b !== void 0 ? _b : document.body;
         target.appendChild(this.pushinDebug);
+        // Remove debugger when unmounted.
+        this.cleanupFns.push(() => { var _a; return (_a = this.pushinDebug) === null || _a === void 0 ? void 0 : _a.remove(); });
     }
 }
 

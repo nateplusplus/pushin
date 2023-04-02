@@ -183,4 +183,8 @@ export class PushInScene extends PushInBase {
 
     return inpoints;
   }
+
+  getMode() {
+    return this.pushin.mode;
+  }
 }
