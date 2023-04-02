@@ -879,7 +879,7 @@ class PushIn extends PushInBase {
      */
     /* istanbul ignore next */
     showDebugger() {
-        var _a;
+        var _a, _b;
         this.pushinDebug = document.createElement('div');
         this.pushinDebug.classList.add('pushin-debug');
         const scrollTitle = document.createElement('p');
@@ -890,8 +890,10 @@ class PushIn extends PushInBase {
         debuggerContent.innerText = `Scroll position: ${this.scrollY}px`;
         this.pushinDebug.appendChild(scrollTitle);
         this.pushinDebug.appendChild(debuggerContent);
-        const target = (_a = this.target.container) !== null && _a !== void 0 ? _a : document.body;
+        const target = (_b = (_a = this.target) === null || _a === void 0 ? void 0 : _a.container) !== null && _b !== void 0 ? _b : document.body;
         target.appendChild(this.pushinDebug);
+        // Remove debugger when unmounted.
+        this.cleanupFns.push(() => { var _a; return (_a = this.pushinDebug) === null || _a === void 0 ? void 0 : _a.remove(); });
     }
 }
 

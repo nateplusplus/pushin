@@ -291,8 +291,11 @@ export class PushIn extends PushInBase {
     this.pushinDebug.appendChild(scrollTitle);
     this.pushinDebug.appendChild(debuggerContent);
 
-    const target = this.target!.container ?? document.body;
+    const target = this.target?.container ?? document.body;
 
     target.appendChild(this.pushinDebug);
+
+    // Remove debugger when unmounted.
+    this.cleanupFns.push(() => this.pushinDebug?.remove());
   }
 }
