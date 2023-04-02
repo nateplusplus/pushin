@@ -16,6 +16,15 @@ export declare class PushInScene extends PushInBase {
      */
     setContainer(): void;
     /**
+     * Get the AutoStart option if provided.
+     *
+     * Choices:
+     * - scroll (default)    Start effect on scroll.
+     * - bottom              Start effect when target element top at viewport bottom.
+     * - top                 Start effect when target element top at viewport top.
+     */
+    setAutoStart(): void;
+    /**
      * Setup composition for the scene.
      */
     setComposition(): void;

@@ -445,6 +445,7 @@ License: MIT */
         /* istanbul ignore next */
         start() {
             this.setContainer();
+            this.setAutoStart();
             this.setSceneClasses();
             this.setComposition();
             this.setBreakpoints();
@@ -468,6 +469,21 @@ License: MIT */
                     this.pushin.container.innerHTML = this.container.innerHTML;
                 });
             }
+        }
+        /**
+         * Get the AutoStart option if provided.
+         *
+         * Choices:
+         * - scroll (default)    Start effect on scroll.
+         * - bottom              Start effect when target element top at viewport bottom.
+         * - top                 Start effect when target element top at viewport top.
+         */
+        setAutoStart() {
+            let autoStart = this.getStringOption('auto-start');
+            if (autoStart !== 'bottom' && autoStart !== 'top') {
+                autoStart = 'scroll';
+            }
+            this.settings.autoStart = autoStart;
         }
         /**
          * Setup composition for the scene.
@@ -568,7 +584,7 @@ License: MIT */
          * @returns {number[]}
          */
         getInpoints() {
-            var _a, _b;
+            var _a, _b, _c, _d;
             let inpoints = [this.getTop()];
             if (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
                 const pushInFrom = (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]);
@@ -577,6 +593,8 @@ License: MIT */
             else if (((_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                 inpoints = this.settings.inpoints;
             }
+            else if (((_c = this.settings) === null || _c === void 0 ? void 0 : _c.autoStart) === 'bottom') ;
+            else if (((_d = this.settings) === null || _d === void 0 ? void 0 : _d.autoStart) === 'top') ;
             return inpoints;
         }
         getMode() {

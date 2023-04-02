@@ -28,6 +28,7 @@ export class PushInScene extends PushInBase {
   /* istanbul ignore next */
   start(): void {
     this.setContainer();
+    this.setAutoStart();
     this.setSceneClasses();
     this.setComposition();
     this.setBreakpoints();
@@ -54,6 +55,23 @@ export class PushInScene extends PushInBase {
         this.pushin.container.innerHTML = this.container!.innerHTML;
       });
     }
+  }
+
+  /**
+   * Get the AutoStart option if provided.
+   *
+   * Choices:
+   * - scroll (default)    Start effect on scroll.
+   * - bottom              Start effect when target element top at viewport bottom.
+   * - top                 Start effect when target element top at viewport top.
+   */
+  setAutoStart(): void {
+    let autoStart = <string>this.getStringOption('auto-start');
+    if (autoStart !== 'bottom' && autoStart !== 'top') {
+      autoStart = 'scroll';
+    }
+
+    this.settings.autoStart = autoStart;
   }
 
   /**
@@ -179,6 +197,10 @@ export class PushInScene extends PushInBase {
       inpoints.push(parseInt(pushInFrom, 10));
     } else if (this.settings?.inpoints?.length > 0) {
       inpoints = this.settings.inpoints;
+    } else if (this.settings?.autoStart === 'bottom') {
+      // Calculate based on target element top and bottom of viewport
+    } else if (this.settings?.autoStart === 'top') {
+      // Calculate based on target element top and top of viewport
     }
 
     return inpoints;

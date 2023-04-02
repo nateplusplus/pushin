@@ -24,6 +24,7 @@ export interface SceneSettings {
     composition?: CompositionOptions;
     layers?: LayerOptions[];
     ratio?: number[];
+    autoStart?: string;
 }
 export interface PushInOptions {
     composition?: CompositionOptions;
