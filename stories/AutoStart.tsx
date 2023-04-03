@@ -5,7 +5,10 @@ export const AutoStart = () => {
   const pushInContainer = useRef();
 
   useLayoutEffect(() => {
-    const pushIn = new PushIn(pushInContainer.current, { target: '#target' });
+    const pushIn = new PushIn(pushInContainer.current, {
+      target: '#target',
+      scrollTarget: 'window',
+    });
     pushIn.start();
 
     return () => pushIn.destroy();

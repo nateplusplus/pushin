@@ -593,8 +593,18 @@ License: MIT */
             else if (((_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                 inpoints = this.settings.inpoints;
             }
-            else if (((_c = this.settings) === null || _c === void 0 ? void 0 : _c.autoStart) === 'bottom') ;
-            else if (((_d = this.settings) === null || _d === void 0 ? void 0 : _d.autoStart) === 'top') ;
+            else if (((_c = this.settings) === null || _c === void 0 ? void 0 : _c.autoStart) === 'bottom') {
+                // Calculate based on target element top and bottom of viewport
+                const containerTop = this.container.getBoundingClientRect().top +
+                    document.documentElement.scrollTop;
+                inpoints = [containerTop - window.innerHeight];
+            }
+            else if (((_d = this.settings) === null || _d === void 0 ? void 0 : _d.autoStart) === 'top') {
+                // Calculate based on target element top and top of viewport
+                const containerTop = this.container.getBoundingClientRect().top +
+                    document.documentElement.scrollTop;
+                inpoints = [containerTop];
+            }
             return inpoints;
         }
         getMode() {

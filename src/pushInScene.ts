@@ -199,8 +199,16 @@ export class PushInScene extends PushInBase {
       inpoints = this.settings.inpoints;
     } else if (this.settings?.autoStart === 'bottom') {
       // Calculate based on target element top and bottom of viewport
+      const containerTop =
+        this.container!.getBoundingClientRect().top +
+        document.documentElement.scrollTop;
+      inpoints = [containerTop - window.innerHeight];
     } else if (this.settings?.autoStart === 'top') {
       // Calculate based on target element top and top of viewport
+      const containerTop =
+        this.container!.getBoundingClientRect().top +
+        document.documentElement.scrollTop;
+      inpoints = [containerTop];
     }
 
     return inpoints;
