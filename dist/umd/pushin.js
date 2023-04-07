@@ -435,7 +435,7 @@ License: MIT */
     class PushInScene extends PushInBase {
         /* istanbul ignore next */
         constructor(pushin) {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e;
             super();
             this.pushin = pushin;
             const options = (_b = (_a = pushin.options) === null || _a === void 0 ? void 0 : _a.scene) !== null && _b !== void 0 ? _b : {};
@@ -446,7 +446,7 @@ License: MIT */
                 composition: (_c = pushin.options) === null || _c === void 0 ? void 0 : _c.composition,
                 layers: ((_d = pushin.options) === null || _d === void 0 ? void 0 : _d.layers) || [],
                 ratio: options === null || options === void 0 ? void 0 : options.ratio,
-                autoStart: options === null || options === void 0 ? void 0 : options.autoStart,
+                autoStart: (_e = pushin.options) === null || _e === void 0 ? void 0 : _e.autoStart,
             };
             this.layerDepth = this.settings.layerDepth;
             this.layers = [];
