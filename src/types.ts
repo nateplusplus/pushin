@@ -34,8 +34,8 @@ export interface SceneSettings {
   layerDepth: number;
   breakpoints: number[];
   inpoints: number[];
-  composition?: CompositionOptions;
   layers: LayerOptions[];
+  composition?: CompositionOptions;
   ratio?: number[];
   autoStart?: string;
 }
