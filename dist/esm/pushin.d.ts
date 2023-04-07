@@ -10,6 +10,7 @@ import PushInBase from './pushInBase';
  */
 export declare class PushIn extends PushInBase {
     container: HTMLElement;
+    options: PushInOptions;
     scene: PushInScene;
     private pushinDebug?;
     target?: PushInTarget;

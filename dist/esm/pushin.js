@@ -429,16 +429,26 @@ class PushInLayer extends PushInBase {
 class PushInScene extends PushInBase {
     /* istanbul ignore next */
     constructor(pushin) {
-        var _a;
+        var _a, _b, _c, _d;
         super();
         this.pushin = pushin;
-        this.settings = pushin.settings.scene;
-        this.layerDepth = ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.layerDepth) || 1000;
+        const options = (_b = (_a = pushin.options) === null || _a === void 0 ? void 0 : _a.scene) !== null && _b !== void 0 ? _b : {};
+        this.settings = {
+            layerDepth: (options === null || options === void 0 ? void 0 : options.layerDepth) || 1000,
+            breakpoints: (options === null || options === void 0 ? void 0 : options.breakpoints) || [],
+            inpoints: (options === null || options === void 0 ? void 0 : options.inpoints) || [],
+            composition: (_c = pushin.options) === null || _c === void 0 ? void 0 : _c.composition,
+            layers: ((_d = pushin.options) === null || _d === void 0 ? void 0 : _d.layers) || [],
+            ratio: options === null || options === void 0 ? void 0 : options.ratio,
+            autoStart: options === null || options === void 0 ? void 0 : options.autoStart,
+        };
+        this.layerDepth = this.settings.layerDepth;
         this.layers = [];
     }
     /* istanbul ignore next */
     start() {
         this.setContainer();
+        this.setAutoStart();
         this.setSceneClasses();
         this.setComposition();
         this.setBreakpoints();
@@ -462,6 +472,21 @@ class PushInScene extends PushInBase {
                 this.pushin.container.innerHTML = this.container.innerHTML;
             });
         }
+    }
+    /**
+     * Get the AutoStart option if provided.
+     *
+     * Choices:
+     * - scroll (default)    Start effect on scroll.
+     * - screen-bottom       Start effect when target element top at viewport bottom.
+     * - screen-top          Start effect when target element top at viewport top.
+     */
+    setAutoStart() {
+        let autoStart = (this.getStringOption('autoStart', this.pushin.container));
+        if (autoStart !== 'screen-bottom' && autoStart !== 'screen-top') {
+            autoStart = 'scroll';
+        }
+        this.settings.autoStart = autoStart;
     }
     /**
      * Setup composition for the scene.
@@ -562,14 +587,22 @@ class PushInScene extends PushInBase {
      * @returns {number[]}
      */
     getInpoints() {
-        var _a, _b;
+        var _a, _b, _c, _d;
         let inpoints = [this.getTop()];
+        const containerTop = this.container.getBoundingClientRect().top +
+            document.documentElement.scrollTop;
         if (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
             const pushInFrom = (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]);
             inpoints.push(parseInt(pushInFrom, 10));
         }
-        else if (((_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+        else if (((_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) && ((_b = this.settings) === null || _b === void 0 ? void 0 : _b.inpoints.length) > 0) {
             inpoints = this.settings.inpoints;
+        }
+        else if (((_c = this.settings) === null || _c === void 0 ? void 0 : _c.autoStart) === 'screen-bottom') {
+            inpoints = [containerTop - window.innerHeight];
+        }
+        else if (((_d = this.settings) === null || _d === void 0 ? void 0 : _d.autoStart) === 'screen-top') {
+            inpoints = [containerTop];
         }
         return inpoints;
     }
@@ -674,25 +707,22 @@ const pushInStyles = `.pushin {position: relative;}.pushin-scene {display: flex;
  */
 class PushIn extends PushInBase {
     /* istanbul ignore next */
-    constructor(container, options) {
-        var _a, _b, _c, _d, _e, _f, _g;
+    constructor(container, options = {}) {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         super();
         this.container = container;
+        this.options = options;
         this.scrollY = 0;
         this.lastAnimationFrameId = -1;
         this.cleanupFns = [];
-        options = options !== null && options !== void 0 ? options : {};
         this.settings = {
-            debug: (_a = options === null || options === void 0 ? void 0 : options.debug) !== null && _a !== void 0 ? _a : false,
-            scene: (_b = options === null || options === void 0 ? void 0 : options.scene) !== null && _b !== void 0 ? _b : { breakpoints: [], inpoints: [] },
-            target: (_c = options === null || options === void 0 ? void 0 : options.target) !== null && _c !== void 0 ? _c : undefined,
-            scrollTarget: options === null || options === void 0 ? void 0 : options.scrollTarget,
-            mode: (_d = options === null || options === void 0 ? void 0 : options.mode) !== null && _d !== void 0 ? _d : 'sequential',
+            debug: (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.debug) !== null && _b !== void 0 ? _b : false,
+            target: (_d = (_c = this.options) === null || _c === void 0 ? void 0 : _c.target) !== null && _d !== void 0 ? _d : undefined,
+            scrollTarget: (_e = this.options) === null || _e === void 0 ? void 0 : _e.scrollTarget,
+            mode: (_g = (_f = this.options) === null || _f === void 0 ? void 0 : _f.mode) !== null && _g !== void 0 ? _g : 'sequential',
         };
-        this.settings.scene.composition = (_e = options === null || options === void 0 ? void 0 : options.composition) !== null && _e !== void 0 ? _e : undefined;
-        this.settings.scene.layers = (_f = options === null || options === void 0 ? void 0 : options.layers) !== null && _f !== void 0 ? _f : undefined;
         // Defaults
-        this.settings.debug = (_g = options === null || options === void 0 ? void 0 : options.debug) !== null && _g !== void 0 ? _g : false;
+        this.settings.debug = (_h = options === null || options === void 0 ? void 0 : options.debug) !== null && _h !== void 0 ? _h : false;
     }
     /**
      * Initialize the object to start everything up.

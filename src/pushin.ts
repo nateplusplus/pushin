@@ -22,20 +22,18 @@ export class PushIn extends PushInBase {
   public mode!: string;
 
   /* istanbul ignore next */
-  constructor(public container: HTMLElement, options?: PushInOptions) {
+  constructor(
+    public container: HTMLElement,
+    public options: PushInOptions = {}
+  ) {
     super();
-    options = options ?? {};
 
     this.settings = {
-      debug: options?.debug ?? false,
-      scene: options?.scene ?? { breakpoints: [], inpoints: [] },
-      target: options?.target ?? undefined,
-      scrollTarget: options?.scrollTarget,
-      mode: options?.mode ?? 'sequential',
+      debug: this.options?.debug ?? false,
+      target: this.options?.target ?? undefined,
+      scrollTarget: this.options?.scrollTarget,
+      mode: this.options?.mode ?? 'sequential',
     };
-
-    this.settings.scene!.composition = options?.composition ?? undefined;
-    this.settings.scene!.layers = options?.layers ?? undefined;
 
     // Defaults
     this.settings.debug = options?.debug ?? false;

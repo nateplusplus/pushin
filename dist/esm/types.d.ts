@@ -17,19 +17,29 @@ export interface LayerSettings {
 export interface CompositionOptions {
     ratio?: number[];
 }
-export interface SceneSettings {
+export interface SceneOptions {
     layerDepth?: number;
-    breakpoints: number[];
-    inpoints: number[];
+    breakpoints?: number[];
+    inpoints?: number[];
     composition?: CompositionOptions;
     layers?: LayerOptions[];
     ratio?: number[];
+    autoStart?: string;
+}
+export interface SceneSettings {
+    layerDepth: number;
+    breakpoints: number[];
+    inpoints: number[];
+    composition?: CompositionOptions;
+    layers: LayerOptions[];
+    ratio?: number[];
+    autoStart?: string;
 }
 export interface PushInOptions {
     composition?: CompositionOptions;
     debug?: boolean;
     layers?: LayerOptions[];
-    scene?: SceneSettings;
+    scene?: SceneOptions;
     selector?: string;
     target?: string;
     scrollTarget?: string;
@@ -39,7 +49,6 @@ export interface PushInSettings {
     composition?: CompositionOptions;
     debug?: boolean;
     layers?: LayerOptions[];
-    scene?: SceneSettings;
     selector?: string;
     target?: string;
     scrollTarget?: string;
