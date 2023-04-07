@@ -29,7 +29,7 @@ export class PushInScene extends PushInBase {
       composition: pushin.options?.composition,
       layers: pushin.options?.layers || [],
       ratio: options?.ratio,
-      autoStart: options?.autoStart,
+      autoStart: pushin.options?.autoStart,
     };
 
     this.layerDepth = this.settings.layerDepth;

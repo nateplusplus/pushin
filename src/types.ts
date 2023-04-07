@@ -27,7 +27,6 @@ export interface SceneOptions {
   composition?: CompositionOptions;
   layers?: LayerOptions[];
   ratio?: number[];
-  autoStart?: string;
 }
 
 export interface SceneSettings {
@@ -49,6 +48,7 @@ export interface PushInOptions {
   target?: string;
   scrollTarget?: string;
   mode?: string;
+  autoStart?: string;
 }
 
 export interface PushInSettings {

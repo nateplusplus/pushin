@@ -1,6 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
-import { PushInOptions } from '../dist/esm/types';
 
 export const AutoStart = ({ autoStart, useAttr }) => {
   const pushInContainer = useRef();
@@ -9,9 +8,7 @@ export const AutoStart = ({ autoStart, useAttr }) => {
     const pushIn = new PushIn(pushInContainer.current, {
       target: '#target',
       scrollTarget: 'window',
-      scene: {
-        autoStart,
-      },
+      autoStart,
     });
     pushIn.start();
 
