@@ -20,8 +20,8 @@ export declare class PushInScene extends PushInBase {
      *
      * Choices:
      * - scroll (default)    Start effect on scroll.
-     * - bottom              Start effect when target element top at viewport bottom.
-     * - top                 Start effect when target element top at viewport top.
+     * - screen-bottom       Start effect when target element top at viewport bottom.
+     * - screen-top          Start effect when target element top at viewport top.
      */
     setAutoStart(): void;
     /**

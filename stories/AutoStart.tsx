@@ -1,18 +1,27 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
+import { PushInOptions } from '../dist/esm/types';
 
-export const AutoStart = () => {
+export const AutoStart = ({ autoStart, useAttr }) => {
   const pushInContainer = useRef();
 
   useLayoutEffect(() => {
     const pushIn = new PushIn(pushInContainer.current, {
       target: '#target',
       scrollTarget: 'window',
+      scene: {
+        autoStart,
+      },
     });
     pushIn.start();
 
     return () => pushIn.destroy();
   });
+
+  const pushInAttr = {};
+  if (useAttr) {
+    pushInAttr['data-pushin-auto-start'] = useAttr;
+  }
 
   return (
     <div>
@@ -23,7 +32,7 @@ export const AutoStart = () => {
         }}
       >
         <h1>AutoStart</h1>
-        <p>
+        <p style={{ marginBottom: '80px' }}>
           Scroll down to confirm that the animation starts just before the
           pushIn effect is visible on the screen.
         </p>
@@ -34,7 +43,7 @@ export const AutoStart = () => {
           tenetur cumque tempore porro velit libero odit dolorum eligendi
           maiores, eius magnam.
         </p>
-        <p>
+        <p style={{ marginBottom: '80px' }}>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
           incidunt et harum dignissimos alias similique tempore! Nemo quisquam
           tenetur cumque tempore porro velit libero odit dolorum eligendi
@@ -47,32 +56,37 @@ export const AutoStart = () => {
           tenetur cumque tempore porro velit libero odit dolorum eligendi
           maiores, eius magnam.
         </p>
+        <p style={{ marginBottom: '80px' }}>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
+          incidunt et harum dignissimos alias similique tempore! Nemo quisquam
+          tenetur cumque tempore porro velit libero odit dolorum eligendi
+          maiores, eius magnam.
+        </p>
+        <h2>Lorem Ipsum</h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
           incidunt et harum dignissimos alias similique tempore! Nemo quisquam
           tenetur cumque tempore porro velit libero odit dolorum eligendi
           maiores, eius magnam.
         </p>
+        <p style={{ marginBottom: '80px' }}>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
+          incidunt et harum dignissimos alias similique tempore! Nemo quisquam
+          tenetur cumque tempore porro velit libero odit dolorum eligendi
+          maiores, eius magnam.
+        </p>
       </div>
-      <div id="target" style={{ height: '300px' }}>
-        <div className="pushin" ref={pushInContainer}>
+      <div id="target" style={{ backgroundColor: '#EEE' }}>
+        <div className="pushin" ref={pushInContainer} {...pushInAttr}>
           <div className="pushin-scene">
             <div key="layer1" className="pushin-layer">
-              <span>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              </span>
+              <h2>Slide 1</h2>
             </div>
             <div key="layer2" className="pushin-layer">
-              <span>
-                Mollitia hic non, at tempora saepe doloremque, voluptatem
-                provident.
-              </span>
+              <h2>Slide 2</h2>
             </div>
             <div key="layer3" className="pushin-layer">
-              <span>
-                Reprehenderit nisi perspiciatis facilis sint repudiandae totam
-                praesentium dignissimos consequuntur tenetur.
-              </span>
+              <h2>Slide 3</h2>
             </div>
           </div>
         </div>

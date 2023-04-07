@@ -20,8 +20,19 @@ export class PushInScene extends PushInBase {
   constructor(public pushin: PushIn) {
     super();
 
-    this.settings = pushin.settings.scene!;
-    this.layerDepth = this.settings?.layerDepth || 1000;
+    const options = pushin.options?.scene ?? {};
+
+    this.settings = {
+      layerDepth: options?.layerDepth || 1000,
+      breakpoints: options?.breakpoints || [],
+      inpoints: options?.inpoints || [],
+      composition: pushin.options?.composition,
+      layers: pushin.options?.layers || [],
+      ratio: options?.ratio,
+      autoStart: options?.autoStart,
+    };
+
+    this.layerDepth = this.settings.layerDepth;
     this.layers = [];
   }
 
@@ -62,12 +73,14 @@ export class PushInScene extends PushInBase {
    *
    * Choices:
    * - scroll (default)    Start effect on scroll.
-   * - bottom              Start effect when target element top at viewport bottom.
-   * - top                 Start effect when target element top at viewport top.
+   * - screen-bottom       Start effect when target element top at viewport bottom.
+   * - screen-top          Start effect when target element top at viewport top.
    */
   setAutoStart(): void {
-    let autoStart = <string>this.getStringOption('auto-start');
-    if (autoStart !== 'bottom' && autoStart !== 'top') {
+    let autoStart = <string>(
+      this.getStringOption('autoStart', this.pushin.container)
+    );
+    if (autoStart !== 'screen-bottom' && autoStart !== 'screen-top') {
       autoStart = 'scroll';
     }
 
@@ -189,25 +202,20 @@ export class PushInScene extends PushInBase {
    */
   getInpoints(): number[] {
     let inpoints = <number[]>[this.getTop()];
+    const containerTop =
+      this.container!.getBoundingClientRect().top +
+      document.documentElement.scrollTop;
 
     if (this.container!.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       const pushInFrom = <string>(
         this.container!.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
       );
       inpoints.push(parseInt(pushInFrom, 10));
-    } else if (this.settings?.inpoints?.length > 0) {
+    } else if (this.settings?.inpoints && this.settings?.inpoints.length > 0) {
       inpoints = this.settings.inpoints;
-    } else if (this.settings?.autoStart === 'bottom') {
-      // Calculate based on target element top and bottom of viewport
-      const containerTop =
-        this.container!.getBoundingClientRect().top +
-        document.documentElement.scrollTop;
+    } else if (this.settings?.autoStart === 'screen-bottom') {
       inpoints = [containerTop - window.innerHeight];
-    } else if (this.settings?.autoStart === 'top') {
-      // Calculate based on target element top and top of viewport
-      const containerTop =
-        this.container!.getBoundingClientRect().top +
-        document.documentElement.scrollTop;
+    } else if (this.settings?.autoStart === 'screen-top') {
       inpoints = [containerTop];
     }
 

@@ -16,6 +16,21 @@ const Template: ComponentStory<typeof AutoStart> = args => (
   <AutoStart {...args} />
 );
 
-export const Enabled = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Enabled.args = {};
+export const Default = Template.bind({});
+Default.args = {};
+
+export const ScreenTop = Template.bind({});
+ScreenTop.args = {
+  autoStart: 'screen-top',
+};
+
+export const ScreenBottom = Template.bind({});
+ScreenBottom.args = {
+  autoStart: 'screen-bottom',
+};
+
+export const ScreenTopAttr = Template.bind({});
+ScreenTopAttr.args = {
+  autoStart: 'screen-bottom',
+  useAttr: 'screen-top',
+};
