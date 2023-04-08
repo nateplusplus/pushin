@@ -201,7 +201,10 @@ class PushInLayer extends PushInBase {
             // not yet compatible with breakpoints. Fall back to first value only.
             [option] = option;
         }
-        const start = option;
+        let start = option;
+        if (!start && this.scene.getMode() === 'continuous') {
+            start = -1;
+        }
         return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
     }
     /**
@@ -215,7 +218,10 @@ class PushInLayer extends PushInBase {
             // not yet compatible with breakpoints. Fall back to first value only.
             [option] = option;
         }
-        const end = option;
+        let end = option;
+        if (!end && this.scene.getMode() === 'continuous') {
+            end = -1;
+        }
         return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
     }
     /**

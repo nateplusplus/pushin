@@ -1,14 +1,14 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { PushIn } from '../dist/esm/pushin';
 
-export const AutoStart = ({ autoStart, useAttr }) => {
+export const AutoStart = ({ settings, useAttr }) => {
   const pushInContainer = useRef();
 
   useLayoutEffect(() => {
     const pushIn = new PushIn(pushInContainer.current, {
       target: '#target',
       scrollTarget: 'window',
-      autoStart,
+      ...settings,
     });
     pushIn.start();
 

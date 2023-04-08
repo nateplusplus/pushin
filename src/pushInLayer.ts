@@ -95,7 +95,11 @@ export class PushInLayer extends PushInBase {
       [option] = option;
     }
 
-    const start = option as number | null;
+    let start = option as number | null;
+
+    if (!start && this.scene.getMode() === 'continuous') {
+      start = -1;
+    }
 
     return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
   }
@@ -113,7 +117,11 @@ export class PushInLayer extends PushInBase {
       [option] = option;
     }
 
-    const end = option as number | null;
+    let end = option as number | null;
+
+    if (!end && this.scene.getMode() === 'continuous') {
+      end = -1;
+    }
 
     return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
   }

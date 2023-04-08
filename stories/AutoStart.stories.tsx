@@ -21,16 +21,30 @@ Default.args = {};
 
 export const ScreenTop = Template.bind({});
 ScreenTop.args = {
-  autoStart: 'screen-top',
+  settings: {
+    autoStart: 'screen-top',
+  },
 };
 
 export const ScreenBottom = Template.bind({});
 ScreenBottom.args = {
-  autoStart: 'screen-bottom',
+  settings: {
+    autoStart: 'screen-bottom',
+  },
 };
 
 export const ScreenTopAttr = Template.bind({});
 ScreenTopAttr.args = {
-  autoStart: 'screen-bottom',
+  settings: {
+    autoStart: 'screen-bottom',
+  },
   useAttr: 'screen-top',
+};
+
+export const ScreenTopContinuous = Template.bind({});
+ScreenTopContinuous.args = {
+  settings: {
+    autoStart: 'screen-top',
+    mode: 'continuous',
+  },
 };
