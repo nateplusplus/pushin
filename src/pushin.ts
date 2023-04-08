@@ -193,7 +193,10 @@ export class PushIn extends PushInBase {
 
         const layer = this.scene.layers[index];
         if (layer) {
-          const scrollTo = layer.params.inpoint + layer.params.transitionStart;
+          let scrollTo = layer.params.inpoint + layer.params.transitionStart;
+          if (layer.params.tabInpoint) {
+            scrollTo = layer.params.tabInpoint;
+          }
 
           if (this.target!.scrollTarget === 'window') {
             window.scrollTo(0, scrollTo);
