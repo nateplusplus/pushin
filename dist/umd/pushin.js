@@ -157,8 +157,9 @@ License: MIT */
             const inpoints = this.getInpoints(this.container, this.index);
             const outpoints = this.getOutpoints(this.container, inpoints[0]);
             const speed = this.getSpeed(this.container);
+            const tabInpoints = this.getTabInpoints(inpoints);
             this.originalScale = this.getElementScaleX(this.container);
-            this.ref = { inpoints, outpoints, speed };
+            this.ref = { inpoints, outpoints, speed, tabInpoints };
             this.setA11y();
             this.setLayerParams();
         }
@@ -303,6 +304,7 @@ License: MIT */
                 depth: this.getDepth(),
                 inpoint: this.getInpoint(this.ref.inpoints),
                 outpoint: this.getOutpoint(this.ref.outpoints),
+                tabInpoint: this.getTabInpoint(this.ref.tabInpoints),
                 overlap: this.getOverlap(),
                 speed: this.ref.speed,
                 transitions: this.getTransitions(),
@@ -436,6 +438,29 @@ License: MIT */
             else {
                 this.container.classList.remove('pushin-layer--visible');
             }
+        }
+        /**
+         * Set tabInpoints for this layer.
+         */
+        getTabInpoints(inpoints) {
+            let tabInpoints = this.getNumberOption('tabInpoints');
+            if (!tabInpoints) {
+                tabInpoints = inpoints.map(inpoint => inpoint + this.getTransitionStart());
+            }
+            if (typeof tabInpoints === 'number') {
+                tabInpoints = [tabInpoints];
+            }
+            return tabInpoints;
+        }
+        /**
+         * Get the current tabInpoint for a layer,
+         * depending on window breakpoint.
+         */
+        /* istanbul ignore next */
+        getTabInpoint(tabInpoints) {
+            const { breakpoints } = this.scene.settings;
+            const breakpoint = this.scene.getBreakpointIndex(breakpoints);
+            return tabInpoints[breakpoint] || tabInpoints[0];
         }
     }
 
@@ -857,7 +882,10 @@ License: MIT */
                     const index = parseInt(target.getAttribute(PUSH_IN_LAYER_INDEX_ATTRIBUTE), 10);
                     const layer = this.scene.layers[index];
                     if (layer) {
-                        const scrollTo = layer.params.inpoint + layer.params.transitionStart;
+                        let scrollTo = layer.params.inpoint + layer.params.transitionStart;
+                        if (layer.params.tabInpoint) {
+                            scrollTo = layer.params.tabInpoint;
+                        }
                         if (this.target.scrollTarget === 'window') {
                             window.scrollTo(0, scrollTo);
                         }

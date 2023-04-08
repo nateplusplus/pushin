@@ -5,6 +5,7 @@ export interface LayerOptions {
     transitions?: boolean;
     transitionStart?: number;
     transitionEnd?: number;
+    tabInpoints?: number[];
 }
 export interface LayerSettings {
     inpoints: number[];
@@ -67,11 +68,13 @@ export interface LayerRef {
     inpoints: number[];
     outpoints: number[];
     speed: number;
+    tabInpoints: number[];
 }
 export interface LayerParams {
     depth: number;
     inpoint: number;
     outpoint: number;
+    tabInpoint: number;
     overlap: number;
     speed: number;
     transitions: boolean;

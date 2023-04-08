@@ -100,4 +100,13 @@ export declare class PushInLayer extends PushInBase {
      * Set a css class depending on current opacity.
      */
     setLayerVisibility(): void;
+    /**
+     * Set tabInpoints for this layer.
+     */
+    getTabInpoints(inpoints: number[]): number[];
+    /**
+     * Get the current tabInpoint for a layer,
+     * depending on window breakpoint.
+     */
+    private getTabInpoint;
 }

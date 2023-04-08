@@ -29,9 +29,10 @@ export class PushInLayer extends PushInBase {
     const inpoints = this.getInpoints(this.container, this.index);
     const outpoints = this.getOutpoints(this.container, inpoints[0]);
     const speed = this.getSpeed(this.container);
+    const tabInpoints = this.getTabInpoints(inpoints);
 
     this.originalScale = this.getElementScaleX(this.container);
-    this.ref = { inpoints, outpoints, speed };
+    this.ref = { inpoints, outpoints, speed, tabInpoints };
 
     this.setA11y();
     this.setLayerParams();
@@ -199,6 +200,7 @@ export class PushInLayer extends PushInBase {
       depth: this.getDepth(),
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
+      tabInpoint: this.getTabInpoint(this.ref.tabInpoints),
       overlap: this.getOverlap(),
       speed: this.ref.speed,
       transitions: this.getTransitions(),
@@ -368,5 +370,32 @@ export class PushInLayer extends PushInBase {
     } else {
       this.container.classList.remove('pushin-layer--visible');
     }
+  }
+
+  /**
+   * Set tabInpoints for this layer.
+   */
+  getTabInpoints(inpoints: number[]): number[] {
+    let tabInpoints = this.getNumberOption('tabInpoints');
+    if (!tabInpoints) {
+      tabInpoints = inpoints.map(
+        inpoint => inpoint + this.getTransitionStart()
+      );
+    }
+    if (typeof tabInpoints === 'number') {
+      tabInpoints = [tabInpoints];
+    }
+    return tabInpoints;
+  }
+
+  /**
+   * Get the current tabInpoint for a layer,
+   * depending on window breakpoint.
+   */
+  /* istanbul ignore next */
+  private getTabInpoint(tabInpoints: number[]): number {
+    const { breakpoints } = this.scene.settings;
+    const breakpoint = this.scene.getBreakpointIndex(breakpoints);
+    return tabInpoints[breakpoint] || tabInpoints[0];
   }
 }
