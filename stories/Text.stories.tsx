@@ -31,11 +31,11 @@ FormattedText.args = {
 export const PlainText = Template.bind({});
 PlainText.args = {
   layer1:
-    'This example demonstrates the simplest, zero-configuration setup for pushin.js.',
+    'This example demonstrates the simplest, zero-configuration setup for PushIn.js.',
   layer2:
     'These layers are added to the HTML without any parameters and minimal CSS.',
   layer3:
-    'Pushin.js has configured the timing of this effect automatically to adjust for the number of layers.',
+    'PushIn.js has configured the timing of this effect automatically to adjust for the number of layers.',
   layer4:
     'The scroll length increases to accommodate all layers in an evenly-spaced animation.',
 };

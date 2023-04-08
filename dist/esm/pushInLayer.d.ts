@@ -11,6 +11,11 @@ export declare class PushInLayer extends PushInBase {
     settings: LayerSettings;
     constructor(container: HTMLElement, index: number, scene: PushInScene, options: LayerOptions);
     /**
+     * Set Accessibility features.
+     * Ensures layers are tabbable and their role is understood by screenreaders.
+     */
+    private setA11y;
+    /**
      * Get the transitions setting, either from the API or HTML attributes.
      *
      * @return {boolean}

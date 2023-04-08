@@ -33,15 +33,21 @@ export class PushInLayer extends PushInBase {
     this.originalScale = this.getElementScaleX(this.container);
     this.ref = { inpoints, outpoints, speed };
 
+    this.setA11y();
+    this.setLayerParams();
+  }
+
+  /**
+   * Set Accessibility features.
+   * Ensures layers are tabbable and their role is understood by screenreaders.
+   */
+  private setA11y() {
     this.container.setAttribute(
       'data-pushin-layer-index',
       this.index.toString()
     );
-
-    // Set tabindex so we can sync scrolling with screenreaders
     this.container.setAttribute('tabindex', '0');
-
-    this.setLayerParams();
+    this.container.setAttribute('aria-role', 'composite');
   }
 
   /**

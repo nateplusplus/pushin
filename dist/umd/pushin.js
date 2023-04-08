@@ -159,10 +159,17 @@ License: MIT */
             const speed = this.getSpeed(this.container);
             this.originalScale = this.getElementScaleX(this.container);
             this.ref = { inpoints, outpoints, speed };
-            this.container.setAttribute('data-pushin-layer-index', this.index.toString());
-            // Set tabindex so we can sync scrolling with screenreaders
-            this.container.setAttribute('tabindex', '0');
+            this.setA11y();
             this.setLayerParams();
+        }
+        /**
+         * Set Accessibility features.
+         * Ensures layers are tabbable and their role is understood by screenreaders.
+         */
+        setA11y() {
+            this.container.setAttribute('data-pushin-layer-index', this.index.toString());
+            this.container.setAttribute('tabindex', '0');
+            this.container.setAttribute('aria-role', 'composite');
         }
         /**
          * Get the transitions setting, either from the API or HTML attributes.
