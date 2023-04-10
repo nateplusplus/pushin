@@ -245,26 +245,12 @@ export class PushInLayer extends PushInBase {
   }
 
   /**
-   * Whether or not a layer should currently be zooming.
+   * Whether or not a layer should currently be animated.
    */
   private isActive(): boolean {
-    const { inpoint } = this.params;
-    const { outpoint } = this.params;
-
-    let active = true;
-
-    if (this.params.transitions) {
-      const min = this.scene.pushin.scrollY >= inpoint;
-      const max = this.scene.pushin.scrollY <= outpoint;
-      active = min && max;
-      if (!active && this.params.transitionStart < 0 && !min) {
-        active = true;
-      } else if (!active && this.params.transitionEnd < 0 && !max) {
-        active = true;
-      }
-    }
-
-    return active;
+    const min = this.scene.pushin.scrollY >= this.params.inpoint;
+    const max = this.scene.pushin.scrollY <= this.params.outpoint;
+    return min && max;
   }
 
   /**
@@ -330,7 +316,7 @@ export class PushInLayer extends PushInBase {
       opacity = 1;
     } else if (isLast && this.scene.pushin.scrollY > outpoint) {
       opacity = 1;
-    } else if (this.isActive()) {
+    } else if (!this.params.transitions || this.isActive()) {
       let inpointDistance =
         Math.max(
           Math.min(

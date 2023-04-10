@@ -77,13 +77,13 @@ export const AutoStart = ({ settings, useAttr }) => {
         <div className="pushin" ref={pushInContainer} {...pushInAttr}>
           <div className="pushin-scene">
             <div key="layer1" className="pushin-layer">
-              <h2>Slide 1</h2>
+              <h2 style={{ position: 'absolute', left: '35%' }}>Slide 1</h2>
             </div>
             <div key="layer2" className="pushin-layer">
               <h2>Slide 2</h2>
             </div>
             <div key="layer3" className="pushin-layer">
-              <h2>Slide 3</h2>
+              <h2 style={{ position: 'absolute', left: '60%' }}>Slide 3</h2>
             </div>
           </div>
         </div>

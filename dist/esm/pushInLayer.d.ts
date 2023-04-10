@@ -68,7 +68,7 @@ export declare class PushInLayer extends PushInBase {
      */
     private getElementScaleX;
     /**
-     * Whether or not a layer should currently be zooming.
+     * Whether or not a layer should currently be animated.
      */
     private isActive;
     /**
