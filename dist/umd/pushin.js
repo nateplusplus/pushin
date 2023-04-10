@@ -210,16 +210,20 @@ License: MIT */
          * @returns number
          */
         getTransitionStart() {
+            const transitions = this.getTransitions();
             let option = this.getNumberOption('transitionStart');
             if (option !== null && typeof option !== 'number') {
                 // not yet compatible with breakpoints. Fall back to first value only.
                 [option] = option;
             }
             let start = option;
-            if (!start && this.scene.getMode() === 'continuous') {
+            if (!start && !transitions && this.scene.getMode() === 'continuous') {
                 start = -1;
             }
-            return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
+            else {
+                start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+            }
+            return start;
         }
         /**
          * Get the transitionEnd setting, either from the API or HTML attributes.
@@ -227,16 +231,20 @@ License: MIT */
          * @returns number
          */
         getTransitionEnd() {
+            const transitions = this.getTransitions();
             let option = this.getNumberOption('transitionEnd');
             if (option !== null && typeof option !== 'number') {
                 // not yet compatible with breakpoints. Fall back to first value only.
                 [option] = option;
             }
             let end = option;
-            if (!end && this.scene.getMode() === 'continuous') {
+            if (!end && !transitions && this.scene.getMode() === 'continuous') {
                 end = -1;
             }
-            return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
+            else {
+                end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+            }
+            return end;
         }
         /**
          * Get all inpoints for the layer.

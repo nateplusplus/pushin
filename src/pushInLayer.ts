@@ -95,6 +95,7 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionStart(): number {
+    const transitions = this.getTransitions();
     let option = this.getNumberOption('transitionStart');
 
     if (option !== null && typeof option !== 'number') {
@@ -104,11 +105,13 @@ export class PushInLayer extends PushInBase {
 
     let start = option as number | null;
 
-    if (!start && this.scene.getMode() === 'continuous') {
+    if (!start && !transitions && this.scene.getMode() === 'continuous') {
       start = -1;
+    } else {
+      start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
     }
 
-    return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
+    return start;
   }
 
   /**
@@ -117,6 +120,7 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionEnd(): number {
+    const transitions = this.getTransitions();
     let option = this.getNumberOption('transitionEnd');
 
     if (option !== null && typeof option !== 'number') {
@@ -126,11 +130,13 @@ export class PushInLayer extends PushInBase {
 
     let end = option as number | null;
 
-    if (!end && this.scene.getMode() === 'continuous') {
+    if (!end && !transitions && this.scene.getMode() === 'continuous') {
       end = -1;
+    } else {
+      end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
     }
 
-    return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
+    return end;
   }
 
   /**
