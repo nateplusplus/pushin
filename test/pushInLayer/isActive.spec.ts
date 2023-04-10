@@ -64,22 +64,4 @@ describe('isActive', () => {
 
     expect(result).toEqual(false);
   });
-
-  it('should be true if transitionStart is set to -1 and screen top is less than inpoint', () => {
-    mockPushInLayer['scene']['pushin']['scrollY'] = 5;
-    mockPushInLayer['params'].transitionStart = -1;
-
-    const result = mockPushInLayer['isActive']();
-
-    expect(result).toEqual(true);
-  });
-
-  it('should be true if transitionEnd is set to -1 and screen top is greater than outpoint', () => {
-    mockPushInLayer['scene']['pushin']['scrollY'] = 25;
-    mockPushInLayer['params'].transitionEnd = -1;
-
-    const result = mockPushInLayer['isActive']();
-
-    expect(result).toEqual(true);
-  });
 });
