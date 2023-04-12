@@ -275,6 +275,10 @@ class PushInLayer extends PushInBase {
         else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.outpoints) {
             outpoints = this.settings.outpoints;
         }
+        else if (this.scene.getMode() === 'continuous') {
+            const { height } = this.scene.pushin.container.getBoundingClientRect();
+            outpoints = [height];
+        }
         return outpoints;
     }
     /**
@@ -578,6 +582,7 @@ class PushInScene extends PushInBase {
      */
     getLayers() {
         const layers = Array.from(this.container.getElementsByClassName('pushin-layer'));
+        this.layerCount = layers.length;
         layers.forEach((element, index) => {
             var _a;
             let options = {};
@@ -926,7 +931,7 @@ class PushIn extends PushInBase {
         this.scene.layers.forEach(layer => {
             maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
         });
-        this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint + this.target.height)}px`;
+        this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint)}px`;
     }
     loadStyles() {
         const stylesheet = document.querySelector('style#pushin-styles');

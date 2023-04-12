@@ -172,6 +172,9 @@ export class PushInLayer extends PushInBase {
       outpoints = values.map(value => parseInt(value.trim(), 10));
     } else if (this.settings?.outpoints) {
       outpoints = this.settings.outpoints;
+    } else if (this.scene.getMode() === 'continuous') {
+      const { height } = this.scene.pushin.container!.getBoundingClientRect();
+      outpoints = [height];
     }
 
     return outpoints;

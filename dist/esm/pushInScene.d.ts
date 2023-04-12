@@ -9,6 +9,7 @@ export declare class PushInScene extends PushInBase {
     layerDepth: number;
     settings: SceneSettings;
     composition?: PushInComposition;
+    layerCount: number;
     constructor(pushin: PushIn);
     start(): void;
     /**

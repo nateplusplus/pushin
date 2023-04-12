@@ -252,7 +252,7 @@ export class PushIn extends PushInBase {
 
     this.container.style.height = `${Math.max(
       parseFloat(containerHeight),
-      maxOutpoint + this.target!.height
+      maxOutpoint
     )}px`;
   }
 

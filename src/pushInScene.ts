@@ -15,6 +15,7 @@ export class PushInScene extends PushInBase {
   public layerDepth: number;
   public settings: SceneSettings;
   public composition?: PushInComposition;
+  public layerCount!: number;
 
   /* istanbul ignore next */
   constructor(public pushin: PushIn) {
@@ -153,6 +154,8 @@ export class PushInScene extends PushInBase {
     const layers = Array.from(
       this.container!.getElementsByClassName('pushin-layer')
     );
+
+    this.layerCount = layers.length;
 
     layers.forEach((element: Element, index) => {
       let options = <LayerOptions>{};
