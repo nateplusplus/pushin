@@ -926,12 +926,19 @@ class PushIn extends PushInBase {
      * the larger of the two numbers will be used.
      */
     setScrollLength() {
-        const containerHeight = getComputedStyle(this.container).height.replace('px', '');
+        var _a, _b;
+        // Get the largest layer outpoint and add up overlap values.
         let maxOutpoint = 0;
         this.scene.layers.forEach(layer => {
             maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
         });
-        this.container.style.height = `${Math.max(parseFloat(containerHeight), maxOutpoint)}px`;
+        // Calculate height with greatest outpoint + target height.
+        const targetHeight = (_b = (_a = this.target) === null || _a === void 0 ? void 0 : _a.height) !== null && _b !== void 0 ? _b : 0;
+        const calculated = maxOutpoint + targetHeight;
+        // Get the existing container height.
+        const height = parseFloat(getComputedStyle(this.container).height.replace('px', ''));
+        // Use the largest value between existing container height, largest outpoint or calculated height.
+        this.container.style.height = `${Math.max(height, calculated)}px`;
     }
     loadStyles() {
         const stylesheet = document.querySelector('style#pushin-styles');

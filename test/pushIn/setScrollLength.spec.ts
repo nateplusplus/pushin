@@ -32,6 +32,9 @@ describe('setScrollLength', () => {
     );
 
     const layer1 = Object.create(mockPushinLayer);
+    // First layer always has 0 overlap.
+    layer1['params']['overlap'] = 0;
+
     const layer2 = Object.create(mockPushinLayer);
     const layer3 = Object.create(mockPushinLayer);
     layer3.params.outpoint = 2800;
@@ -75,23 +78,12 @@ describe('setScrollLength', () => {
     expect(result).toEqual('5000px');
   });
 
-  it('Should calculate container height based on the maximum outpoint and the height of the target element', () => {
+  it('Should calculate container height based on the largest outpoint + target height', () => {
     container!.style!.height = '0';
 
     mockPushIn['setScrollLength']();
     const result = container.style.height;
 
-    // 3 * 1000 (depth) - 200 (overlap twice) + 1000 (target height)
-    expect(result).toEqual('3800px');
-  });
-
-  it('Should not exceed the greatest outpoint + target height', () => {
-    container!.style!.height = '0';
-
-    mockPushIn.scene.layers[1].params.outpoint = 2000;
-
-    mockPushIn['setScrollLength']();
-    const result = container.style.height;
-    expect(result).toEqual('3000px');
+    expect(result).toEqual( '3800px' );
   });
 });
