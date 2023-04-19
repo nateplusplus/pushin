@@ -15,6 +15,8 @@ export class PushInLayer extends PushInBase {
   private originalScale: number;
   private ref: LayerRef;
   public settings: LayerSettings;
+  public isFirst: boolean;
+  public isLast: boolean;
 
   /* istanbul ignore next */
   constructor(
@@ -26,13 +28,21 @@ export class PushInLayer extends PushInBase {
     super();
     this.settings = options;
 
+    this.isFirst = options.isFirst;
+    this.isLast = options.isLast;
+
     const inpoints = this.getInpoints(this.container, this.index);
     const outpoints = this.getOutpoints(this.container, inpoints[0]);
     const speed = this.getSpeed(this.container);
     const tabInpoints = this.getTabInpoints(inpoints);
 
     this.originalScale = this.getElementScaleX(this.container);
-    this.ref = { inpoints, outpoints, speed, tabInpoints };
+    this.ref = {
+      inpoints,
+      outpoints,
+      speed,
+      tabInpoints,
+    };
 
     this.setA11y();
     this.setLayerParams();
@@ -78,8 +88,8 @@ export class PushInLayer extends PushInBase {
 
     if (this.index > 0) {
       const prevLayer = this.scene.layers[this.index - 1];
-      const prevTranEnd = prevLayer.params.transitionEnd;
-      const curTranStart = this.getTransitionStart();
+      const prevTranEnd = Math.max(0, prevLayer.params.transitionEnd);
+      const curTranStart = Math.max(0, this.getTransitionStart());
 
       const average = (curTranStart + prevTranEnd) / 2;
 
@@ -107,7 +117,9 @@ export class PushInLayer extends PushInBase {
 
     if (!start && !transitions && this.scene.getMode() === 'continuous') {
       start = -1;
-    } else {
+    } else if (!start && this.isFirst) {
+      start = -1;
+    } else if (!start) {
       start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
     }
 
@@ -132,7 +144,9 @@ export class PushInLayer extends PushInBase {
 
     if (!end && !transitions && this.scene.getMode() === 'continuous') {
       end = -1;
-    } else {
+    } else if (!end && this.isLast) {
+      end = -1;
+    } else if (!end) {
       end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
     }
 
@@ -321,11 +335,19 @@ export class PushInLayer extends PushInBase {
     const { inpoint } = this.params;
     const { outpoint } = this.params;
 
-    if (isFirst && this.scene.pushin.scrollY < inpoint) {
+    if (
+      isFirst &&
+      this.scene.pushin.scrollY < inpoint &&
+      this.params.transitionStart === -1
+    ) {
       opacity = 1;
-    } else if (isLast && this.scene.pushin.scrollY > outpoint) {
+    } else if (
+      isLast &&
+      this.scene.pushin.scrollY > outpoint &&
+      this.params.transitionEnd === -1
+    ) {
       opacity = 1;
-    } else if (!this.params.transitions || this.isActive()) {
+    } else if (this.isVisible() || this.isActive()) {
       let inpointDistance =
         Math.max(
           Math.min(
@@ -335,7 +357,7 @@ export class PushInLayer extends PushInBase {
           0
         ) / this.params.transitionStart;
 
-      if (isFirst || this.params.transitionStart < 0) {
+      if (this.params.transitionStart < 0) {
         inpointDistance = 1;
       }
 
@@ -348,7 +370,7 @@ export class PushInLayer extends PushInBase {
           0
         ) / this.params.transitionEnd;
 
-      if (isLast || this.params.transitionEnd < 0) {
+      if (this.params.transitionEnd < 0) {
         outpointDistance = 1;
       }
 
@@ -362,6 +384,29 @@ export class PushInLayer extends PushInBase {
     }
 
     this.container.style.opacity = opacity.toString();
+  }
+
+  /**
+   * Check if the layer should be visible.
+   *
+   * @returns boolean
+   */
+  isVisible(): boolean {
+    const { scrollY } = this.scene.pushin;
+    const { transitionStart, transitionEnd, transitions } = this.params;
+    let isVisible = false;
+
+    if (!transitions) {
+      isVisible = true;
+    } else if (this.params.inpoint > scrollY && transitionStart === -1) {
+      isVisible = true;
+    } else if (this.params.outpoint < scrollY && transitionEnd === -1) {
+      isVisible = true;
+    } else if (this.isActive()) {
+      isVisible = true;
+    }
+
+    return isVisible;
   }
 
   /**

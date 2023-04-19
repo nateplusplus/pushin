@@ -9,6 +9,8 @@ export declare class PushInLayer extends PushInBase {
     private originalScale;
     private ref;
     settings: LayerSettings;
+    isFirst: boolean;
+    isLast: boolean;
     constructor(container: HTMLElement, index: number, scene: PushInScene, options: LayerOptions);
     /**
      * Set Accessibility features.
@@ -96,6 +98,12 @@ export declare class PushInLayer extends PushInBase {
      * as the user scrolls.
      */
     setLayerStyle(): void;
+    /**
+     * Check if the layer should be visible.
+     *
+     * @returns boolean
+     */
+    isVisible(): boolean;
     /**
      * Set a css class depending on current opacity.
      */

@@ -148,12 +148,19 @@ class PushInLayer extends PushInBase {
         this.index = index;
         this.scene = scene;
         this.settings = options;
+        this.isFirst = options.isFirst;
+        this.isLast = options.isLast;
         const inpoints = this.getInpoints(this.container, this.index);
         const outpoints = this.getOutpoints(this.container, inpoints[0]);
         const speed = this.getSpeed(this.container);
         const tabInpoints = this.getTabInpoints(inpoints);
         this.originalScale = this.getElementScaleX(this.container);
-        this.ref = { inpoints, outpoints, speed, tabInpoints };
+        this.ref = {
+            inpoints,
+            outpoints,
+            speed,
+            tabInpoints,
+        };
         this.setA11y();
         this.setLayerParams();
     }
@@ -191,8 +198,8 @@ class PushInLayer extends PushInBase {
         let overlap = 0;
         if (this.index > 0) {
             const prevLayer = this.scene.layers[this.index - 1];
-            const prevTranEnd = prevLayer.params.transitionEnd;
-            const curTranStart = this.getTransitionStart();
+            const prevTranEnd = Math.max(0, prevLayer.params.transitionEnd);
+            const curTranStart = Math.max(0, this.getTransitionStart());
             const average = (curTranStart + prevTranEnd) / 2;
             overlap = Math.min(average * 0.5, curTranStart);
         }
@@ -214,7 +221,10 @@ class PushInLayer extends PushInBase {
         if (!start && !transitions && this.scene.getMode() === 'continuous') {
             start = -1;
         }
-        else {
+        else if (!start && this.isFirst) {
+            start = -1;
+        }
+        else if (!start) {
             start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
         }
         return start;
@@ -235,7 +245,10 @@ class PushInLayer extends PushInBase {
         if (!end && !transitions && this.scene.getMode() === 'continuous') {
             end = -1;
         }
-        else {
+        else if (!end && this.isLast) {
+            end = -1;
+        }
+        else if (!end) {
             end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
         }
         return end;
@@ -404,19 +417,23 @@ class PushInLayer extends PushInBase {
         const isLast = this.index + 1 === this.scene.layers.length;
         const { inpoint } = this.params;
         const { outpoint } = this.params;
-        if (isFirst && this.scene.pushin.scrollY < inpoint) {
+        if (isFirst &&
+            this.scene.pushin.scrollY < inpoint &&
+            this.params.transitionStart === -1) {
             opacity = 1;
         }
-        else if (isLast && this.scene.pushin.scrollY > outpoint) {
+        else if (isLast &&
+            this.scene.pushin.scrollY > outpoint &&
+            this.params.transitionEnd === -1) {
             opacity = 1;
         }
-        else if (!this.params.transitions || this.isActive()) {
+        else if (this.isVisible() || this.isActive()) {
             let inpointDistance = Math.max(Math.min(this.scene.pushin.scrollY - inpoint, this.params.transitionStart), 0) / this.params.transitionStart;
-            if (isFirst || this.params.transitionStart < 0) {
+            if (this.params.transitionStart < 0) {
                 inpointDistance = 1;
             }
             let outpointDistance = Math.max(Math.min(outpoint - this.scene.pushin.scrollY, this.params.transitionEnd), 0) / this.params.transitionEnd;
-            if (isLast || this.params.transitionEnd < 0) {
+            if (this.params.transitionEnd < 0) {
                 outpointDistance = 1;
             }
             opacity = this.params.transitions
@@ -427,6 +444,29 @@ class PushInLayer extends PushInBase {
             this.setScale(this.getScaleValue(this));
         }
         this.container.style.opacity = opacity.toString();
+    }
+    /**
+     * Check if the layer should be visible.
+     *
+     * @returns boolean
+     */
+    isVisible() {
+        const { scrollY } = this.scene.pushin;
+        const { transitionStart, transitionEnd, transitions } = this.params;
+        let isVisible = false;
+        if (!transitions) {
+            isVisible = true;
+        }
+        else if (this.params.inpoint > scrollY && transitionStart === -1) {
+            isVisible = true;
+        }
+        else if (this.params.outpoint < scrollY && transitionEnd === -1) {
+            isVisible = true;
+        }
+        else if (this.isActive()) {
+            isVisible = true;
+        }
+        return isVisible;
     }
     /**
      * Set a css class depending on current opacity.
@@ -590,6 +630,8 @@ class PushInScene extends PushInBase {
             if (((_a = this === null || this === void 0 ? void 0 : this.settings) === null || _a === void 0 ? void 0 : _a.layers) && this.settings.layers[index]) {
                 options = this.settings.layers[index];
             }
+            options.isFirst = index === 0;
+            options.isLast = index === layers.length - 1;
             const layer = new PushInLayer(element, index, this, options);
             this.layers.push(layer);
             layer.setZIndex(layers.length);

@@ -163,6 +163,8 @@ export class PushInScene extends PushInBase {
       if (this?.settings?.layers && this.settings.layers[index]) {
         options = this.settings.layers[index];
       }
+      options.isFirst = index === 0;
+      options.isLast = index === layers.length - 1;
 
       const layer = new PushInLayer(<HTMLElement>element, index, this, options);
       this.layers.push(layer);

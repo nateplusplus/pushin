@@ -2,6 +2,8 @@ export interface LayerOptions {
   inpoints: number[];
   outpoints: number[];
   speed: number;
+  isFirst: boolean;
+  isLast: boolean;
   transitions?: boolean;
   transitionStart?: number;
   transitionEnd?: number;
@@ -12,6 +14,8 @@ export interface LayerSettings {
   inpoints: number[];
   outpoints: number[];
   speed: number;
+  isFirst: boolean;
+  isLast: boolean;
   transitions?: boolean;
   transitionStart?: number;
   transitionEnd?: number;
