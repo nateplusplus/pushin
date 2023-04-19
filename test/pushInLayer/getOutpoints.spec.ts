@@ -87,17 +87,12 @@ describe('getOutpoints', () => {
     expect(result).toEqual([800]);
   });
 
-  it('Should return scene height for all outpoints in "continuous" mode', () => {
+  it('Should return -1 if outpoint not set and using "continuous" mode', () => {
     mockPushInLayer['scene']['getMode'] = () => 'continuous';
-
-    // Mock getBoundingClientRect function to return 1000px height.
-    mockPushInLayer['scene']['pushin']['container']['getBoundingClientRect'] = (): DOMRect => {
-      return <unknown> { height: 1000 } as DOMRect;
-    };
 
     const elem = <HTMLElement>document.querySelector('#layer-0');
     const result = mockPushInLayer['getOutpoints'](elem, 0);
 
-    expect(result).toEqual([1000]);
+    expect(result).toEqual([-1]);
   });
 });
