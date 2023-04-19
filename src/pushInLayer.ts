@@ -173,8 +173,8 @@ export class PushInLayer extends PushInBase {
     } else if (this.settings?.outpoints) {
       outpoints = this.settings.outpoints;
     } else if (this.scene.getMode() === 'continuous') {
-      const { height } = this.scene.pushin.container!.getBoundingClientRect();
-      outpoints = [height];
+      // match pushin container height.
+      outpoints = [-1];
     }
 
     return outpoints;

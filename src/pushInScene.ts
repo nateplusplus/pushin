@@ -116,7 +116,7 @@ export class PushInScene extends PushInBase {
   /**
    * Resize the PushIn container if using a target container.
    */
-  public resize() {
+  public resize(): void {
     if (this.pushin.target!.scrollTarget !== 'window') {
       const sizes = this.pushin.target!.container?.getBoundingClientRect();
       if (sizes) {
@@ -124,6 +124,7 @@ export class PushInScene extends PushInBase {
         this.container!.style.width = `${sizes.width}px`;
       }
     }
+    this.updateOutpoints();
   }
 
   /**
@@ -225,7 +226,27 @@ export class PushInScene extends PushInBase {
     return inpoints;
   }
 
-  getMode() {
+  /**
+   * Get the mode setting.
+   *
+   * @returns string
+   */
+  getMode(): string {
     return this.pushin.mode;
+  }
+
+  /**
+   * Update outpoints to match container height
+   * if using continuous mode and outpoint not specified.
+   */
+  updateOutpoints(): void {
+    if (this.getMode() === 'continuous') {
+      this.layers.forEach(layer => {
+        if (layer.params.outpoint === -1) {
+          const { bottom } = this.pushin.container.getBoundingClientRect();
+          layer.params.outpoint = bottom;
+        }
+      });
+    }
   }
 }

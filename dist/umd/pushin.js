@@ -282,8 +282,8 @@ License: MIT */
                 outpoints = this.settings.outpoints;
             }
             else if (this.scene.getMode() === 'continuous') {
-                const { height } = this.scene.pushin.container.getBoundingClientRect();
-                outpoints = [height];
+                // match pushin container height.
+                outpoints = [-1];
             }
             return outpoints;
         }
@@ -567,6 +567,7 @@ License: MIT */
                     this.container.style.width = `${sizes.width}px`;
                 }
             }
+            this.updateOutpoints();
         }
         /**
          * Set breakpoints for responsive design settings.
@@ -651,8 +652,27 @@ License: MIT */
             }
             return inpoints;
         }
+        /**
+         * Get the mode setting.
+         *
+         * @returns string
+         */
         getMode() {
             return this.pushin.mode;
+        }
+        /**
+         * Update outpoints to match container height
+         * if using continuous mode and outpoint not specified.
+         */
+        updateOutpoints() {
+            if (this.getMode() === 'continuous') {
+                this.layers.forEach(layer => {
+                    if (layer.params.outpoint === -1) {
+                        const { bottom } = this.pushin.container.getBoundingClientRect();
+                        layer.params.outpoint = bottom;
+                    }
+                });
+            }
         }
     }
 
@@ -934,7 +954,7 @@ License: MIT */
         setScrollLength() {
             var _a, _b;
             // Get the largest layer outpoint and add up overlap values.
-            let maxOutpoint = 0;
+            let maxOutpoint = this.scene.layerDepth;
             this.scene.layers.forEach(layer => {
                 maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
             });

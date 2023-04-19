@@ -19,36 +19,57 @@ const Template: ComponentStory<typeof Modes> = args => <Modes {...args} />;
 export const SequentialMode = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 SequentialMode.args = {
-  mode: 'sequential',
-  layers: [],
+  options: {
+    mode: 'sequential',
+    layers: [],
+  },
 };
 
 export const ContinuousMode = Template.bind({});
 ContinuousMode.args = {
-  mode: 'continuous',
-  layers: [],
+  options: {
+    mode: 'continuous',
+    layers: [],
+  },
 };
 
 export const ContinuousWithTransitions = Template.bind({});
 ContinuousWithTransitions.args = {
-  mode: 'continuous',
-  layers: [
-    {
-      transitions: true,
-    },
-    {
-      transitions: true,
-    },
-    {
-      transitions: true,
-      inpoints: [100],
-    },
-  ],
+  options: {
+    mode: 'continuous',
+    layers: [
+      {
+        transitions: true,
+      },
+      {
+        transitions: true,
+      },
+      {
+        transitions: true,
+        inpoints: [100],
+      },
+    ],
+  },
 };
 
 export const SetModeByAttribute = Template.bind({});
 SetModeByAttribute.args = {
-  mode: '',
-  layers: [],
+  options: {
+    mode: '',
+    layers: [],
+  },
   modeAttr: 'continuous',
+};
+
+export const ContinuousWithLayerOutpoint = Template.bind({});
+ContinuousWithLayerOutpoint.args = {
+  options: {
+    mode: 'continuous',
+    layers: [
+      {
+        outpoints: [3000],
+      },
+    ],
+    debug: true,
+  },
 };

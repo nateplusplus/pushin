@@ -65,5 +65,15 @@ export declare class PushInScene extends PushInBase {
      * @returns {number[]}
      */
     getInpoints(): number[];
+    /**
+     * Get the mode setting.
+     *
+     * @returns string
+     */
     getMode(): string;
+    /**
+     * Update outpoints to match container height
+     * if using continuous mode and outpoint not specified.
+     */
+    updateOutpoints(): void;
 }

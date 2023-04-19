@@ -241,7 +241,7 @@ export class PushIn extends PushInBase {
    */
   private setScrollLength(): void {
     // Get the largest layer outpoint and add up overlap values.
-    let maxOutpoint = 0;
+    let maxOutpoint = this.scene.layerDepth;
     this.scene.layers.forEach(layer => {
       maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
     });
