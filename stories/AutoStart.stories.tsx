@@ -46,5 +46,6 @@ ScreenTopContinuous.args = {
   settings: {
     autoStart: 'screen-top',
     mode: 'continuous',
+    debug: true,
   },
 };

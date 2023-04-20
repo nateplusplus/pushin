@@ -193,11 +193,7 @@ export class PushInScene extends PushInBase {
    * @returns {number}
    */
   getTop(): number {
-    let { top } = this.container!.getBoundingClientRect();
-    if (this.pushin.target!.container) {
-      top -= this.pushin.target!.container.getBoundingClientRect().top;
-    }
-    return top;
+    return this.container!.getBoundingClientRect().top;
   }
 
   /**
@@ -207,11 +203,7 @@ export class PushInScene extends PushInBase {
    * @returns {number[]}
    */
   getInpoints(): number[] {
-    let inpoints = <number[]>[this.getTop()];
-    const containerTop =
-      this.container!.getBoundingClientRect().top +
-      document.documentElement.scrollTop;
-
+    let inpoints = [0];
     if (this.container!.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       const pushInFrom = <string>(
         this.container!.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]
@@ -220,9 +212,9 @@ export class PushInScene extends PushInBase {
     } else if (this.settings?.inpoints && this.settings?.inpoints.length > 0) {
       inpoints = this.settings.inpoints;
     } else if (this.settings?.autoStart === 'screen-bottom') {
-      inpoints = [containerTop - window.innerHeight];
+      inpoints = [this.getTop() - window.innerHeight];
     } else if (this.settings?.autoStart === 'screen-top') {
-      inpoints = [containerTop];
+      inpoints = [this.getTop()];
     }
 
     return inpoints;

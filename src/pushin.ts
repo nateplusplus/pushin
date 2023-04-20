@@ -251,12 +251,22 @@ export class PushIn extends PushInBase {
     const calculated = maxOutpoint + targetHeight;
 
     // Get the existing container height.
-    const height = parseFloat(
+    const containerHeight = parseFloat(
       getComputedStyle(this.container).height.replace('px', '')
     );
 
+    let height = Math.max(containerHeight, calculated);
+
+    if (
+      calculated < window.innerHeight &&
+      this.mode === 'continuous' &&
+      this.scene.settings.autoStart === 'screen-top'
+    ) {
+      height += window.innerHeight;
+    }
+
     // Use the largest value between existing container height, largest outpoint or calculated height.
-    this.container.style.height = `${Math.max(height, calculated)}px`;
+    this.container.style.height = `${height}px`;
   }
 
   loadStyles(): void {

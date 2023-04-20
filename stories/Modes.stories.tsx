@@ -43,10 +43,14 @@ ContinuousWithTransitions.args = {
       },
       {
         transitions: true,
+        transitionStart: 300,
+        transitionEnd: 300,
       },
       {
         transitions: true,
-        inpoints: [100],
+        inpoints: [200],
+        transitionStart: 300,
+        transitionEnd: 300,
       },
     ],
   },

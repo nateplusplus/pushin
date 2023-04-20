@@ -157,18 +157,19 @@ export class PushInLayer extends PushInBase {
    * Get all inpoints for the layer.
    */
   private getInpoints(element: HTMLElement, index: number): number[] {
-    let inpoints = [this.scene.getTop()];
+    const { scene } = this;
+    let inpoints = [0];
     if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(',').map(
         inpoint => parseInt(inpoint.trim(), 10)
       );
     } else if (this.settings?.inpoints) {
       inpoints = this.settings.inpoints;
-    } else if (index === 0 || this.scene.getMode() === 'continuous') {
+    } else if (this.isFirst || scene.getMode() === 'continuous') {
       inpoints = this.scene.getInpoints();
     } else if (index > 0) {
       // Set default for middle layers if none provided
-      const { outpoint } = this.scene.layers[index - 1].params;
+      const { outpoint } = scene.layers[index - 1].params;
       inpoints = [outpoint - this.getOverlap()];
     }
 

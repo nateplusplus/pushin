@@ -264,19 +264,20 @@ License: MIT */
          */
         getInpoints(element, index) {
             var _a;
-            let inpoints = [this.scene.getTop()];
+            const { scene } = this;
+            let inpoints = [0];
             if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
                 inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE].split(',').map(inpoint => parseInt(inpoint.trim(), 10));
             }
             else if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.inpoints) {
                 inpoints = this.settings.inpoints;
             }
-            else if (index === 0 || this.scene.getMode() === 'continuous') {
+            else if (this.isFirst || scene.getMode() === 'continuous') {
                 inpoints = this.scene.getInpoints();
             }
             else if (index > 0) {
                 // Set default for middle layers if none provided
-                const { outpoint } = this.scene.layers[index - 1].params;
+                const { outpoint } = scene.layers[index - 1].params;
                 inpoints = [outpoint - this.getOverlap()];
             }
             return inpoints;
@@ -662,11 +663,7 @@ License: MIT */
          * @returns {number}
          */
         getTop() {
-            let { top } = this.container.getBoundingClientRect();
-            if (this.pushin.target.container) {
-                top -= this.pushin.target.container.getBoundingClientRect().top;
-            }
-            return top;
+            return this.container.getBoundingClientRect().top;
         }
         /**
          * Get the scene inpoints provided by the JavaScript API
@@ -676,9 +673,7 @@ License: MIT */
          */
         getInpoints() {
             var _a, _b, _c, _d;
-            let inpoints = [this.getTop()];
-            const containerTop = this.container.getBoundingClientRect().top +
-                document.documentElement.scrollTop;
+            let inpoints = [0];
             if (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
                 const pushInFrom = (this.container.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]);
                 inpoints.push(parseInt(pushInFrom, 10));
@@ -687,10 +682,10 @@ License: MIT */
                 inpoints = this.settings.inpoints;
             }
             else if (((_c = this.settings) === null || _c === void 0 ? void 0 : _c.autoStart) === 'screen-bottom') {
-                inpoints = [containerTop - window.innerHeight];
+                inpoints = [this.getTop() - window.innerHeight];
             }
             else if (((_d = this.settings) === null || _d === void 0 ? void 0 : _d.autoStart) === 'screen-top') {
-                inpoints = [containerTop];
+                inpoints = [this.getTop()];
             }
             return inpoints;
         }
@@ -1004,9 +999,15 @@ License: MIT */
             const targetHeight = (_b = (_a = this.target) === null || _a === void 0 ? void 0 : _a.height) !== null && _b !== void 0 ? _b : 0;
             const calculated = maxOutpoint + targetHeight;
             // Get the existing container height.
-            const height = parseFloat(getComputedStyle(this.container).height.replace('px', ''));
+            const containerHeight = parseFloat(getComputedStyle(this.container).height.replace('px', ''));
+            let height = Math.max(containerHeight, calculated);
+            if (calculated < window.innerHeight &&
+                this.mode === 'continuous' &&
+                this.scene.settings.autoStart === 'screen-top') {
+                height += window.innerHeight;
+            }
             // Use the largest value between existing container height, largest outpoint or calculated height.
-            this.container.style.height = `${Math.max(height, calculated)}px`;
+            this.container.style.height = `${height}px`;
         }
         loadStyles() {
             const stylesheet = document.querySelector('style#pushin-styles');
