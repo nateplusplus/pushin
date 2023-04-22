@@ -31,10 +31,10 @@ export interface SceneOptions {
     ratio?: number[];
 }
 export interface SceneSettings {
-    layerDepth: number;
     breakpoints: number[];
     inpoints: number[];
     layers: LayerOptions[];
+    layerDepth?: number;
     composition?: CompositionOptions;
     ratio?: number[];
     autoStart?: string;

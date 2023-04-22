@@ -7,3 +7,4 @@ export declare const PUSH_IN_DEFAULT_BREAKPOINTS: number[];
 export declare const PUSH_IN_LAYER_INDEX_ATTRIBUTE = "data-pushin-layer-index";
 export declare const PUSH_IN_DEFAULT_ASPECT_RATIO: number[];
 export declare const PUSH_IN_DEFAULT_TRANSITION_LENGTH = 200;
+export declare const PUSH_IN_DEFAULT_LAYER_DEPTH = 1000;

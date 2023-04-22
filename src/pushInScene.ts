@@ -2,6 +2,7 @@ import {
   PUSH_IN_FROM_DATA_ATTRIBUTE,
   PUSH_IN_BREAKPOINTS_DATA_ATTRIBUTE,
   PUSH_IN_DEFAULT_BREAKPOINTS,
+  PUSH_IN_DEFAULT_LAYER_DEPTH,
 } from './constants';
 import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
@@ -12,7 +13,7 @@ import { LayerOptions, SceneSettings } from './types';
 
 export class PushInScene extends PushInBase {
   public layers: PushInLayer[];
-  public layerDepth: number;
+  public layerDepth!: number;
   public settings: SceneSettings;
   public composition?: PushInComposition;
   public layerCount!: number;
@@ -24,7 +25,7 @@ export class PushInScene extends PushInBase {
     const options = pushin.options?.scene ?? {};
 
     this.settings = {
-      layerDepth: options?.layerDepth || 1000,
+      layerDepth: options?.layerDepth,
       breakpoints: options?.breakpoints || [],
       inpoints: options?.inpoints || [],
       composition: pushin.options?.composition,
@@ -33,7 +34,6 @@ export class PushInScene extends PushInBase {
       autoStart: pushin.options?.autoStart,
     };
 
-    this.layerDepth = this.settings.layerDepth;
     this.layers = [];
   }
 
@@ -41,6 +41,7 @@ export class PushInScene extends PushInBase {
   start(): void {
     this.setContainer();
     this.setAutoStart();
+    this.setLayerDepth();
     this.setSceneClasses();
     this.setComposition();
     this.setBreakpoints();
@@ -86,6 +87,17 @@ export class PushInScene extends PushInBase {
     }
 
     this.settings.autoStart = autoStart;
+  }
+
+  setLayerDepth() {
+    let layerDepth = this.getNumberOption('layerDepth');
+
+    if (layerDepth && typeof layerDepth !== 'number') {
+      // not yet compatible with array - set to first index if array passed in.
+      [layerDepth] = layerDepth;
+    }
+
+    this.layerDepth = layerDepth ?? PUSH_IN_DEFAULT_LAYER_DEPTH;
   }
 
   /**

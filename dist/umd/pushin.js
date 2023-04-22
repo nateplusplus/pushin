@@ -19,6 +19,7 @@ License: MIT */
     const PUSH_IN_DEFAULT_BREAKPOINTS = [768, 1440, 1920];
     const PUSH_IN_LAYER_INDEX_ATTRIBUTE = 'data-pushin-layer-index';
     const PUSH_IN_DEFAULT_TRANSITION_LENGTH = 200;
+    const PUSH_IN_DEFAULT_LAYER_DEPTH = 1000;
 
     class PushInBase {
         /**
@@ -519,7 +520,7 @@ License: MIT */
             this.pushin = pushin;
             const options = (_b = (_a = pushin.options) === null || _a === void 0 ? void 0 : _a.scene) !== null && _b !== void 0 ? _b : {};
             this.settings = {
-                layerDepth: (options === null || options === void 0 ? void 0 : options.layerDepth) || 1000,
+                layerDepth: options === null || options === void 0 ? void 0 : options.layerDepth,
                 breakpoints: (options === null || options === void 0 ? void 0 : options.breakpoints) || [],
                 inpoints: (options === null || options === void 0 ? void 0 : options.inpoints) || [],
                 composition: (_c = pushin.options) === null || _c === void 0 ? void 0 : _c.composition,
@@ -527,13 +528,13 @@ License: MIT */
                 ratio: options === null || options === void 0 ? void 0 : options.ratio,
                 autoStart: (_e = pushin.options) === null || _e === void 0 ? void 0 : _e.autoStart,
             };
-            this.layerDepth = this.settings.layerDepth;
             this.layers = [];
         }
         /* istanbul ignore next */
         start() {
             this.setContainer();
             this.setAutoStart();
+            this.setLayerDepth();
             this.setSceneClasses();
             this.setComposition();
             this.setBreakpoints();
@@ -572,6 +573,14 @@ License: MIT */
                 autoStart = 'scroll';
             }
             this.settings.autoStart = autoStart;
+        }
+        setLayerDepth() {
+            let layerDepth = this.getNumberOption('layerDepth');
+            if (layerDepth && typeof layerDepth !== 'number') {
+                // not yet compatible with array - set to first index if array passed in.
+                [layerDepth] = layerDepth;
+            }
+            this.layerDepth = layerDepth !== null && layerDepth !== void 0 ? layerDepth : PUSH_IN_DEFAULT_LAYER_DEPTH;
         }
         /**
          * Setup composition for the scene.

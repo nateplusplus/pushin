@@ -25,6 +25,7 @@ export declare class PushInScene extends PushInBase {
      * - screen-top          Start effect when target element top at viewport top.
      */
     setAutoStart(): void;
+    setLayerDepth(): void;
     /**
      * Setup composition for the scene.
      */
