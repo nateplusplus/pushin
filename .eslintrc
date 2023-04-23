@@ -33,7 +33,8 @@
       {
         "devDependencies": [
           "stories/**/*",
-          "**/*.spec.js"
+          "**/*.spec.js",
+          "rollup.config.js"
         ]
       }
     ]

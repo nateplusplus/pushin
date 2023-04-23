@@ -75,8 +75,9 @@ describe('setLayerStyle', () => {
     );
   });
 
-  it('should set opacity to 1 if its the first layer and the scroll position is before its inpoint', () => {
+  it('should set opacity to 1 if its the first layer, scroll position is before inpoint, and transitionStart is -1', () => {
     mockPushInLayer['scene']['pushin']['scrollY'] = 10;
+    mockPushInLayer['params']['transitionStart'] = -1;
     mockPushInLayer['setLayerStyle']();
     const result = element.style.opacity;
 
@@ -84,15 +85,16 @@ describe('setLayerStyle', () => {
   });
 
   it('should set opacity to 1 if its the first layer and it is active', () => {
-    mockPushInLayer['scene']['pushin']['scrollY'] = 205;
+    mockPushInLayer['scene']['pushin']['scrollY'] = 251;
     mockPushInLayer['setLayerStyle']();
     const result = element.style.opacity;
 
     expect(result).toEqual('1');
   });
 
-  it('should set opacity to 1 if its the last layer and the scroll position is after its outpoint', () => {
+  it('should set opacity to 1 if its the last layer, scroll position is after outpoint, and transitionEnd is -1', () => {
     mockPushInLayer['scene']['pushin']['scrollY'] = 600;
+    mockPushInLayer['params']['transitionEnd'] = -1;
     mockPushInLayer['index'] = 2;
     mockPushInLayer['setLayerStyle']();
 

@@ -1,7 +1,9 @@
 import { PushInScene } from './pushInScene';
-import { PushInOptions } from './types';
+import { PushInTarget } from './pushInTarget';
+import { PushInOptions, PushInSettings, TargetSettings } from './types';
 import { PUSH_IN_LAYER_INDEX_ATTRIBUTE } from './constants';
 import PushInBase from './pushInBase';
+import pushInStyles from './pushInStyles';
 
 /**
  * PushIn object
@@ -12,32 +14,29 @@ import PushInBase from './pushInBase';
 export class PushIn extends PushInBase {
   public scene!: PushInScene;
   private pushinDebug?: HTMLElement;
-  public target?: HTMLElement | null;
+  public target?: PushInTarget;
   public scrollY = 0;
   private lastAnimationFrameId = -1;
   public cleanupFns: VoidFunction[] = [];
-  public options: PushInOptions;
-  public scrollTarget?: HTMLElement | string;
-  private targetHeight: number;
+  public settings: PushInSettings;
+  public mode!: string;
 
   /* istanbul ignore next */
-  constructor(public container: HTMLElement, options?: PushInOptions) {
+  constructor(
+    public container: HTMLElement,
+    public options: PushInOptions = {}
+  ) {
     super();
-    options = options ?? {};
 
-    this.options = {
-      debug: options?.debug ?? false,
-      scene: options?.scene ?? { breakpoints: [], inpoints: [] },
-      target: options?.target ?? undefined,
-      scrollTarget: options?.scrollTarget,
+    this.settings = {
+      debug: this.options?.debug ?? false,
+      target: this.options?.target ?? undefined,
+      scrollTarget: this.options?.scrollTarget,
+      mode: this.options?.mode ?? 'sequential',
     };
 
-    this.options.scene!.composition = options?.composition ?? undefined;
-    this.options.scene!.layers = options?.layers ?? undefined;
-
     // Defaults
-    this.targetHeight = 0;
-    this.options.debug = options?.debug ?? false;
+    this.settings.debug = options?.debug ?? false;
   }
 
   /**
@@ -46,20 +45,19 @@ export class PushIn extends PushInBase {
   /* istanbul ignore next */
   start(): void {
     if (this.container) {
-      this.setTarget();
-      this.setScrollTarget();
-      this.setTargetHeight();
-
-      this.scrollY = this.getScrollY();
-
-      if (this.options.debug) {
+      if (this.settings.debug) {
         this.showDebugger();
       }
 
+      this.setMode();
+      this.loadStyles();
+      this.setTarget();
+      this.scrollY = this.getScrollY();
+
       this.scene = new PushInScene(this);
+      this.scene.start();
 
       this.setScrollLength();
-      this.setTargetOverflow();
       this.scene.resize();
 
       if (typeof window !== 'undefined') {
@@ -77,66 +75,31 @@ export class PushIn extends PushInBase {
   }
 
   /**
-   * Set the target height on initialization.
+   * Set the mode.
    *
-   * This will be used to calculate scroll length.
-   *
-   * @see setScrollLength
+   * @returns {string}    The mode setting, or "sequential" by default.
    */
-  setTargetHeight() {
-    this.targetHeight = window.innerHeight;
-    if (this.target) {
-      const computedHeight = getComputedStyle(this.target).height;
-
-      // Remove px and convert to number
-      this.targetHeight = +computedHeight.replace('px', '');
-    }
+  setMode() {
+    const mode = <string>this.getStringOption('mode');
+    this.mode = mode !== '' ? mode : 'sequential';
   }
 
   /**
-   * Get scrollTarget option from data attribute
-   * or JavaScript API.
+   * Set up the target element for this effect, and where to listen for scrolling.
    */
-  setScrollTarget(): void {
-    const value = this.getStringOption('scrollTarget');
-    let scrollTarget;
+  setTarget() {
+    const options: TargetSettings = {};
 
-    if (value) {
-      if (value === 'window') {
-        scrollTarget = value;
-      } else {
-        scrollTarget = document.querySelector(<string>value);
-      }
+    if (this.settings.target) {
+      options.target = this.settings.target;
     }
 
-    if (!scrollTarget) {
-      if (this.target) {
-        scrollTarget = this.target;
-      } else {
-        scrollTarget = 'window';
-      }
+    if (this.settings.scrollTarget) {
+      options.scrollTarget = this.settings.scrollTarget;
     }
 
-    this.scrollTarget = <HTMLElement | string>scrollTarget;
-  }
-
-  /**
-   * Set the target parameter and make sure
-   * pushin is always a child of that target.
-   *
-   * @param options
-   */
-  setTarget(): void {
-    const value = <string>this.getStringOption('target');
-
-    if (value) {
-      this.target = document.querySelector(value);
-    }
-
-    if (this.target && this.container.parentElement !== this.target) {
-      // Move pushin into the target container
-      this.target.appendChild(this.container);
-    }
+    this.target = new PushInTarget(this, options);
+    this.target.start();
   }
 
   /**
@@ -159,27 +122,17 @@ export class PushIn extends PushInBase {
   private getScrollY(): number {
     let scrollY = 0;
 
-    if (this.scrollTarget === 'window' && typeof window !== 'undefined') {
+    if (
+      this.target?.scrollTarget === 'window' &&
+      typeof window !== 'undefined'
+    ) {
       scrollY = window.scrollY;
     } else {
-      const target = <HTMLElement>this.scrollTarget;
-      if (target) {
-        scrollY = target.scrollTop;
-      }
+      const target = <HTMLElement>this.target!.scrollTarget;
+      scrollY = <number>target.scrollTop;
     }
 
     return scrollY;
-  }
-
-  /**
-   * Set overflow-y and scroll-behavior styles
-   * on the provided target element.
-   */
-  private setTargetOverflow(): void {
-    if (this.target && this.scrollTarget !== 'window') {
-      this.target.style.overflowY = 'scroll';
-      this.target.style.scrollBehavior = 'smooth';
-    }
   }
 
   /**
@@ -187,8 +140,10 @@ export class PushIn extends PushInBase {
    */
   /* istanbul ignore next */
   bindEvents(): void {
-    const scrollTarget =
-      this.scrollTarget === 'window' ? window : <HTMLElement>this.scrollTarget;
+    let scrollTarget: Window | HTMLElement = window;
+    if (this.target!.scrollTarget !== 'window') {
+      scrollTarget = <HTMLElement>this.target!.scrollTarget;
+    }
 
     const onScroll = () => {
       this.scrollY = this.getScrollY();
@@ -238,9 +193,12 @@ export class PushIn extends PushInBase {
 
         const layer = this.scene.layers[index];
         if (layer) {
-          const scrollTo = layer.params.inpoint + layer.params.transitionStart;
+          let scrollTo = layer.params.inpoint + layer.params.transitionStart;
+          if (layer.params.tabInpoint) {
+            scrollTo = layer.params.tabInpoint;
+          }
 
-          if (this.scrollTarget === 'window') {
+          if (this.target!.scrollTarget === 'window') {
             window.scrollTo(0, scrollTo);
           } else {
             const container = <HTMLElement>scrollTarget;
@@ -282,20 +240,49 @@ export class PushIn extends PushInBase {
    * the larger of the two numbers will be used.
    */
   private setScrollLength(): void {
-    const containerHeight = getComputedStyle(this.container).height.replace(
-      'px',
-      ''
-    );
-
-    let maxOutpoint = 0;
+    // Get the largest layer outpoint and add up overlap values.
+    let maxOutpoint = this.scene.layerDepth;
     this.scene.layers.forEach(layer => {
       maxOutpoint = Math.max(maxOutpoint, layer.params.outpoint);
     });
 
-    this.container.style.height = `${Math.max(
-      parseFloat(containerHeight),
-      maxOutpoint + this.targetHeight
-    )}px`;
+    // Calculate height with greatest outpoint + target height.
+    const targetHeight = this.target?.height ?? 0;
+    const calculated = maxOutpoint + targetHeight;
+
+    // Get the existing container height.
+    const containerHeight = parseFloat(
+      getComputedStyle(this.container).height.replace('px', '')
+    );
+
+    let height = Math.max(containerHeight, calculated);
+
+    if (
+      calculated < window.innerHeight &&
+      this.mode === 'continuous' &&
+      this.scene.settings.autoStart === 'screen-top'
+    ) {
+      height += window.innerHeight;
+    }
+
+    // Use the largest value between existing container height, largest outpoint or calculated height.
+    this.container.style.height = `${height}px`;
+  }
+
+  loadStyles(): void {
+    const stylesheet = document.querySelector('style#pushin-styles');
+
+    if (!stylesheet) {
+      const sheet = document.createElement('style');
+      sheet.id = 'pushin-styles';
+
+      sheet.appendChild(document.createTextNode(pushInStyles));
+      document.head.appendChild(sheet);
+
+      this.cleanupFns.push(() => {
+        document.head.removeChild(sheet);
+      });
+    }
   }
 
   /**
@@ -318,8 +305,11 @@ export class PushIn extends PushInBase {
     this.pushinDebug.appendChild(scrollTitle);
     this.pushinDebug.appendChild(debuggerContent);
 
-    const target = this.target ?? document.body;
+    const target = this.target?.container ?? document.body;
 
     target.appendChild(this.pushinDebug);
+
+    // Remove debugger when unmounted.
+    this.cleanupFns.push(() => this.pushinDebug?.remove());
   }
 }

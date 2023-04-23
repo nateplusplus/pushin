@@ -1,5 +1,6 @@
 import { PushInScene } from './pushInScene';
-import { PushInOptions } from './types';
+import { PushInTarget } from './pushInTarget';
+import { PushInOptions, PushInSettings } from './types';
 import PushInBase from './pushInBase';
 /**
  * PushIn object
@@ -9,38 +10,28 @@ import PushInBase from './pushInBase';
  */
 export declare class PushIn extends PushInBase {
     container: HTMLElement;
+    options: PushInOptions;
     scene: PushInScene;
     private pushinDebug?;
-    target?: HTMLElement | null;
+    target?: PushInTarget;
     scrollY: number;
     private lastAnimationFrameId;
     cleanupFns: VoidFunction[];
-    options: PushInOptions;
-    scrollTarget?: HTMLElement | string;
-    private targetHeight;
+    settings: PushInSettings;
+    mode: string;
     constructor(container: HTMLElement, options?: PushInOptions);
     /**
      * Initialize the object to start everything up.
      */
     start(): void;
     /**
-     * Set the target height on initialization.
+     * Set the mode.
      *
-     * This will be used to calculate scroll length.
-     *
-     * @see setScrollLength
+     * @returns {string}    The mode setting, or "sequential" by default.
      */
-    setTargetHeight(): void;
+    setMode(): void;
     /**
-     * Get scrollTarget option from data attribute
-     * or JavaScript API.
-     */
-    setScrollTarget(): void;
-    /**
-     * Set the target parameter and make sure
-     * pushin is always a child of that target.
-     *
-     * @param options
+     * Set up the target element for this effect, and where to listen for scrolling.
      */
     setTarget(): void;
     /**
@@ -54,11 +45,6 @@ export declare class PushIn extends PushInBase {
      * Otherwise default to 0.
      */
     private getScrollY;
-    /**
-     * Set overflow-y and scroll-behavior styles
-     * on the provided target element.
-     */
-    private setTargetOverflow;
     /**
      * Bind event listeners to watch for page load and user interaction.
      */
@@ -78,6 +64,7 @@ export declare class PushIn extends PushInBase {
      * the larger of the two numbers will be used.
      */
     private setScrollLength;
+    loadStyles(): void;
     /**
      * Show a debugging tool appended to the frontend of the page.
      * Can be used to determine best "pushin-from" and "pushin-to" values.

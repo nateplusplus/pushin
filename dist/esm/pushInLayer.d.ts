@@ -1,15 +1,22 @@
 import { PushInScene } from './pushInScene';
 import PushInBase from './pushInBase';
-import { LayerOptions, LayerParams } from './types';
+import { LayerOptions, LayerSettings, LayerParams } from './types';
 export declare class PushInLayer extends PushInBase {
     container: HTMLElement;
     private index;
     scene: PushInScene;
-    options: LayerOptions;
     params: LayerParams;
     private originalScale;
     private ref;
+    settings: LayerSettings;
+    isFirst: boolean;
+    isLast: boolean;
     constructor(container: HTMLElement, index: number, scene: PushInScene, options: LayerOptions);
+    /**
+     * Set Accessibility features.
+     * Ensures layers are tabbable and their role is understood by screenreaders.
+     */
+    private setA11y;
     /**
      * Get the transitions setting, either from the API or HTML attributes.
      *
@@ -63,7 +70,7 @@ export declare class PushInLayer extends PushInBase {
      */
     private getElementScaleX;
     /**
-     * Whether or not a layer should currently be zooming.
+     * Whether or not a layer should currently be animated.
      */
     private isActive;
     /**
@@ -92,7 +99,22 @@ export declare class PushInLayer extends PushInBase {
      */
     setLayerStyle(): void;
     /**
+     * Check if the layer should be visible.
+     *
+     * @returns boolean
+     */
+    isVisible(): boolean;
+    /**
      * Set a css class depending on current opacity.
      */
     setLayerVisibility(): void;
+    /**
+     * Set tabInpoints for this layer.
+     */
+    getTabInpoints(inpoints: number[]): number[];
+    /**
+     * Get the current tabInpoint for a layer,
+     * depending on window breakpoint.
+     */
+    private getTabInpoint;
 }

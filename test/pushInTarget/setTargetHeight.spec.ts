@@ -1,8 +1,8 @@
 import { setupJSDOM } from '../setup';
-import { PushIn } from '../../src/pushin';
+import { PushInTarget } from '../../src/pushInTarget';
 
 describe('setTargetHeight', () => {
-  let mockPushIn: PushIn;
+  let mockPushInTarget: PushInTarget;
   let target: HTMLElement;
 
   beforeEach(() => {
@@ -17,17 +17,17 @@ describe('setTargetHeight', () => {
 
     window.innerHeight = 2000;
 
-    mockPushIn = Object.create(PushIn.prototype);
+    mockPushInTarget = Object.create(PushInTarget.prototype);
   });
 
   it('Should use the window height by default', () => {
-    mockPushIn['setTargetHeight']();
-    expect(mockPushIn['targetHeight']).toEqual(2000);
+    mockPushInTarget['setTargetHeight']();
+    expect(mockPushInTarget['height']).toEqual(2000);
   });
 
   it('Should match computed target height', () => {
-    mockPushIn['target'] = target;
-    mockPushIn['setTargetHeight']();
-    expect(mockPushIn['targetHeight']).toEqual(1000);
+    mockPushInTarget['container'] = target;
+    mockPushInTarget['setTargetHeight']();
+    expect(mockPushInTarget['height']).toEqual(1000);
   });
 });

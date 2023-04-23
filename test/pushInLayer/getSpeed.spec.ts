@@ -43,12 +43,12 @@ describe('getSpeed', () => {
 
   it('Should use javascript API', () => {
     const elem = <HTMLElement> document.querySelector('#layer-0');
-    const options = Object.apply(
+    const settings = Object.apply(
       {},
       layerOptions
     );
-    options.speed = 10;
-    mockPushInLayer['options'] = options;
+    settings.speed = 10;
+    mockPushInLayer['settings'] = settings;
     const result = mockPushInLayer['getSpeed'](elem);
     expect(result).toEqual(10);
   });
