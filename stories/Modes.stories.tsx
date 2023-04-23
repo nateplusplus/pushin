@@ -77,3 +77,23 @@ ContinuousWithLayerOutpoint.args = {
     debug: true,
   },
 };
+
+export const ContinuousWithLayerDepth = Template.bind({});
+ContinuousWithLayerDepth.args = {
+  options: {
+    mode: 'continuous',
+    debug: true,
+    scene: {
+      layerDepth: 3500,
+    },
+  },
+};
+
+export const ContinuousWithLength = Template.bind({});
+ContinuousWithLength.args = {
+  options: {
+    mode: 'continuous',
+    debug: true,
+    length: 4000,
+  },
+};
