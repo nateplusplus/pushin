@@ -97,7 +97,7 @@ export class PushInScene extends PushInBase {
       [layerDepth] = layerDepth;
     }
 
-    this.layerDepth = layerDepth ?? PUSH_IN_DEFAULT_LAYER_DEPTH;
+    this.layerDepth = <number>layerDepth ?? PUSH_IN_DEFAULT_LAYER_DEPTH;
   }
 
   /**

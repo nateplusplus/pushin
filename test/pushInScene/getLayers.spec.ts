@@ -40,7 +40,11 @@ describe('getLayers', () => {
 
   it('Should create pushInLayer with correct arguments', () => {
     mockPushInScene['getLayers']();
-    expect(PushInLayer).toHaveBeenCalledWith(layers[1], 1, mockPushInScene, {});
+    const mockOptions = {
+      isFirst: false,
+      isLast: false,
+    };
+    expect(PushInLayer).toHaveBeenCalledWith(layers[1], 1, mockPushInScene, mockOptions);
   });
 
   it('Should set layer settings from the JavaScript API', () => {
@@ -49,13 +53,19 @@ describe('getLayers', () => {
 
     mockPushInScene['settings'] = sceneOptions;
     mockPushInScene['settings'].layers = [
-      Object.assign({}, layerOptions),
+      { ...layerOptions, isFirst: true },
       testLayerOptions,
-      Object.assign({}, layerOptions),
-      Object.assign({}, layerOptions),
+      { ...layerOptions },
+      { ...layerOptions, isLast: true },
     ];
 
     mockPushInScene['getLayers']();
-    expect(PushInLayer).toHaveBeenNthCalledWith(2, layers[1], 1, mockPushInScene, testLayerOptions);
+
+    const expectedElement = layers[1];
+    const expectedIndex = 1;
+    const expectedParent = mockPushInScene;
+    const expectedOptions = testLayerOptions;
+
+    expect(PushInLayer).toHaveBeenNthCalledWith(2, expectedElement, expectedIndex, expectedParent, expectedOptions);
   });
 });

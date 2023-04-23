@@ -61,8 +61,15 @@ describe('getInpoints', () => {
     );
   });
 
-  it('Should return scene top value as the default for first layer', () => {
+  it('Should return 0 as the default for first layer in sequential mode', () => {
     const elem = <HTMLElement>document.querySelector('#layer-0');
+    const result = mockPushInLayer['getInpoints'](elem, 0);
+    expect(result).toEqual([0]);
+  });
+
+  it('Should return scene top value as the default for first layer in continuous mode', () => {
+    const elem = <HTMLElement>document.querySelector('#layer-0');
+    mockPushInLayer['scene']['getMode'] = () => 'continuous';
     const result = mockPushInLayer['getInpoints'](elem, 0);
     expect(result).toEqual([10]);
   });
