@@ -1,4 +1,4 @@
-/* Pushin.js - v5.2.3
+/* Pushin.js - v6.0.0
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -575,12 +575,13 @@ License: MIT */
             this.settings.autoStart = autoStart;
         }
         setLayerDepth() {
+            var _a;
             let layerDepth = this.getNumberOption('layerDepth');
             if (layerDepth && typeof layerDepth !== 'number') {
                 // not yet compatible with array - set to first index if array passed in.
                 [layerDepth] = layerDepth;
             }
-            this.layerDepth = layerDepth !== null && layerDepth !== void 0 ? layerDepth : PUSH_IN_DEFAULT_LAYER_DEPTH;
+            this.layerDepth = (_a = layerDepth) !== null && _a !== void 0 ? _a : PUSH_IN_DEFAULT_LAYER_DEPTH;
         }
         /**
          * Setup composition for the scene.
@@ -1076,8 +1077,6 @@ License: MIT */
     }
 
     exports.PushIn = PushIn;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
 //# sourceMappingURL=pushin.js.map

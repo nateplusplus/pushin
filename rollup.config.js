@@ -5,7 +5,9 @@ import getBabelOutputPlugin from '@rollup/plugin-babel';
 import CleanCSS from 'clean-css';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const banner = require('./build/banner');
+const { version, author, license } = require('./package.json');
+
+const banner = `Pushin.js - v${version}\nAuthor: ${author}\nLicense: ${license}`;
 
 function createConfig(format) {
   return {
