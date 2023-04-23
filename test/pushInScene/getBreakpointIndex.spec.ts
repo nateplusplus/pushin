@@ -24,4 +24,10 @@ describe('getBreakpointIndex', () => {
     const result = PushInScene.prototype.getBreakpointIndex([0, 768, 1440, 1920]);
     expect(result).toEqual(1);
   });
+
+  it('Should return the index of a breakpoint that matches the current window width', () => {
+    window.innerWidth = 1440;
+    const result = PushInScene.prototype.getBreakpointIndex([0, 768, 1440, 1920]);
+    expect(result).toEqual(2);
+  });
 });

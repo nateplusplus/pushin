@@ -21,7 +21,7 @@ describe('setRatio', () => {
 
     element = <HTMLElement> document.querySelector('.pushin-composition');
     mockComposition = Object.create(PushInComposition.prototype);
-    Object.assign(mockComposition, {  container: element, options: {} });
+    Object.assign(mockComposition, {  container: element, settings: {} });
   });
 
   it('Should not change padding by default', () => {
@@ -32,7 +32,7 @@ describe('setRatio', () => {
   });
 
   it('Should not change padding by default', () => {
-    mockComposition['options'].ratio = [16, 9];
+    mockComposition['settings'].ratio = [16, 9];
     mockComposition['setRatio']();
 
     const result = element.style.paddingTop;

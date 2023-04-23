@@ -6,28 +6,34 @@ export class PushInComposition extends PushInBase {
   /* istanbul ignore next */
   constructor(public scene: PushInScene, public options: CompositionOptions) {
     super();
-    this.options = options;
+    this.settings = options;
+  }
 
-    const container = this.scene.container.querySelector<HTMLElement>(
+  public start(): void {
+    this.setContainer();
+
+    if (this.container) {
+      this.setRatio();
+    }
+  }
+
+  public setContainer(): void {
+    const container = this.scene.container!.querySelector<HTMLElement>(
       '.pushin-composition'
     );
 
     if (container) {
       this.container = container;
-    } else if (this.options?.ratio) {
+    } else if (this.settings?.ratio) {
       this.container = document.createElement('div');
       this.container.classList.add('pushin-composition');
 
-      this.container.innerHTML = this.scene.container.innerHTML;
-      this.scene.container.innerHTML = '';
-      this.scene.container.appendChild(this.container);
+      this.container.innerHTML = this.scene.container!.innerHTML;
+      this.scene.container!.innerHTML = '';
+      this.scene.container!.appendChild(this.container);
       this.scene.pushin.cleanupFns.push(() => {
-        this.scene.container.innerHTML = this!.container!.innerHTML;
+        this.scene.container!.innerHTML = this!.container!.innerHTML;
       });
-    }
-
-    if (this.container) {
-      this.setRatio();
     }
   }
 

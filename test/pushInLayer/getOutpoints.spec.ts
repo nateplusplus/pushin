@@ -1,8 +1,9 @@
 import { setupJSDOM } from '../setup';
+import { PushIn } from '../../src/pushin';
 import { PushInScene } from '../../src/pushInScene';
 import { PushInLayer } from '../../src/pushInLayer';
 
-describe('getInpoints', () => {
+describe('getOutpoints', () => {
   let mockPushInLayer: PushInLayer;
 
   beforeEach(() => {
@@ -20,8 +21,26 @@ describe('getInpoints', () => {
         </body>
       </html>`);
 
+    // Mock layer
     mockPushInLayer = Object.create(PushInLayer.prototype);
-    mockPushInLayer['scene'] = <PushInScene>{};
+
+    // Mock scene
+    mockPushInLayer['scene'] = Object.create(PushInScene);
+    Object.assign(
+       mockPushInLayer['scene'],
+       {
+        getMode: () => 'sequential',
+       }
+    );
+
+    // Mock PushIn
+    mockPushInLayer['scene']['pushin'] = Object.create( PushIn );
+    Object.assign(
+       mockPushInLayer['scene']['pushin'],
+       {
+        container: <HTMLElement>document.querySelector('.pushin'),
+       }
+    );
   });
 
   it('Should return inpoint + layerDepth by default for first layer', () => {
@@ -29,7 +48,7 @@ describe('getInpoints', () => {
 
     const inpoint = 100;
 
-    const elem = document.querySelector<HTMLElement>('#layer-0');
+    const elem = <HTMLElement>document.querySelector('#layer-0');
     const result = mockPushInLayer['getOutpoints'](elem, inpoint);
 
     expect(result).toEqual([400]);
@@ -40,7 +59,7 @@ describe('getInpoints', () => {
 
     const inpoint = 100;
 
-    const elem = document.querySelector<HTMLElement>('#layer-1');
+    const elem = <HTMLElement>document.querySelector('#layer-1');
     const result = mockPushInLayer['getOutpoints'](elem, inpoint);
 
     expect(result).toEqual([300]);
@@ -51,7 +70,7 @@ describe('getInpoints', () => {
 
     const inpoint = 100;
 
-    const elem = document.querySelector<HTMLElement>('#layer-2');
+    const elem = <HTMLElement>document.querySelector('#layer-2');
     const result = mockPushInLayer['getOutpoints'](elem, inpoint);
 
     expect(result).toEqual([300, 500]);
@@ -62,9 +81,18 @@ describe('getInpoints', () => {
 
     const inpoint = 500;
 
-    const elem = document.querySelector<HTMLElement>('#layer-3');
+    const elem = <HTMLElement>document.querySelector('#layer-3');
     const result = mockPushInLayer['getOutpoints'](elem, inpoint);
 
     expect(result).toEqual([800]);
+  });
+
+  it('Should return -1 if outpoint not set and using "continuous" mode', () => {
+    mockPushInLayer['scene']['getMode'] = () => 'continuous';
+
+    const elem = <HTMLElement>document.querySelector('#layer-0');
+    const result = mockPushInLayer['getOutpoints'](elem, 0);
+
+    expect(result).toEqual([-1]);
   });
 });

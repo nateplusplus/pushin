@@ -2,14 +2,34 @@ import { PushInComposition } from './pushInComposition';
 import { PushInLayer } from './pushInLayer';
 import { PushIn } from './pushin';
 import PushInBase from './pushInBase';
-import { SceneOptions } from './types';
+import { SceneSettings } from './types';
 export declare class PushInScene extends PushInBase {
     pushin: PushIn;
     layers: PushInLayer[];
     layerDepth: number;
-    options: SceneOptions;
+    settings: SceneSettings;
     composition?: PushInComposition;
+    layerCount: number;
     constructor(pushin: PushIn);
+    start(): void;
+    /**
+     * If there is not a pushin-scene element, create one.
+     */
+    setContainer(): void;
+    /**
+     * Get the AutoStart option if provided.
+     *
+     * Choices:
+     * - scroll (default)    Start effect on scroll.
+     * - screen-bottom       Start effect when target element top at viewport bottom.
+     * - screen-top          Start effect when target element top at viewport top.
+     */
+    setAutoStart(): void;
+    setLayerDepth(): void;
+    /**
+     * Setup composition for the scene.
+     */
+    setComposition(): void;
     /**
      * Set scene class names.
      */
@@ -46,4 +66,15 @@ export declare class PushInScene extends PushInBase {
      * @returns {number[]}
      */
     getInpoints(): number[];
+    /**
+     * Get the mode setting.
+     *
+     * @returns string
+     */
+    getMode(): string;
+    /**
+     * Update outpoints to match container height
+     * if using continuous mode and outpoint not specified.
+     */
+    updateOutpoints(): void;
 }

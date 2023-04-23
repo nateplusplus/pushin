@@ -8,37 +8,57 @@ import {
 import { PushInScene } from './pushInScene';
 import PushInBase from './pushInBase';
 
-import { LayerOptions, LayerRef, LayerParams } from './types';
+import { LayerOptions, LayerSettings, LayerRef, LayerParams } from './types';
 
 export class PushInLayer extends PushInBase {
   public params!: LayerParams;
   private originalScale: number;
   private ref: LayerRef;
+  public settings: LayerSettings;
+  public isFirst: boolean;
+  public isLast: boolean;
 
   /* istanbul ignore next */
   constructor(
     public container: HTMLElement,
     private index: number,
     public scene: PushInScene,
-    public options: LayerOptions
+    options: LayerOptions
   ) {
     super();
+    this.settings = options;
+
+    this.isFirst = options.isFirst;
+    this.isLast = options.isLast;
+
     const inpoints = this.getInpoints(this.container, this.index);
     const outpoints = this.getOutpoints(this.container, inpoints[0]);
     const speed = this.getSpeed(this.container);
+    const tabInpoints = this.getTabInpoints(inpoints);
 
     this.originalScale = this.getElementScaleX(this.container);
-    this.ref = { inpoints, outpoints, speed };
+    this.ref = {
+      inpoints,
+      outpoints,
+      speed,
+      tabInpoints,
+    };
 
+    this.setA11y();
+    this.setLayerParams();
+  }
+
+  /**
+   * Set Accessibility features.
+   * Ensures layers are tabbable and their role is understood by screenreaders.
+   */
+  private setA11y() {
     this.container.setAttribute(
       'data-pushin-layer-index',
       this.index.toString()
     );
-
-    // Set tabindex so we can sync scrolling with screenreaders
     this.container.setAttribute('tabindex', '0');
-
-    this.setLayerParams();
+    this.container.setAttribute('aria-role', 'composite');
   }
 
   /**
@@ -47,7 +67,8 @@ export class PushInLayer extends PushInBase {
    * @return {boolean}
    */
   private getTransitions(): boolean {
-    let transitions = this.options?.transitions ?? true;
+    let transitions =
+      this.settings?.transitions ?? this.scene.getMode() === 'sequential';
     if (this.container.hasAttribute('data-pushin-transitions')) {
       const attr = this.container!.dataset!.pushinTransitions;
       if (attr) {
@@ -67,8 +88,8 @@ export class PushInLayer extends PushInBase {
 
     if (this.index > 0) {
       const prevLayer = this.scene.layers[this.index - 1];
-      const prevTranEnd = prevLayer.params.transitionEnd;
-      const curTranStart = this.getTransitionStart();
+      const prevTranEnd = Math.max(0, prevLayer.params.transitionEnd);
+      const curTranStart = Math.max(0, this.getTransitionStart());
 
       const average = (curTranStart + prevTranEnd) / 2;
 
@@ -84,6 +105,7 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionStart(): number {
+    const transitions = this.getTransitions();
     let option = this.getNumberOption('transitionStart');
 
     if (option !== null && typeof option !== 'number') {
@@ -91,9 +113,17 @@ export class PushInLayer extends PushInBase {
       [option] = option;
     }
 
-    const start = option as number | null;
+    let start = option as number | null;
 
-    return start === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : start;
+    if (!start && !transitions && this.scene.getMode() === 'continuous') {
+      start = -1;
+    } else if (!start && this.isFirst) {
+      start = -1;
+    } else if (!start) {
+      start = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    }
+
+    return start;
   }
 
   /**
@@ -102,6 +132,7 @@ export class PushInLayer extends PushInBase {
    * @returns number
    */
   private getTransitionEnd(): number {
+    const transitions = this.getTransitions();
     let option = this.getNumberOption('transitionEnd');
 
     if (option !== null && typeof option !== 'number') {
@@ -109,27 +140,36 @@ export class PushInLayer extends PushInBase {
       [option] = option;
     }
 
-    const end = option as number | null;
+    let end = option as number | null;
 
-    return end === null ? PUSH_IN_DEFAULT_TRANSITION_LENGTH : end;
+    if (!end && !transitions && this.scene.getMode() === 'continuous') {
+      end = -1;
+    } else if (!end && this.isLast) {
+      end = -1;
+    } else if (!end) {
+      end = PUSH_IN_DEFAULT_TRANSITION_LENGTH;
+    }
+
+    return end;
   }
 
   /**
    * Get all inpoints for the layer.
    */
   private getInpoints(element: HTMLElement, index: number): number[] {
-    let inpoints = [this.scene.getTop()];
+    const { scene } = this;
+    let inpoints = [0];
     if (element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]) {
       inpoints = element.dataset[PUSH_IN_FROM_DATA_ATTRIBUTE]!.split(',').map(
         inpoint => parseInt(inpoint.trim(), 10)
       );
-    } else if (this.options?.inpoints) {
-      inpoints = this.options.inpoints;
-    } else if (index === 0) {
+    } else if (this.settings?.inpoints) {
+      inpoints = this.settings.inpoints;
+    } else if (this.isFirst || scene.getMode() === 'continuous') {
       inpoints = this.scene.getInpoints();
     } else if (index > 0) {
       // Set default for middle layers if none provided
-      const { outpoint } = this.scene.layers[index - 1].params;
+      const { outpoint } = scene.layers[index - 1].params;
       inpoints = [outpoint - this.getOverlap()];
     }
 
@@ -145,8 +185,11 @@ export class PushInLayer extends PushInBase {
     if (element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]) {
       const values = element.dataset[PUSH_IN_TO_DATA_ATTRIBUTE]!.split(',');
       outpoints = values.map(value => parseInt(value.trim(), 10));
-    } else if (this.options?.outpoints) {
-      outpoints = this.options.outpoints;
+    } else if (this.settings?.outpoints) {
+      outpoints = this.settings.outpoints;
+    } else if (this.scene.getMode() === 'continuous') {
+      // match pushin container height.
+      outpoints = [-1];
     }
 
     return outpoints;
@@ -163,8 +206,8 @@ export class PushInLayer extends PushInBase {
       if (Number.isNaN(speed)) {
         speed = DEFAULT_SPEED;
       }
-    } else if (this.options?.speed) {
-      speed = this.options.speed;
+    } else if (this.settings?.speed) {
+      speed = this.settings.speed;
     }
 
     return speed || DEFAULT_SPEED;
@@ -189,6 +232,7 @@ export class PushInLayer extends PushInBase {
       depth: this.getDepth(),
       inpoint: this.getInpoint(this.ref.inpoints),
       outpoint: this.getOutpoint(this.ref.outpoints),
+      tabInpoint: this.getTabInpoint(this.ref.tabInpoints),
       overlap: this.getOverlap(),
       speed: this.ref.speed,
       transitions: this.getTransitions(),
@@ -225,26 +269,12 @@ export class PushInLayer extends PushInBase {
   }
 
   /**
-   * Whether or not a layer should currently be zooming.
+   * Whether or not a layer should currently be animated.
    */
   private isActive(): boolean {
-    const { inpoint } = this.params;
-    const { outpoint } = this.params;
-
-    let active = true;
-
-    if (this.params.transitions) {
-      const min = this.scene.pushin.scrollY >= inpoint;
-      const max = this.scene.pushin.scrollY <= outpoint;
-      active = min && max;
-      if (!active && this.params.transitionStart < 0 && !min) {
-        active = true;
-      } else if (!active && this.params.transitionEnd < 0 && !max) {
-        active = true;
-      }
-    }
-
-    return active;
+    const min = this.scene.pushin.scrollY >= this.params.inpoint;
+    const max = this.scene.pushin.scrollY <= this.params.outpoint;
+    return min && max;
   }
 
   /**
@@ -253,7 +283,7 @@ export class PushInLayer extends PushInBase {
    */
   /* istanbul ignore next */
   private getInpoint(inpoints: number[]): number {
-    const { breakpoints } = this.scene.options;
+    const { breakpoints } = this.scene.settings;
     return inpoints[this.scene.getBreakpointIndex(breakpoints)] || inpoints[0];
   }
 
@@ -263,7 +293,7 @@ export class PushInLayer extends PushInBase {
    */
   /* istanbul ignore next */
   private getOutpoint(outpoints: number[]): number {
-    const { breakpoints } = this.scene.options;
+    const { breakpoints } = this.scene.settings;
     return (
       outpoints[this.scene.getBreakpointIndex(breakpoints)] || outpoints[0]
     );
@@ -306,11 +336,19 @@ export class PushInLayer extends PushInBase {
     const { inpoint } = this.params;
     const { outpoint } = this.params;
 
-    if (isFirst && this.scene.pushin.scrollY < inpoint) {
+    if (
+      isFirst &&
+      this.scene.pushin.scrollY < inpoint &&
+      this.params.transitionStart === -1
+    ) {
       opacity = 1;
-    } else if (isLast && this.scene.pushin.scrollY > outpoint) {
+    } else if (
+      isLast &&
+      this.scene.pushin.scrollY > outpoint &&
+      this.params.transitionEnd === -1
+    ) {
       opacity = 1;
-    } else if (this.isActive()) {
+    } else if (this.isVisible() || this.isActive()) {
       let inpointDistance =
         Math.max(
           Math.min(
@@ -320,7 +358,7 @@ export class PushInLayer extends PushInBase {
           0
         ) / this.params.transitionStart;
 
-      if (isFirst || this.params.transitionStart < 0) {
+      if (this.params.transitionStart < 0) {
         inpointDistance = 1;
       }
 
@@ -333,7 +371,7 @@ export class PushInLayer extends PushInBase {
           0
         ) / this.params.transitionEnd;
 
-      if (isLast || this.params.transitionEnd < 0) {
+      if (this.params.transitionEnd < 0) {
         outpointDistance = 1;
       }
 
@@ -350,6 +388,29 @@ export class PushInLayer extends PushInBase {
   }
 
   /**
+   * Check if the layer should be visible.
+   *
+   * @returns boolean
+   */
+  isVisible(): boolean {
+    const { scrollY } = this.scene.pushin;
+    const { transitionStart, transitionEnd, transitions } = this.params;
+    let isVisible = false;
+
+    if (!transitions) {
+      isVisible = true;
+    } else if (this.params.inpoint > scrollY && transitionStart === -1) {
+      isVisible = true;
+    } else if (this.params.outpoint < scrollY && transitionEnd === -1) {
+      isVisible = true;
+    } else if (this.isActive()) {
+      isVisible = true;
+    }
+
+    return isVisible;
+  }
+
+  /**
    * Set a css class depending on current opacity.
    */
   setLayerVisibility() {
@@ -358,5 +419,32 @@ export class PushInLayer extends PushInBase {
     } else {
       this.container.classList.remove('pushin-layer--visible');
     }
+  }
+
+  /**
+   * Set tabInpoints for this layer.
+   */
+  getTabInpoints(inpoints: number[]): number[] {
+    let tabInpoints = this.getNumberOption('tabInpoints');
+    if (!tabInpoints) {
+      tabInpoints = inpoints.map(
+        inpoint => inpoint + this.getTransitionStart()
+      );
+    }
+    if (typeof tabInpoints === 'number') {
+      tabInpoints = [tabInpoints];
+    }
+    return tabInpoints;
+  }
+
+  /**
+   * Get the current tabInpoint for a layer,
+   * depending on window breakpoint.
+   */
+  /* istanbul ignore next */
+  private getTabInpoint(tabInpoints: number[]): number {
+    const { breakpoints } = this.scene.settings;
+    const breakpoint = this.scene.getBreakpointIndex(breakpoints);
+    return tabInpoints[breakpoint] || tabInpoints[0];
   }
 }
