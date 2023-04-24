@@ -72,7 +72,7 @@
     "@storybook/addon-links": "^6.5.16",
     "@storybook/builder-webpack5": "^6.5.16",
     "@storybook/manager-webpack5": "^6.5.16",
-    "@storybook/react": "^6.5.16",
+    "@storybook/react": "^7.0.6",
     "@storybook/testing-library": "^0.0.13",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
