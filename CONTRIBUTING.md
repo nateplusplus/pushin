@@ -18,6 +18,10 @@ Ensure the PR description clearly describes the problem and solution. Include th
 
 If there is no open issue for this change, please open a new one using the Feature Request issue template in order to thoroughly document the goal of this feature change. If you have already made this change, please open a pull request and include a link to the corresponding issue for further explanation of what has been done.
 
+## Development setup
+
+For more information on how to set up your development environment, please see [DEVELOPERS.md](DEVELOPERS.md).
+
 ## More questions?
 
 Ask any questions about how to use or contribute to PushIn.js in the Discussions section of the GitHub repository.

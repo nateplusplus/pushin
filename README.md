@@ -20,14 +20,26 @@ PushIn.js supports all browsers that are [ES5-compliant](http://kangax.github.io
 
 PushIn is available via NPM or a CDN. Follow the detailed instructions in the documentation site: https://pushinjs.com/installation.
 
+If you're using npm, you can install the package by running:
+
+```shell
+npm install --save pushin
+```
+
+Alternatively, you can use a CDN:
+
+```
+<script src="https://cdn.jsdelivr.net/npm/pushin@6/dist/umd/pushin.min.js"></script>
+```
+
 ## Configuration
 
 There are several plugin configurations you can use to customize for your unique project. Refer to [https://pushinjs.com/api](https://pushinjs.com/api) for a detailed breakdown of all available configurations.
 
 ## Contributing
 
-We've setup separate documentation for contributors: [CONTRIBUTING.md](CONTRIBUTING.md)
+Contributors are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) to learn more about the best ways to contribute to this project.
 
 ## Development Setup
 
-We've setup separate documentation for developers: [DEVELOPERS.md](DEVELOPERS.md)
+See [DEVELOPERS.md](DEVELOPERS.md) for details on how to set up your development environment to contribute to this project.
