@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 
 import { A11y } from './A11y';
 
@@ -11,10 +11,10 @@ export default {
   argTypes: {
     mode: { control: 'select', options: ['sequential', 'continuous'] },
   },
-} as ComponentMeta<typeof A11y>;
+} as Meta<typeof A11y>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof A11y> = args => <A11y {...args} />;
+const Template: StoryFn<typeof A11y> = args => <A11y {...args} />;
 
 export const A11yOptionsSequential = Template.bind({});
 A11yOptionsSequential.args = {
