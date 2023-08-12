@@ -32,6 +32,7 @@ export class PushInScene extends PushInBase {
       layers: pushin.options?.layers || [],
       ratio: options?.ratio,
       autoStart: pushin.options?.autoStart,
+      length: this.pushin.options?.length,
     };
 
     this.layers = [];
@@ -91,6 +92,11 @@ export class PushInScene extends PushInBase {
 
   setLayerDepth() {
     let layerDepth = this.getNumberOption('layerDepth');
+
+    if (!layerDepth) {
+      // use pushin 'length' setting as alias for layerDepth
+      layerDepth = this.getNumberOption('length', this.pushin.container);
+    }
 
     if (layerDepth && typeof layerDepth !== 'number') {
       // not yet compatible with array - set to first index if array passed in.

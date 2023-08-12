@@ -1,4 +1,4 @@
-/* Pushin.js - v6.0.0
+/* Pushin.js - v6.0.1
 Author: Nathan Blair <nate@natehub.net> (https://natehub.net)
 License: MIT */
 (function (global, factory) {
@@ -515,7 +515,7 @@ License: MIT */
     class PushInScene extends PushInBase {
         /* istanbul ignore next */
         constructor(pushin) {
-            var _a, _b, _c, _d, _e;
+            var _a, _b, _c, _d, _e, _f;
             super();
             this.pushin = pushin;
             const options = (_b = (_a = pushin.options) === null || _a === void 0 ? void 0 : _a.scene) !== null && _b !== void 0 ? _b : {};
@@ -527,6 +527,7 @@ License: MIT */
                 layers: ((_d = pushin.options) === null || _d === void 0 ? void 0 : _d.layers) || [],
                 ratio: options === null || options === void 0 ? void 0 : options.ratio,
                 autoStart: (_e = pushin.options) === null || _e === void 0 ? void 0 : _e.autoStart,
+                length: (_f = this.pushin.options) === null || _f === void 0 ? void 0 : _f.length,
             };
             this.layers = [];
         }
@@ -577,6 +578,10 @@ License: MIT */
         setLayerDepth() {
             var _a;
             let layerDepth = this.getNumberOption('layerDepth');
+            if (!layerDepth) {
+                // use pushin 'length' setting as alias for layerDepth
+                layerDepth = this.getNumberOption('length', this.pushin.container);
+            }
             if (layerDepth && typeof layerDepth !== 'number') {
                 // not yet compatible with array - set to first index if array passed in.
                 [layerDepth] = layerDepth;
