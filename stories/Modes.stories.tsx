@@ -1,99 +1,103 @@
-import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 
 import { Modes } from './Modes';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta = {
   title: 'PushIn/Modes',
   component: Modes,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     mode: { control: 'select', options: ['sequential', 'continuous'] },
   },
-} as ComponentMeta<typeof Modes>;
+} as Meta<typeof Modes>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Modes> = args => <Modes {...args} />;
+export default meta;
 
-export const SequentialMode = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-SequentialMode.args = {
-  options: {
-    mode: 'sequential',
-    layers: [],
-  },
-};
-
-export const ContinuousMode = Template.bind({});
-ContinuousMode.args = {
-  options: {
-    mode: 'continuous',
-    layers: [],
-  },
-};
-
-export const ContinuousWithTransitions = Template.bind({});
-ContinuousWithTransitions.args = {
-  options: {
-    mode: 'continuous',
-    layers: [
-      {
-        transitions: true,
-      },
-      {
-        transitions: true,
-        transitionStart: 300,
-        transitionEnd: 300,
-      },
-      {
-        transitions: true,
-        inpoints: [200],
-        transitionStart: 300,
-        transitionEnd: 300,
-      },
-    ],
-  },
-};
-
-export const SetModeByAttribute = Template.bind({});
-SetModeByAttribute.args = {
-  options: {
-    mode: '',
-    layers: [],
-  },
-  modeAttr: 'continuous',
-};
-
-export const ContinuousWithLayerOutpoint = Template.bind({});
-ContinuousWithLayerOutpoint.args = {
-  options: {
-    mode: 'continuous',
-    layers: [
-      {
-        outpoints: [3000],
-      },
-    ],
-    debug: true,
-  },
-};
-
-export const ContinuousWithLayerDepth = Template.bind({});
-ContinuousWithLayerDepth.args = {
-  options: {
-    mode: 'continuous',
-    debug: true,
-    scene: {
-      layerDepth: 3500,
+export const SequentialMode = {
+  args: {
+    options: {
+      mode: 'sequential',
+      layers: [],
     },
   },
 };
 
-export const ContinuousWithLength = Template.bind({});
-ContinuousWithLength.args = {
-  options: {
-    mode: 'continuous',
-    debug: true,
-    length: 4000,
+export const ContinuousMode = {
+  args: {
+    options: {
+      mode: 'continuous',
+      layers: [],
+    },
+  },
+};
+
+export const ContinuousWithTransitions = {
+  args: {
+    options: {
+      mode: 'continuous',
+      layers: [
+        {
+          transitions: true,
+        },
+        {
+          transitions: true,
+          transitionStart: 300,
+          transitionEnd: 300,
+        },
+        {
+          transitions: true,
+          inpoints: [200],
+          transitionStart: 300,
+          transitionEnd: 300,
+        },
+      ],
+    },
+  },
+};
+
+export const SetModeByAttribute = {
+  args: {
+    options: {
+      mode: '',
+      layers: [],
+    },
+    modeAttr: 'continuous',
+  },
+};
+
+export const ContinuousWithLayerOutpoint = {
+  args: {
+    options: {
+      mode: 'continuous',
+      layers: [
+        {
+          outpoints: [3000],
+        },
+      ],
+      debug: true,
+    },
+  },
+};
+
+export const ContinuousWithLayerDepth = {
+  args: {
+    options: {
+      mode: 'continuous',
+      debug: true,
+      scene: {
+        layerDepth: 3500,
+      },
+    },
+  },
+};
+
+export const ContinuousWithLength = {
+  args: {
+    options: {
+      mode: 'continuous',
+      debug: true,
+      length: 4000,
+    },
   },
 };

@@ -1,10 +1,9 @@
-import React from 'react';
-import { StoryFn, Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { A11y } from './A11y';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta = {
   title: 'PushIn/A11y',
   component: A11y,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
@@ -13,18 +12,20 @@ export default {
   },
 } as Meta<typeof A11y>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: StoryFn<typeof A11y> = args => <A11y {...args} />;
+export default meta;
 
-export const A11yOptionsSequential = Template.bind({});
-A11yOptionsSequential.args = {
-  settings: {
-    mode: 'sequential',
-    layers: [
-      {
-        tabInpoints: [100],
-      },
-    ],
-    debug: true,
+export const Template: StoryObj<typeof A11y> = {};
+
+export const A11yOptionsSequential: StoryObj<typeof A11y> = {
+  args: {
+    settings: {
+      mode: 'sequential',
+      layers: [
+        {
+          tabInpoints: [100],
+        },
+      ],
+      debug: true,
+    },
   },
 };

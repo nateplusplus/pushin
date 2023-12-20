@@ -1,23 +1,22 @@
-import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 
 import { Target } from './Target';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const meta = {
   title: 'PushIn/Target',
   component: Target,
   argTypes: {
     scrollTarget: { control: 'text' },
   },
-} as ComponentMeta<typeof Target>;
+} as Meta<typeof Target>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Target> = args => <Target {...args} />;
+export default meta;
 
-export const Default = Template.bind({});
+export const Default = {};
 
-export const WindowScroll = Template.bind({});
-WindowScroll.args = {
-  scrollTarget: 'window',
+export const WindowScroll = {
+  args: {
+    scrollTarget: 'window',
+  },
 };
